@@ -1,0 +1,29 @@
+{% extends "admin/change_form.html" %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+
+<h3>{{ header_tittle }}</h3>
+
+<form action="" method="post">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <p>{{ explanation }}</p>
+    <br>
+    <ul>
+    {% for q in queryset %}
+        <li>
+          <input type="hidden" name="primary" value="{{q.id}}">
+          {{q}}
+        </li>
+    {% endfor %}
+    </ul>
+    <input type="hidden" name="action" value="{{ action }}" />
+    <input type="submit" name="apply" value="Aplicar" />
+</form>
+
+{% endblock %}

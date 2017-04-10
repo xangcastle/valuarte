@@ -1,0 +1,107 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrahead %}
+<style media="screen">
+.bgtransparent{
+  position:fixed;
+  left:0;
+  top:0;
+  background-color:#000;
+  opacity:0.6;
+  filter:alpha(opacity=60);
+}
+
+.bgmodal{
+  position:fixed;
+  font-family:arial;
+  font-size:1em;
+  border:0.05em solid black;
+  overflow:auto;
+  background-color:#fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>codigo</th>
+      <th>barrio</th>
+      <th>referencias</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for b in barrios %}
+    <tr>
+      <td>{{ b.code }}</td>
+      <td>{{ b.name }}</td>
+      <td>
+        <ul>
+        {% for d in b.referencias %}
+          <li>{{d}}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<script type="text/javascript">
+(function($) {
+
+    var closeModal = function(){
+      $('#bgmodal').remove();
+      $('#bgtransparent').remove();
+    };
+
+    var contenidoHTML = '<button class="close-modal">Cerrar</button>';
+    var ancho = 600;
+    var alto = 250;
+
+    var funka = function() {
+      alert('funka');
+    }
+
+    var acomodar = function(){
+     var wscr = $(window).width();
+     var hscr = $(window).height();
+     $('#bgtransparent').css("width", wscr);
+     $('#bgtransparent').css("height", hscr);
+     $('#bgmodal').css("width", ancho+'px');
+     $('#bgmodal').css("height", alto+'px');
+     var wcnt = $('#bgmodal').width();
+     var hcnt = $('#bgmodal').height();
+     var mleft = ( wscr - wcnt ) / 2;
+     var mtop = ( hscr - hcnt ) / 2;
+     $('#bgmodal').css("left", mleft+'px');
+     $('#bgmodal').css("top", mtop+'px');
+     };
+
+
+    var openModal = function(){
+      var bgdiv = $('<div>').attr({
+        class: 'bgtransparent',
+        id: 'bgtransparent'
+      });
+      $('body').append(bgdiv);
+        var wscr = $(window).width();
+        var hscr = $(window).height();
+        $('#bgtransparent').css("width", wscr);
+        $('#bgtransparent').css("height", hscr);
+        var moddiv = $('<div>').attr({
+          class: 'bgmodal',
+          id: 'bgmodal'
+        });
+        $('body').append(moddiv);
+        $('#bgmodal').append(contenidoHTML);
+        acomodar();
+    };
+
+    $(document).ready(function() {
+        $("tr").on('click', openModal);
+        $("")
+    });
+})(grp.jQuery);
+</script>
+{% endblock %}
