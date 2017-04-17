@@ -81,7 +81,7 @@ class ZonaBarrio(models.Model):
 
 
 class TipoGestion(Entidad):
-
+    prefijo = models.CharField(max_length=6, null=True, blank=False)
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
 
@@ -162,7 +162,7 @@ class Elemento(models.Model):
 
 class Gestion(models.Model):
     barra = models.CharField(max_length=65, null=True)
-    destinatario = models.CharField(max_length=125, null=True)
+    destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
     direccion = models.TextField(max_length=255, null=True)
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)
