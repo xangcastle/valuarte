@@ -147,7 +147,7 @@ STATICFILES_FINDERS = (
 
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components/')
 
-BOWER_PATH = '/usr/local/bin/bower'
+BOWER_PATH = 'C:/Users/Jose Williams Garcia/AppData/Roaming/npm/node_modules/bower/bin/bower'
 
 BOWER_INSTALLED_APPS = (
     'izimodal',
