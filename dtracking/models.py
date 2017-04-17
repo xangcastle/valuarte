@@ -81,7 +81,7 @@ class ZonaBarrio(models.Model):
 
 
 class TipoGestion(Entidad):
-
+    prefijo = models.CharField(max_length=6, null=True, blank=False)
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
 
