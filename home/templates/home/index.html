@@ -15,6 +15,7 @@
 
 	<!-- Favicons
 	================================================== -->
+
 	<link rel="icon" href="http://themewinter.com/html/bizcraft/onepage/img/favicon/favicon-32x32.png" type="image/x-icon" />
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://themewinter.com/html/bizcraft/onepage/img/favicon/favicon-144x144.png">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://themewinter.com/html/bizcraft/onepage/img/favicon/favicon-72x72.png">
@@ -22,7 +23,7 @@
 
 	<!-- CSS
 	================================================== -->
-
+    {% load static %}
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="/static/home/css/bootstrap.min.css">
 	<!-- Template styles-->
@@ -42,6 +43,8 @@
 	<link rel="stylesheet" href="/static/home/css/flexslider.css">
 	<!-- Style Swicther -->
 	<link id="style-switch" href="/static/home/css/presets/preset3.css" media="screen" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href='{% static 'izimodal/css/iziModal.min.css' %}'type="text/css">
+
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
@@ -58,15 +61,24 @@
 		<div class="style-switch-button">
 			<i class="fa fa-sliders"></i>
 		</div>
-		<h3>Style Options</h3>
-		<button id="preset1" class="btn btn-sm btn-primary"></button>
+		<h3>Ingrese su gestión</h3>
+		{% comment %}<button id="preset1" class="btn btn-sm btn-primary"></button>
 		<button id="preset2" class="btn btn-sm btn-primary"></button>
 		<button id="preset3" class="btn btn-sm btn-primary"></button>
 		<button id="preset4" class="btn btn-sm btn-primary"></button>
 		<button id="preset5" class="btn btn-sm btn-primary"></button>
-		<button id="preset6" class="btn btn-sm btn-primary"></button>
+		<button id="preset6" class="btn btn-sm btn-primary"></button>{% endcomment %}
+        <input class="form-control"
+               name="no_gestion"
+               id="no_gestion"
+               placeholder="" type="text" required=""
+               style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;);
+               background-repeat: no-repeat;
+               background-attachment: scroll;
+               background-size: 16px 18px; background-position: 98% 50%;
+               cursor: auto;">
 		<br/><br/>
-		<a class="btn btn-sm btn-primary close-styler pull-right">Close X</a>
+		<a class="btn btn-sm btn-primary close-styler pull-right" id="btnGestion">Ver Gestion</a>
 	</div>
 	<!-- Style switcher end -->
 
@@ -1025,6 +1037,58 @@
 	<!-- Doc http://www.mkyong.com/google-maps/google-maps-api-hello-world-example/ -->
 	<!-- Template custom -->
 	<script type="text/javascript" src="/static/home/js/custom.js"></script>
+    <script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
 	</div><!-- Body inner end -->
+
+    <div id="modal-default" data-izimodal-fullscreen="true"
+         data-izimodal-title="Welcome to the iziModal"
+         data-izimodal-subtitle="Elegant, responsive, flexible and lightweight modal plugin with jQuery."
+         data-izimodal-icon="icon-home"
+         aria-hidden="false"
+         aria-labelledby="modal-default"
+         role="dialog" class="iziModal"
+         data-izimodal-group="grupo1"
+         data-izimodal-loop="true"
+
+         style="border-bottom: 3px solid rgb(136, 160, 185);
+         overflow: hidden; z-index: 999;
+         border-radius: 3px; max-width: 700px;
+         display: None; height: 459px;">
+        <div class="iziModal-header" style="background: rgb(136, 160, 185); padding-right: 44px;">
+            <i class="iziModal-header-icon icon-home"></i>
+            <h2 class="iziModal-header-title">Welcome to the iziModal</h2>
+            <p class="iziModal-header-subtitle">Elegant, responsive, flexible and lightweight modal plugin with jQuery.</p><div class="iziModal-header-buttons"><a href="javascript:void(0)" class="iziModal-button iziModal-button-close" data-izimodal-close=""></a><a href="javascript:void(0)" class="iziModal-button iziModal-button-fullscreen" data-izimodal-fullscreen="" style="display: none;"></a></div></div><div class="iziModal-wrap" style="height: auto;"><div class="iziModal-content" style="padding: 20px;">
+
+        <p>You have several possibilities to use the easy Modal, with options, and also data-attributes. Click below for see some examples.</p>
+        <h4><span>Ajax/Fetch</span></h4>
+        <footer>
+            <button class="btn btn-ajax">Load Ajax</button>
+            <button class="btn btn-fetch">Load Fetch</button>
+            <h4><span>Group</span></h4>
+            <button class="btn" data-izimodal-prev="">Prev Modal</button>
+            <button class="btn" data-izimodal-next="">Next Modal</button>
+            <h4><span>Data-Attributes</span></h4>
+            <button class="btn" data-izimodal-close="">Close</button>
+            <button class="btn" data-izimodal-fullscreen="">Fullscreen</button>
+            <button data-izimodal-open="modal-custom" data-izimodal-transitionin="fadeInDown" data-izimodal-transitionout="fadeOutDown">Open other Modal</button>
+        </footer>
+    </div>
+    </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var ver_gestion = function () {
+                $("#modal-default").iziModal();
+                $("#modal-default").iziModal('open');
+            };
+
+        $('#btnGesion').on('click',  ver_gestion);
+
+        $('#no_gestion').on('keyup',  function () {
+                $("#modal-default").iziModal();
+                $("#modal-default").iziModal('open');
+            });
+        });
+    </script>
 </body>
 </html>
