@@ -1055,8 +1055,18 @@
          overflow: hidden; z-index: 999;
          border-radius: 3px; max-width: 700px;
          display: None; height: 459px;">
-        <div class="iziModal-content" style="padding: 20px">
-            <table class="table table-responsive table-bordered table-striped">
+        <div class="iziModal-content" >
+            <div style="padding: 20px">
+                <div class="row">
+                    <div class="col-sm-3 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
+                    <div class="col-sm-9 col-xs-12"><strong>3527364</strong></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
+                    <div class="col-sm-9 col-xs-12"><strong>José Williams Garcia</strong></div>
+                </div>
+                <table class="table table-responsive table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -1102,6 +1112,8 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
+
         </div>
 
 
@@ -1110,7 +1122,7 @@
 
     <script>
         function ver_gestion() {
-                $("#modal-default").iziModal();
+                $("#modal-default").iziModal({zindex: 9999});
                 $("#modal-default").iziModal('open');
                 $(".style-switch-wrapper").removeClass("active");
             };
