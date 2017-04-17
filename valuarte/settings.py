@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'dtracking',
     'home',
+    'djangobower',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,19 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'YOUR_API_KEY'
+
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'djangobower.finders.BowerFinder',
+
+)
+
+BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components/')
+
+BOWER_PATH = '/usr/local/bin/bower'
+
+BOWER_INSTALLED_APPS = (
+    'izimodal',
+)
