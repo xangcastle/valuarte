@@ -145,7 +145,7 @@ class DetalleGestion(models.Model):
 
 class especiales(models.Manager):
     def get_queryset(self):
-        return super(especiales, self).get_queryset().filter(tipo__in=['combobox', 'checkbox'])
+        return super(especiales, self).get_queryset().filter(tipo__in=['combobox', 'radio'])
 
 class EspecialField(DetalleGestion):
     objects = models.Manager()
@@ -163,6 +163,7 @@ class Elemento(models.Model):
 class Gestion(models.Model):
     barra = models.CharField(max_length=65, null=True)
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
+    referencia = models.CharField(max_length=35, null=True, verbose_name="Referencia Bancaria")
     direccion = models.TextField(max_length=255, null=True)
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)

@@ -33,7 +33,7 @@ class gestion_admin(entidad_admin):
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    fields = ('destinatario', 'direccion', 'telefono', ('departamento', 'municipio'),
+    fields = (('destinatario', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
              ('barrio', 'zona'))
 
     actions = ['action_cancelar',]
