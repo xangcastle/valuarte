@@ -1,75 +1,52 @@
 {% extends "admin/app_index.html" %}
 
+{% load i18n %}
+
+
 {% block content_title %}
-    {% if title %}
-        <header><h1>Sitio Administrativo Valuarte</h1></header>
-    {% endif %}
+{% if title %}
+<header><h1>Sitio Administrativo Valuarte</h1></header>
+{% endif %}
 {% endblock content_title %}
 
-{% load i18n %}
+
 {% block extrahead %}
-<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 {% endblock %}
+
 {% block content %}
-<div class="" id="content"></div>
+<div id="mapid" style="width: 1200px; height: 600px;"></div>
 <script>
-(function($) {
-{% block javascript %}
-{% load puntos %}
-{% get_puntos as facturas %}
-var ventana_ancho = $(window).width();
-var ventana_alto = $(window).height();
-$("#content").append($('<div id="map" style="width: '+ (ventana_ancho * 0.78) +'px; height: '+ (ventana_alto * 0.75) +'px;"></div>'));
-var get_content = function(fecha, usuario){
-			var content = '<div class="marker-content">';
-			content += '<table><tbody>';
-			content += '<tr><td>' + fecha + '</td></tr>';
-			content += '<tr><td>' + usuario + '</td></tr>';
-			content += '</tbody></table></div>';
-			return content;
-			}
 
-		var locations = [
-		{% for f in facturas %}
-		  ['{{ f.label }}', {{ f.latitude }}, {{ f.longitude }}, '{{ f.usuario }}', '{{ f.fecha }}'],
-		{% endfor %}
-		];
+	var mymap = L.map('mapid').setView([12.09, -86.16], 8);
 
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(mymap);
 
-		var map = new google.maps.Map(document.getElementById('map'), {
-		  zoom: 10,
-		  center: new google.maps.LatLng(12.130634779728421, -86.2261902890624),
-		  mapTypeId: google.maps.MapTypeId.ROADMAP
-		});
+	L.marker([12.09, -86.16]).addTo(mymap);
 
-		var infowindow = new google.maps.InfoWindow();
+	L.circle([12.09, -86.17], {
+		color: 'red',
+		fillColor: '#f03',
+		fillOpacity: 0.5,
+		radius: 2000
+	}).addTo(mymap);
 
-		var marker, i;
-
-		for (i = 0; i < locations.length; i++) {
-		  marker = new google.maps.Marker({
-			position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-			map: map,
-			label: locations[i][0]
-		  });
-		  google.maps.event.addListener(marker, 'click', (function(marker, i) {
-			return function() {
-			  infowindow.setContent(get_content(locations[i][4], locations[i][3]));
-			  infowindow.open(map, marker);
-			}
-		  })(marker, i));
-		}
-{% endblock javascript %}
-var active = function(select) {
-		var span = $('<span class="sr-only">(current)</span>');
-		var element = $(select);
-		element.parent()
-			.addClass('active')
-			.append(span);
-}
+	L.polygon([
+		[12.409, -86.08],
+		[12.503, -86.06],
+		[12.61, -86.047]
+	]).addTo(mymap);
 
 
-active('.{% block active %}home{% endblock active %}');
-})(grp.jQuery);
 </script>
+
 {% endblock content %}
