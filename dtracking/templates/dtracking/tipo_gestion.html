@@ -3,4 +3,20 @@
 {% block content %}
 <p>Prueba de plantilla editada</p>
 {{ block.super }}
+    <script>
+    (function($) {
+        $(document).ready(function($) {
+            var combos = $(".grp-tr input:hidden[name*='detallegestion_set']").not("[name*='tipo_gestion'],[name*='prefix']");
+            $(combos).each(function( index ) {
+               var $combo =  $( this );
+               console.log( index + ": " + $combo.val());
+               var $divtipo = $combo.closest("div").find(".tipo");
+               $divtipo.append(
+                   '<a class="grp-related-widget-wrapper-link grp-add-related grp-add-another related-widget-wrapper-link add-related add-another" id="add_id_elemento" ' +
+                   'href="/admin/dtracking/elemento/add/?_to_field=id&amp;_popup=1" ' +
+                   'title="Añadir otro elemento"></a>');
+            });
+        });
+    })(grp.jQuery);
+    </script>
 {% endblock content %}
