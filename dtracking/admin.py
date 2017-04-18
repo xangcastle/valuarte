@@ -20,12 +20,12 @@ class detalle_tabular(GrappelliSortableHiddenMixin, admin.TabularInline):
 
 
 class tipoGestion_admin(entidad_admin):
+    change_form_template = "dtracking/tipo_gestion.html"
     inlines = [detalle_tabular, ]
 
 
 class gestion_admin(entidad_admin):
     change_list_template = "dtracking/gestiones.html"
-
     date_hierarchy = "fecha"
     list_display = ('destinatario', 'direccion', 'departamento', 'municipio',
     'barrio', 'tipo_gestion', 'user', '_realizada')
