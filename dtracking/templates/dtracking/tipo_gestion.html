@@ -1,22 +1,71 @@
 {% extends "admin/change_form.html" %}
 
 {% block content %}
-<p>Prueba de plantilla editada</p>
 {{ block.super }}
-    <script>
-    (function($) {
-        $(document).ready(function($) {
-            var combos = $(".grp-tr input:hidden[name*='detallegestion_set']").not("[name*='tipo_gestion'],[name*='prefix']");
-            $(combos).each(function( index ) {
-               var $combo =  $( this );
-               console.log( index + ": " + $combo.val());
-               var $divtipo = $combo.closest("div").find(".tipo");
-               $divtipo.append(
-                   '<a class="grp-related-widget-wrapper-link grp-add-related grp-add-another related-widget-wrapper-link add-related add-another" id="add_id_elemento" ' +
-                   'href="/admin/dtracking/elemento/add/?_to_field=id&amp;_popup=1" ' +
-                   'title="Añadir otro elemento"></a>');
-            });
+<div id="modal-default"
+ data-izimodal-title="Editar elementos de este control"
+ data-izimodal-icon="icon-home"
+ aria-hidden="false"
+ aria-labelledby="modal-default"
+ role="dialog"
+ class="iziModal">
+<div class="iziModal-content" >
+    <div style="padding: 20px;">
+        <table class="table table-responsive table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Elementos</th>
+                <th>
+                    {% if perms.dtracking.can_add_elemento %}
+                    <a class="add-another" title="Anadir Elementos"></a>
+                    {% endif %}
+                </th>
+            </tr>
+        </thead>
+        <tbody id="elementos">
+
+        </tbody>
+    </table>
+    </div>
+
+</div>
+
+
+</div>
+{% load static %}
+<script type="text/javascript" src="/static/home/js/jquery.min.js"></script>
+<link rel="stylesheet" href='{% static 'izimodal/css/iziModal.min.css' %}'type="text/css">
+<script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
+<script>
+$(document).ready(function() {
+
+    var editar_elementos = function () {
+        $.ajax({url: '/dtracking/edicion_elementos/',
+            type: 'GET',
+            dataType: "json",
+            data: {'combo': $(this).data('id')},
+            success : function(result){
+                var tab = $('#elementos').empty();
+                $.each(result, function (i, o) {
+                    var rw = '<tr><td>'+o.valor+'</td><td><a class="add-another" title="Anadir Elementos"></a></td></tr>';
+                    tab.append(rw);
+                });
+            }
         });
-    })(grp.jQuery);
-    </script>
+
+        $("#modal-default").iziModal({zindex: 9999, bodyOverflow: true});
+        $("#modal-default").iziModal('open');
+    };
+    var tipos = $('.tipo>select');
+    $.each(tipos, function(i, o){
+        if($(o).val() == 'combobox' || $(o).val() == 'radio'){
+            $(o).parent().append(
+           '<a class="add-another elementos" data-id="' +
+           $(o).parent().parent().parent().find("input:hidden[name*='-id']").val() +
+          '" title="Editar Elementos"></a>');
+    }
+    });
+    $('.tipo').on('click', '.elementos', editar_elementos);
+});
+</script>
 {% endblock content %}

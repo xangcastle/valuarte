@@ -118,3 +118,18 @@ def view_details(request):
     data = g.to_json()
     data = json.dumps(data)
     return HttpResponse(data, content_type="application/json")
+
+
+@csrf_exempt
+def edicion_elementos(request):
+    data = []
+    if request.method == "POST":
+        print "post"
+    if request.method == "GET":
+        id = request.GET.get('combo', None)
+        if id:
+            elms = DetalleGestion.objects.get(id=id).elementos()
+            for e in elms:
+                data.append(e.to_json())
+    data = json.dumps(data)
+    return HttpResponse(data, content_type='application/json')

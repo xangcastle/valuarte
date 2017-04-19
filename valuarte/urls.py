@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^$', index, name="valuarte_index"),
     url(r'^admin/', admin.site.urls),
     url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^dtracking/', include('dtracking.urls')),
 ]

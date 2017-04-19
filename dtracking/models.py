@@ -159,6 +159,9 @@ class Elemento(models.Model):
     combo = models.ForeignKey(EspecialField)
     valor = models.CharField(max_length=65)
 
+    def to_json(self):
+        return {'combo': self.combo.id, 'valor': self.valor}
+
 
 class Gestion(models.Model):
     barra = models.CharField(max_length=65, null=True)
