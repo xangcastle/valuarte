@@ -34,7 +34,7 @@ class gestion_admin(entidad_admin):
     'municipio__name', 'barrio__name', 'zona__name')
 
     fields = (('destinatario', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
-             ('barrio', 'zona'))
+             ('barrio', 'zona'), 'tipo_gestion' )
 
     actions = ['action_cancelar',]
 
@@ -152,6 +152,10 @@ class sms_admin(admin.ModelAdmin):
     list_display = ('texto', 'enviado', 'user', 'fecha_envio')
     list_filter = ('enviado', 'user')
 
+class loggestion_admin(admin.ModelAdmin):
+    list_display = ('gestion', 'usuario', 'fecha', 'estado')
+    list_filter = ('gestion', 'usuario')
+
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
 admin.site.register(Departamento, entidad_admin)
@@ -164,3 +168,4 @@ admin.site.register(Import, import_admin)
 admin.site.register(Archivo)
 admin.site.register(SMS, sms_admin)
 admin.site.register(Position, seguimiento_admin)
+admin.site.register(Log_Gestion, loggestion_admin)

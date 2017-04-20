@@ -52,12 +52,6 @@
       <script src="/static/home/js/respond.min.js"></script>
     <![endif]-->
 
-    <style>
-        .iziModal.hasScroll .iziModal-wrap {
-            overflow-y: auto;
-            overflow-x: auto;
-        }
-    </style>
 </head>
 
 <body>
@@ -111,12 +105,11 @@
 					<ul class="nav navbar-nav navbar-right">
 						<li class="active"><a class="page-scroll" href="#home" tabindex="-1">Inicio</a></li>
 						<li><a class="page-scroll" href="#about" tabindex="-1">Quines somos</a></li>
-
 						<li><a class="page-scroll" href="#service" tabindex="-1">Servicios</a></li>
 						<li><a class="page-scroll" href="#team" tabindex="-1">Equipo</a></li>
-                        <li><a class="page-scroll" href="#clients" tabindex="-1">Clientes</a></li>
 						{% comment %}<li><a class="page-scroll" href="#pricing" tabindex="-1">Pricing</a></li>
 						<li><a class="page-scroll" href="#blog" tabindex="-1">Blog</a></li>{% endcomment %}
+                        <li><a class="page-scroll" href="#clients" tabindex="-1">Clientes</a></li>
 						<li><a class="page-scroll" href="#contact" tabindex="-1">Contactanos</a></li>
                     </ul>
 				</nav><!--/ Navigation end -->
@@ -871,7 +864,7 @@
 	<section id="clients" class="clients">
 		<div class="container">
 			<div class="row text-center">
-				<h2 class="title">Nuestros Clientes <span class="title-desc">Amamos trabajar con Pasión</span></h2>
+				<h2 class="title">Our Clients <span class="title-desc">We Love to Work with Passion</span></h2>
 			</div>
 			<div class="row wow fadeInLeft">
 		      <div id="client-carousel" class="col-sm-12 owl-carousel owl-theme text-center client-carousel">
@@ -1048,6 +1041,44 @@
 		</div><!--/ Container end -->
 	</section><!--/ Footer end -->
 
+	<!-- Javascript Files
+	================================================== -->
+
+	<!-- initialize jQuery Library -->
+	<script type="text/javascript" src="/static/home/js/jquery.min.js"></script>
+	<!-- Bootstrap jQuery -->
+	<script type="text/javascript" src="/static/home/js/bootstrap.min.js"></script>
+	<!-- Style Switcher -->
+	<script type="text/javascript" src="/static/home/js/style-switcher.js"></script>
+	<!-- Owl Carousel -->
+	<script type="text/javascript" src="/static/home/js/owl.carousel.js"></script>
+	<!-- PrettyPhoto -->
+	<script type="text/javascript" src="/static/home/js/jquery.prettyPhoto.js"></script>
+	<!-- Bxslider -->
+	<script type="text/javascript" src="/static/home/js/jquery.flexslider.js"></script>
+	<!-- Isotope -->
+	<script type="text/javascript" src="/static/home/js/isotope.js"></script>
+	<script type="text/javascript" src="/static/home/js/ini.isotope.js"></script>
+	<!-- Wow Animation -->
+	<script type="text/javascript" src="/static/home/js/wow.min.js"></script>
+	<!-- SmoothScroll -->
+	<script type="text/javascript" src="/static/home/js/smoothscroll.js"></script>
+	<!-- Eeasing -->
+	<script type="text/javascript" src="/static/home/js/jquery.easing.1.3.js"></script>
+	<!-- Counter -->
+	<script type="text/javascript" src="/static/home/js/jquery.counterup.min.js"></script>
+	<!-- Waypoints -->
+	<script type="text/javascript" src="/static/home/js/waypoints.min.js"></script>
+	<!-- Google Map API Key Source -->
+	<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<!-- For Google Map -->
+	<script type="text/javascript" src="/static/home/js/gmap3.js"></script>
+	<!-- Doc http://www.mkyong.com/google-maps/google-maps-api-hello-world-example/ -->
+	<!-- Template custom -->
+	<script type="text/javascript" src="/static/home/js/custom.js"></script>
+    <script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
+	</div><!-- Body inner end -->
+
     <div id="modal-default"
          data-izimodal-fullscreen="true"
          data-izimodal-title="Estado de su gestion"
@@ -1055,12 +1086,16 @@
          data-izimodal-icon="icon-home"
          aria-hidden="false"
          aria-labelledby="modal-default"
-         role="dialog"
-         class="iziModal"
+         role="dialog" class="iziModal"
          data-izimodal-group="grupo1"
-         data-izimodal-loop="true">
+         data-izimodal-loop="true"
+
+         style="border-bottom: 3px solid rgb(136, 160, 185);
+         overflow: hidden; z-index: 999;
+         border-radius: 3px; max-width: 700px;
+         display: None; height: 459px;">
         <div class="iziModal-content" >
-            <div style="padding: 20px;">
+            <div style="padding: 20px">
                 <div class="row">
                     <div class="col-sm-3 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
                     <div class="col-sm-9 col-xs-12"><strong>3527364</strong></div>
@@ -1123,50 +1158,19 @@
 
     </div>
 
-	<!-- Javascript Files
-	================================================== -->
-
-	<!-- initialize jQuery Library -->
-	<script type="text/javascript" src="/static/home/js/jquery.min.js"></script>
-	<!-- Bootstrap jQuery -->
-	<script type="text/javascript" src="/static/home/js/bootstrap.min.js"></script>
-	<!-- Style Switcher -->
-	<script type="text/javascript" src="/static/home/js/style-switcher.js"></script>
-	<!-- Owl Carousel -->
-	<script type="text/javascript" src="/static/home/js/owl.carousel.js"></script>
-	<!-- PrettyPhoto -->
-	<script type="text/javascript" src="/static/home/js/jquery.prettyPhoto.js"></script>
-	<!-- Bxslider -->
-	<script type="text/javascript" src="/static/home/js/jquery.flexslider.js"></script>
-	<!-- Isotope -->
-	<script type="text/javascript" src="/static/home/js/isotope.js"></script>
-	<script type="text/javascript" src="/static/home/js/ini.isotope.js"></script>
-	<!-- Wow Animation -->
-	<script type="text/javascript" src="/static/home/js/wow.min.js"></script>
-	<!-- SmoothScroll -->
-	<script type="text/javascript" src="/static/home/js/smoothscroll.js"></script>
-	<!-- Eeasing -->
-	<script type="text/javascript" src="/static/home/js/jquery.easing.1.3.js"></script>
-	<!-- Counter -->
-	<script type="text/javascript" src="/static/home/js/jquery.counterup.min.js"></script>
-	<!-- Waypoints -->
-	<script type="text/javascript" src="/static/home/js/waypoints.min.js"></script>
-	<!-- Google Map API Key Source -->
-	<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-	<!-- For Google Map -->
-	<script type="text/javascript" src="/static/home/js/gmap3.js"></script>
-	<!-- Doc http://www.mkyong.com/google-maps/google-maps-api-hello-world-example/ -->
-	<!-- Template custom -->
-	<script type="text/javascript" src="/static/home/js/custom.js"></script>
-    <script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
-	</div><!-- Body inner end -->
-
-
-
 
     <script>
         function ver_gestion() {
-                $("#modal-default").iziModal({zindex: 9999, bodyOverflow: true});
+            var gestion=("#no_gestion").val();
+                $.ajax({
+                    url:"{% url "" %}?gestion="+gestion + "",
+                    method:"post",
+                    data:data,
+                    success:function (result) {
+                        alert(result);
+                    }
+                });
+                $("#modal-default").iziModal({zindex: 9999});
                 $("#modal-default").iziModal('open');
                 $(".style-switch-wrapper").removeClass("active");
             };

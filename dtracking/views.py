@@ -159,3 +159,31 @@ def guardar_elementos(request):
 
     data = json.dumps(jresponse)
     return HttpResponse(data, content_type='application/json')
+
+def get_log_gestion(request):
+    jresponse = {}
+    codigo_gestion = request.GET.get("gestion")
+    if not  codigo_gestion:
+        jresponse['mensaje'] = "Gestion no encontrada"
+        jresponse['code'] = 400
+    else:
+        try:
+            gestion = Gestion.objects.get(id=int(codigo_gestion))
+            if not gestion:
+                jresponse['mensaje'] = "Gestion no encontrada"
+                jresponse['code'] = 400
+            else:
+                logs=Log_Gestion.objects.filter(gestion=gestion)
+                jlogs=[]
+                for log in logs:
+                    jlog={"fecha":log.fecha, "estado":log.estado, "atiende":log.usuario}
+                    jlogs.append(jlog)
+                jresponse['mensaje'] = "OK"
+                jresponse['code'] = 200
+                jresponse['logs'] = jlogs
+        except:
+            jresponse['mensaje'] = "Gestion no encontrada"
+            jresponse['code'] = 400
+
+    data = json.dumps(jresponse)
+    return HttpResponse(data, content_type='application/json')
