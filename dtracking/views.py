@@ -124,12 +124,12 @@ def view_details(request):
 
 @csrf_exempt
 def asignar_gestion(request):
-    g = Gestion.objects.get(id=int(request.POST.get('id', '')))
+    g = Gestion.objects.get(id=int(request.POST.get('gestion', '')))
     g.user = User.objects.get(id=int(request.POST.get('user', '')))
     g.fecha_asignacion = request.POST.get('fecha', '')
     g.save()
-    g.log(request.user, datetime.now(), "ASIGNADO A PERITO VALUADOR")
-    return HttpResponse({'mensaje': "Asignacion Exitosa!", 'code': 200},
+    g.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
+    return HttpResponse(json.dumps({'mensaje': "Asignacion Exitosa!", 'code': 200}),
                         content_type="application/json")
 
 
@@ -173,8 +173,8 @@ def guardar_elementos(request):
 
 def get_log_gestion(request):
     jresponse = {}
-    codigo_gestion = request.GET.get("gestion")
-    if not  codigo_gestion:
+    codigo_gestion = request.GET.get("gestion", None)
+    if not codigo_gestion:
         jresponse['mensaje'] = "Gestion no encontrada"
         jresponse['code'] = 400
     else:
@@ -187,7 +187,8 @@ def get_log_gestion(request):
                 logs=Log_Gestion.objects.filter(gestion=gestion)
                 jlogs=[]
                 for log in logs:
-                    jlog={"fecha": str(log.fecha), "estado":log.estado, "atiende":log.usuario.username}
+                    jlog={"fecha": str(log.fecha), "estado":log.estado, "atiende":log.usuario.username,
+                          "anexo": log.anexo()}
                     jlogs.append(jlog)
 
                 jresponse['codigo_gestion'] = gestion.barra

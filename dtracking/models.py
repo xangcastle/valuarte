@@ -7,6 +7,16 @@ from jsonfield import JSONField
 from datetime import datetime
 import json
 
+def ifnull(var, val):
+  if var is None:
+    return val
+  return var
+
+def get_gestor(user):
+    try:
+        return Gestor.objects.get(user=user)
+    except:
+        return None
 
 CONECTIONS = (
 ('SMS + WIFI', 'SMS + WIFI'),
@@ -50,6 +60,9 @@ class Gestor(models.Model):
             o['tipos_gestion'].append(t.name)
         o['intervalo'] = self.intervalo
         return o
+
+    def full_name(self):
+        return "%s %s" % (ifnull(self.user.first_name, self.user.username), ifnull(self.user.last_name, ""))
 
     class Meta:
         verbose_name_plural = "Evaluadores"
@@ -179,7 +192,7 @@ class Gestion(models.Model):
     realizada = models.BooleanField(default=False)
     position = GeopositionField(null=True, blank=True)
     fecha = models.DateField(null=True, blank=True)
-    fecha_asignacion = models.DateField(null=True, blank=True)
+    fecha_asignacion = models.DateTimeField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
     observaciones = models.TextField(max_length=255, null=True, blank=True)
@@ -441,11 +454,11 @@ def cancelar_gestiones(gestiones, motivo=""):
     gestiones.update(realizada=True, observaciones=motivo)
 
 
-ESTADOS_LOG_GESTION=(('RECEPCIONADO','RECEPCIONADO'),
-                     ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'),
-                     ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'),
-                     ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'),
-                     ('TERMINADO', 'TERMINADO'))
+ESTADOS_LOG_GESTION=(('RECEPCIONADO','RECEPCIONADO'), #0 0
+                     ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'), #1 0
+                     ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'), #2 0
+                     ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'), #3 0
+                     ('TERMINADO', 'TERMINADO')) #4 0
 
 class Log_Gestion(models.Model):
     gestion = models.ForeignKey(Gestion)
@@ -454,4 +467,20 @@ class Log_Gestion(models.Model):
     estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION)
 
     def anexo(self):
-        return ''
+        if self.estado == ESTADOS_LOG_GESTION[0][0]:
+            return "Inicio del Proceso."
+        if self.estado == ESTADOS_LOG_GESTION[1][0]:
+            return "Asignado a %s. Visita Programada para el %s a las %s horas." % (get_gestor(self.gestion.user).full_name(),
+                                                                             "{}-{}-{}".format(str(self.gestion.fecha_asignacion.day).zfill(2),
+                                                                                             str(self.gestion.fecha_asignacion.month).zfill(2),
+                                                                                               self.gestion.fecha_asignacion.year),
+                                                                             "{:d}:{:02d}".format(
+                                                                                 self.gestion.fecha_asignacion.hour,
+                                                                                 self.gestion.fecha_asignacion.minute))
+        if self.estado == ESTADOS_LOG_GESTION[2][0]:
+            txt = "Inicio del Proceso."
+        if self.estado == ESTADOS_LOG_GESTION[3][0]:
+            txt = "Inicio del Proceso."
+        if self.estado == ESTADOS_LOG_GESTION[4][0]:
+            txt = "Inicio del Proceso."
+        return txt
