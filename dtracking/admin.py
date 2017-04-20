@@ -27,6 +27,7 @@ class detalle_tabular(GrappelliSortableHiddenMixin, admin.TabularInline):
 class tipoGestion_admin(entidad_admin):
     change_form_template = "dtracking/tipo_gestion.html"
     inlines = [detalle_tabular, ]
+    list_display = ('prefijo', 'name')
 
 
 class gestion_admin(entidad_admin):
