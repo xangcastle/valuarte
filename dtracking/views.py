@@ -123,6 +123,17 @@ def view_details(request):
 
 
 @csrf_exempt
+def asignar_gestion(request):
+    g = Gestion.objects.get(id=int(request.POST.get('id', '')))
+    g.user = User.objects.get(id=int(request.POST.get('user', '')))
+    g.fecha_asignacion = request.POST.get('fecha', '')
+    g.save()
+    g.log(request.user, datetime.now(), "ASIGNADO A PERITO VALUADOR")
+    return HttpResponse({'mensaje': "Asignacion Exitosa!", 'code': 200},
+                        content_type="application/json")
+
+
+@csrf_exempt
 def edicion_elementos(request):
     data = []
     if request.method == "POST":

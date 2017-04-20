@@ -1,0 +1,24 @@
+{% extends "admin/change_form.html" %}
+
+{% block breadcrumbs %}
+    <ul class="grp-horizontal-list">
+            <li><a href="/admin/">Inicio</a></li>
+            <li>Asignacion de {{ total }} Avaluos a Peritos Evaluadores</li>
+        </ul>
+{% endblock breadcrumbs %}
+
+{% block content %}
+    {% if total == 0 %}
+        <p>Nada para asignar.</p>
+    {% else %}
+        {% for obj in queryset %}
+            <form onsubmit="return asignar_gestion()">
+            {% csrf_token %}
+            <input type="hidden" name="gestion" value="{{obj.id}}"/>
+            <input readonly type="text" name="descripcion" style="min-width: 300px;" value="{{ obj.destinatario }} - {{ obj.barra }}"/>
+            {{ form }}
+            <input type="submit" name="asign" value="Asignar" />
+            </form>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

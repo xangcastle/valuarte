@@ -4,10 +4,12 @@ from grappelli.forms import GrappelliSortableHiddenMixin
 from django.contrib.admin import widgets
 from django import forms
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.conf.urls import url
 from .models import *
 from datetime import datetime
+from django.contrib.auth.models import User
 
 
 
@@ -33,12 +35,35 @@ class gestion_admin(entidad_admin):
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    fields = ('destinatario', ('referencia', 'barra'), 'direccion', 'telefono', ('departamento', 'municipio'),
-             ('barrio', 'zona'), ('tipo_gestion', 'user'))
+    fields = (('fecha', 'barra'), 'destinatario', ('identificacion', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
+             ('barrio', 'tipo_gestion'))
 
     readonly_fields = ('barra', 'user')
 
-    actions = ['action_cancelar',]
+    def save_model(self, request, obj, form, change):
+        super(gestion_admin, self).save_model(request, obj, form, change)
+        if not change:
+            obj.log(request.user, obj.fecha, "RECEPCIONADO")
+
+    actions = ['action_asignar', 'action_cancelar',]
+
+    class asignacion_form(forms.Form):
+        fecha_asignacion = forms.DateField(
+            widget=widgets.AdminDateWidget())
+        usuario = forms.ModelChoiceField(label="Perito Evaluador",
+                                         queryset=User.objects.filter(
+                                             id__in=Gestor.objects.all().values_list('user', flat=True)
+                                         ))
+
+
+    def action_asignar(self, request, queryset):
+        data = {
+        'queryset':queryset.filter(user__isnull=True),
+        'total':queryset.filter(user__isnull=True).count(),
+        'form':self.asignacion_form
+        }
+        return render_to_response('dtracking/asignacion.html', data)
+    action_asignar.short_description = "Asignar Avaluo a Perito Valuador"
 
     def action_cancelar(self, request, queryset):
         motivo = "Gestiones canceladas por %s el %s" % (

@@ -166,7 +166,8 @@ class Elemento(models.Model):
 class Gestion(models.Model):
     barra = models.CharField(max_length=65, null=True, verbose_name="codigo de gestion")
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    referencia = models.CharField(max_length=35, null=True, verbose_name="Referencia Bancaria")
+    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificacion")
+    referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia Bancaria")
     direccion = models.TextField(max_length=255, null=True)
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)
@@ -177,7 +178,7 @@ class Gestion(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
     realizada = models.BooleanField(default=False)
     position = GeopositionField(null=True, blank=True)
-    fecha = models.DateTimeField(null=True, blank=True)
+    fecha = models.DateField(null=True, blank=True)
     fecha_asignacion = models.DateField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
@@ -191,8 +192,18 @@ class Gestion(models.Model):
     def get_code(self):
         code = ""
         if self.fecha and self.tipo_gestion:
-            code = "%s-%s" % (str(self.fecha.year), self.tipo_gestion.prefijo)
+            numero = ""
+            try:
+                numero = type(self).objects.filter(tipo_gestion=self.tipo_gestion,
+                                                   fecha__year=self.fecha.year).count() + 1
+            except:
+                numero = 1
+            code = "%s-%s-%s" % (str(self.fecha.year), self.tipo_gestion.prefijo, str(numero).zfill(4))
         return code
+
+    def log(self, usuario, fecha, estado):
+        return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
+
 
     def __unicode__(self):
         return "%s - %s" % (self.tipo_gestion.name, self.destinatario)
@@ -439,5 +450,8 @@ ESTADOS_LOG_GESTION=(('RECEPCIONADO','RECEPCIONADO'),
 class Log_Gestion(models.Model):
     gestion = models.ForeignKey(Gestion)
     usuario = models.ForeignKey(User)
-    fecha = models.DateField()
+    fecha = models.DateTimeField()
     estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION)
+
+    def anexo(self):
+        return ''
