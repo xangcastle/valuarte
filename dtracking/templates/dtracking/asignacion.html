@@ -3,6 +3,7 @@
 {% block breadcrumbs %}
     <ul class="grp-horizontal-list">
             <li><a href="/admin/">Inicio</a></li>
+            <li><a href="/admin/dtracking/gestion/">Volver a Gestiones</a></li>
             <li>Asignacion de {{ total }} Avaluos a Peritos Evaluadores</li>
         </ul>
 {% endblock breadcrumbs %}
@@ -12,7 +13,7 @@
         <p>Nada para asignar.</p>
     {% else %}
         {% for obj in queryset %}
-            <form onsubmit="return asignar_gestion()">
+            <form onsubmit="return false;">
             {% csrf_token %}
             <input type="hidden" name="gestion" value="{{obj.id}}"/>
             <input readonly type="text" name="descripcion" style="min-width: 300px;" value="{{ obj.destinatario }} - {{ obj.barra }}"/>
@@ -21,4 +22,33 @@
             </form>
         {% endfor %}
     {% endif %}
+    <script>
+    (function($) {
+        var asignar = function(){
+            var fecha = $(this).parent().find('input[name="fecha_asignacion"]').val().split("/");
+            var hora = $(this).parent().find('input[name="hora_asignacion"]').val();
+            var data = {'gestion': $(this).parent().find('input[name="gestion"]').val(),
+                        'user': $(this).parent().find('select[name="usuario"]').val(),
+                        'fecha': fecha[2]+"-"+fecha[1]+"-"+fecha[0] +" "+hora+":00"};
+            var gestion = $(this).parent();
+            console.log(data);
+                $.ajax({
+                    url: "/dtracking/asignar_gestion/",
+                    method: "POST",
+                    data: data,
+                    success: function (result) {
+                        console.log(result);
+                        gestion.remove();
+                    },
+                    error: function (result) {
+                        alert("error");
+                        console.log(result);
+                    }
+                });
+            }
+        $(document).ready(function(){
+            $('input[name="asign"]').on('click', asignar);
+        });
+    })(grp.jQuery)
+    </script>
 {% endblock %}

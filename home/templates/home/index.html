@@ -1173,7 +1173,7 @@
                         if (result.code==200){
                             var tab = $('#logs').empty();
                             $.each(result.logs, function (i, o) {
-                                var rw = '<tr><td>'+o.fecha+'</td><td>'+o.estado+'</td><td>'+o.atiende+'</td><td></td></tr>';
+                                var rw = '<tr><td>'+o.fecha+'</td><td>'+o.estado+'</td><td>'+o.atiende+'</td><td>'+o.anexo+'</td></tr>';
                                 tab.append(rw);
                             });
                             $("#codigo_gestion").html(result.codigo_gestion);

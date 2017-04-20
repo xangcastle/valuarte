@@ -10,6 +10,9 @@ from django.conf.urls import url
 from .models import *
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.contrib.admin import site
+import adminactions.actions as actions
+actions.add_to_site(site)
 
 
 
@@ -43,13 +46,15 @@ class gestion_admin(entidad_admin):
     def save_model(self, request, obj, form, change):
         super(gestion_admin, self).save_model(request, obj, form, change)
         if not change:
-            obj.log(request.user, obj.fecha, "RECEPCIONADO")
+            obj.log(request.user, obj.fecha, ESTADOS_LOG_GESTION[0][0])
 
     actions = ['action_asignar', 'action_cancelar',]
 
     class asignacion_form(forms.Form):
-        fecha_asignacion = forms.DateField(
+        fecha_asignacion = forms.DateTimeField(
             widget=widgets.AdminDateWidget())
+        hora_asignacion = forms.DateTimeField(
+            widget=widgets.AdminTimeWidget())
         usuario = forms.ModelChoiceField(label="Perito Evaluador",
                                          queryset=User.objects.filter(
                                              id__in=Gestor.objects.all().values_list('user', flat=True)
