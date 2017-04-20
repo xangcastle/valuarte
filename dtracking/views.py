@@ -176,11 +176,15 @@ def get_log_gestion(request):
                 logs=Log_Gestion.objects.filter(gestion=gestion)
                 jlogs=[]
                 for log in logs:
-                    jlog={"fecha":log.fecha, "estado":log.estado, "atiende":log.usuario}
+                    jlog={"fecha": str(log.fecha), "estado":log.estado, "atiende":log.usuario.username}
                     jlogs.append(jlog)
+
+                jresponse['codigo_gestion'] = gestion.id
+                jresponse['cliente_gestion'] = gestion.destinatario
                 jresponse['mensaje'] = "OK"
                 jresponse['code'] = 200
                 jresponse['logs'] = jlogs
+
         except:
             jresponse['mensaje'] = "Gestion no encontrada"
             jresponse['code'] = 400

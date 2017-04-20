@@ -27,5 +27,6 @@ urlpatterns = [
         name='edicion_elementos'),
     url(r'^guardar_elementos/', guardar_elementos,
         name='guardar_elementos'),
-
+    url(r'^get_log_gestion/', get_log_gestion,
+        name='get_log_gestion'),
 ]

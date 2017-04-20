@@ -1098,12 +1098,12 @@
             <div style="padding: 20px">
                 <div class="row">
                     <div class="col-sm-3 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
-                    <div class="col-sm-9 col-xs-12"><strong>3527364</strong></div>
+                    <div class="col-sm-9 col-xs-12"><strong id="codigo_gestion">3527364</strong></div>
 
                 </div>
                 <div class="row">
                     <div class="col-sm-3 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
-                    <div class="col-sm-9 col-xs-12"><strong>José Williams Garcia</strong></div>
+                    <div class="col-sm-9 col-xs-12"><strong id="cliente_gestion">José Williams Garcia</strong></div>
                 </div>
                 <table class="table table-responsive table-bordered table-striped">
                 <thead>
@@ -1114,7 +1114,7 @@
                         <th>Anexo</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="logs">
                     <tr>
                         <td>24/01/2017</td>
                         <td>RECEPCIONADO</td>
@@ -1161,17 +1161,28 @@
 
     <script>
         function ver_gestion() {
-            var gestion=("#no_gestion").val();
+            var gestion=$("#no_gestion").val();
                 $.ajax({
-                    url:"{% url "" %}?gestion="+gestion + "",
-                    method:"post",
-                    data:data,
+                    url:"{% url "get_log_gestion" %}?gestion="+gestion + "",
+                    method:"get",
                     success:function (result) {
-                        alert(result);
+                        if (result.code==200){
+                            var tab = $('#logs').empty();
+                            $.each(result.logs, function (i, o) {
+                                var rw = '<tr><td>'+o.fecha+'</td><td>'+o.estado+'</td><td>'+o.atiende+'</td><td></td></tr>';
+                                tab.append(rw);
+                            });
+                            $("#codigo_gestion").html(result.codigo_gestion);
+                            $("#cliente_gestion").html(result.cliente_gestion);
+                            $("#modal-default").iziModal({zindex: 9999});
+                            $("#modal-default").iziModal('open');
+                        }else {
+                            alert(result.mensaje);
+                        }
+
                     }
                 });
-                $("#modal-default").iziModal({zindex: 9999});
-                $("#modal-default").iziModal('open');
+
                 $(".style-switch-wrapper").removeClass("active");
             };
 
