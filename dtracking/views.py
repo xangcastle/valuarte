@@ -9,9 +9,11 @@ from geoposition import Geoposition
 
 class barrios_huerfanos(TemplateView):
     template_name = "dtracking/barrios_huerfanos.html"
+
     def get_context_data(self, **kwargs):
         context = super(barrios_huerfanos, self).get_context_data(**kwargs)
-        context['barrios'] = Barrio.objects.all().exclude(id__in=ZonaBarrio.objects.all().values_list('barrio', flat=True))
+        context['barrios'] = Barrio.objects.all().exclude(
+            id__in=ZonaBarrio.objects.all().values_list('barrio', flat=True))
         return context
 
 
@@ -22,7 +24,7 @@ def movil_login(request):
     user = authenticate(username=username, password=password)
     if user:
         o = {'id': user.id, 'username': user.username,
-        'name': user.get_full_name()}
+             'name': user.get_full_name()}
         try:
             profile = Gestor.objects.get(user=user)
             o['perfil'] = profile.to_json()
@@ -47,7 +49,7 @@ def tipos_gestion(request):
 @csrf_exempt
 def gestiones_pendientes(request):
     gs = Gestion.objects.filter(user=int(request.POST.get('user', '')),
-    realizada=False)
+                                realizada=False)
     data = []
     for g in gs:
         data.append(g.to_json())
@@ -62,7 +64,7 @@ def cargar_gestion(request):
         g = Gestion.objects.get(id=int(request.POST.get('gestion', '')))
         g.fecha = request.POST.get('fecha', '')
         g.position = Geoposition(request.POST.get('latitude', ''),
-        request.POST.get('longitude', ''))
+                                 request.POST.get('longitude', ''))
         g.json = request.POST.get('json', '')
         g.realizada = True
         g.save()
@@ -92,9 +94,9 @@ def seguimiento_gps(request):
     p = Position(
         user=User.objects.get(id=int(request.POST.get('user', ''))),
         position=Geoposition(request.POST.get('latitude', ''),
-            request.POST.get('longitude', '')),
+                             request.POST.get('longitude', '')),
         fecha=request.POST.get('fecha', None)
-        )
+    )
     p.save()
     data.append({'mensaje': "posicion registrada con exito"})
     data = json.dumps(data)
@@ -132,4 +134,56 @@ def edicion_elementos(request):
             for e in elms:
                 data.append(e.to_json())
     data = json.dumps(data)
+    return HttpResponse(data, content_type='application/json')
+
+
+@csrf_exempt
+def guardar_elementos(request):
+    jresponse = {}
+    elementos = request.POST.getlist('elemento')
+    id_tipo = request.POST.get('id_tipo')
+
+    detalle = DetalleGestion.objects.filter(id=id_tipo).first()
+    if not detalle:
+        jresponse['mensaje'] = "Detalle no encontrado"
+        jresponse['code'] = 400
+    else:
+
+        Elemento.objects.filter(combo=detalle).delete()
+        for elemento in elementos:
+            if not elemento == "":
+                Elemento.objects.get_or_create(combo=detalle, valor=elemento)
+
+        jresponse['mensaje'] = "Registro exitoso!"
+        jresponse['code'] = 200
+
+    data = json.dumps(jresponse)
+    return HttpResponse(data, content_type='application/json')
+
+def get_log_gestion(request):
+    jresponse = {}
+    codigo_gestion = request.GET.get("gestion")
+    if not  codigo_gestion:
+        jresponse['mensaje'] = "Gestion no encontrada"
+        jresponse['code'] = 400
+    else:
+        try:
+            gestion = Gestion.objects.get(id=int(codigo_gestion))
+            if not gestion:
+                jresponse['mensaje'] = "Gestion no encontrada"
+                jresponse['code'] = 400
+            else:
+                logs=Log_Gestion.objects.filter(gestion=gestion)
+                jlogs=[]
+                for log in logs:
+                    jlog={"fecha":log.fecha, "estado":log.estado, "atiende":log.usuario}
+                    jlogs.append(jlog)
+                jresponse['mensaje'] = "OK"
+                jresponse['code'] = 200
+                jresponse['logs'] = jlogs
+        except:
+            jresponse['mensaje'] = "Gestion no encontrada"
+            jresponse['code'] = 400
+
+    data = json.dumps(jresponse)
     return HttpResponse(data, content_type='application/json')

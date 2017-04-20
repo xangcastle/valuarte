@@ -11,21 +11,30 @@
  class="iziModal">
 <div class="iziModal-content" >
     <div style="padding: 20px;">
-        <table class="table table-responsive table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Elementos</th>
-                <th>
-                    {% if perms.dtracking.can_add_elemento %}
-                    <a class="add-another" title="Anadir Elementos"></a>
-                    {% endif %}
-                </th>
-            </tr>
-        </thead>
-        <tbody id="elementos">
+    <input type="hidden" name="id_tipo" id="id_tipo">
+        <table class="table table-responsive table-bordered table-striped" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>
+                        Elementos
+                        {% if perms.dtracking.can_add_elemento %}
+                            <a class="add-another" style="top: 0px !important;" title="Anadir Elementos" onclick="agregar_elemento()"></a>
+                        {% endif %}
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="elementos">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        <footer class="grp-module grp-submit-row ">
+            <ul>
+                <li><input value="Grabar" class="grp-button guardarelemento" name="_continue" type="submit" onclick="guardar_elementos()"></li>
+                {% if perms.dtracking.can_add_elemento %}
+                <li><input value="Añadir otro" class="grp-button agregarnuevo" name="_addanother" id="_addanother" type="submit" onclick="agregar_elemento()"></li>
+                {% endif %}
+            </ul>
+        </footer>
     </div>
 
 </div>
@@ -40,6 +49,7 @@
 $(document).ready(function() {
 
     var editar_elementos = function () {
+        $("#id_tipo").val($(this).data('id'));
         $.ajax({url: '/dtracking/edicion_elementos/',
             type: 'GET',
             dataType: "json",
@@ -47,7 +57,7 @@ $(document).ready(function() {
             success : function(result){
                 var tab = $('#elementos').empty();
                 $.each(result, function (i, o) {
-                    var rw = '<tr><td>'+o.valor+'</td><td><a class="add-another" title="Anadir Elementos"></a></td></tr>';
+                    var rw = '<tr><td><input class="vTextField" style="width: 85%; height: 28px; margin-top: 0 !important;" type="text" name="elemento" value="'+o.valor+'"></input><a  class="grp-button grp-delete-link" onclick="borrar_elemento(this)">Borrar</a></td></tr>';
                     tab.append(rw);
                 });
             }
@@ -65,7 +75,29 @@ $(document).ready(function() {
           '" title="Editar Elementos"></a>');
     }
     });
-    $('.tipo').on('click', '.elementos', editar_elementos);
+    $('.tipo').on('click', '.elementos', editar_elementos)
 });
+function agregar_elemento() {
+    var tab = $('#elementos')
+    var rw = '<tr><td><input class="vTextField" style="width: 85%; height: 28px; margin-top: 0 !important;" type="text" name="elemento" value=""></input><a  class="grp-button grp-delete-link" onclick="borrar_elemento(this)">Borrar</a></td></tr>';
+                    tab.append(rw);
+    return false;
+}
+function borrar_elemento(tag) {
+    var tr=$(tag).closest('tr');
+    tr.remove();
+}
+function  guardar_elementos() {
+    var data=$('.iziModal-content :input').serialize();
+    $.ajax({
+        url:"{% url "guardar_elementos" %}",
+        method:"post",
+        data:data,
+        success:function (response) {
+            alert(response.mensaje);
+        }
+    });
+    return false;
+}
 </script>
 {% endblock content %}

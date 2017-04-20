@@ -428,3 +428,16 @@ def cancelar_gestiones(gestiones, motivo=""):
         ("%s gestiones eliminadas" % gs.count()))
         send_sms(texto, gs[0].numero_gestor())
     gestiones.update(realizada=True, observaciones=motivo)
+
+
+ESTADOS_LOG_GESTION=(('RECEPCIONADO','RECEPCIONADO'),
+                     ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'),
+                     ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'),
+                     ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'),
+                     ('TERMINADO', 'TERMINADO'))
+
+class Log_Gestion(models.Model):
+    gestion = models.ForeignKey(Gestion)
+    usuario = models.ForeignKey(User)
+    fecha = models.DateField()
+    estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION)

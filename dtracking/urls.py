@@ -25,4 +25,7 @@ urlpatterns = [
         name='view_details'),
     url(r'^edicion_elementos/', edicion_elementos,
         name='edicion_elementos'),
+    url(r'^guardar_elementos/', guardar_elementos,
+        name='guardar_elementos'),
+
 ]
