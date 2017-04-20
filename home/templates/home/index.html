@@ -1105,12 +1105,16 @@
                     <div class="col-sm-3 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
                     <div class="col-sm-9 col-xs-12"><strong id="cliente_gestion">José Williams Garcia</strong></div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-3 col-xs-12"><h4 style="margin-top: 0px;">Tipo de Avaluo:</h4></div>
+                    <div class="col-sm-9 col-xs-12"><strong id="tipo_gestion">Avaluo de Automovil</strong></div>
+                </div>
                 <table class="table table-responsive table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Fecha</th>
                         <th>Estado</th>
-                        <th>Atiende</th>
+                        <th>Ejecutivo</th>
                         <th>Anexo</th>
                     </tr>
                 </thead>
@@ -1174,6 +1178,7 @@
                             });
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);
+                            $("#tipo_gestion").html(result.tipo_gestion);
                             $("#modal-default").iziModal({zindex: 9999});
                             $("#modal-default").iziModal('open');
                         }else {

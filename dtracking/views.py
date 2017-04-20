@@ -192,6 +192,7 @@ def get_log_gestion(request):
 
                 jresponse['codigo_gestion'] = gestion.barra
                 jresponse['cliente_gestion'] = gestion.destinatario
+                jresponse['tipo_gestion'] = gestion.tipo_gestion.name
                 jresponse['mensaje'] = "OK"
                 jresponse['code'] = 200
                 jresponse['logs'] = jlogs
