@@ -29,4 +29,6 @@ urlpatterns = [
         name='guardar_elementos'),
     url(r'^get_log_gestion/', get_log_gestion,
         name='get_log_gestion'),
+    url(r'^asignar_gestion/', asignar_gestion,
+        name='asignar_gestion')
 ]
