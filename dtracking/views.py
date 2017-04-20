@@ -190,7 +190,7 @@ def get_log_gestion(request):
                     jlog={"fecha": str(log.fecha), "estado":log.estado, "atiende":log.usuario.username}
                     jlogs.append(jlog)
 
-                jresponse['codigo_gestion'] = gestion.id
+                jresponse['codigo_gestion'] = gestion.barra
                 jresponse['cliente_gestion'] = gestion.destinatario
                 jresponse['mensaje'] = "OK"
                 jresponse['code'] = 200
