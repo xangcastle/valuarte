@@ -33,8 +33,10 @@ class gestion_admin(entidad_admin):
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    fields = (('destinatario', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
-             ('barrio', 'zona'))
+    fields = ('destinatario', ('referencia', 'barra'), 'direccion', 'telefono', ('departamento', 'municipio'),
+             ('barrio', 'zona'), ('tipo_gestion', 'user'))
+
+    readonly_fields = ('barra', 'user')
 
     actions = ['action_cancelar',]
 

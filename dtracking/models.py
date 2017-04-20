@@ -164,7 +164,7 @@ class Elemento(models.Model):
 
 
 class Gestion(models.Model):
-    barra = models.CharField(max_length=65, null=True)
+    barra = models.CharField(max_length=65, null=True, verbose_name="codigo de gestion")
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
     referencia = models.CharField(max_length=35, null=True, verbose_name="Referencia Bancaria")
     direccion = models.TextField(max_length=255, null=True)
@@ -182,6 +182,17 @@ class Gestion(models.Model):
     fecha_vence = models.DateField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
     observaciones = models.TextField(max_length=255, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.barra:
+            self.barra = self.get_code()
+        super(Gestion, self).save()
+
+    def get_code(self):
+        code = ""
+        if self.fecha and self.tipo_gestion:
+            code = "%s-%s" % (str(self.fecha.year), self.tipo_gestion.prefijo)
+        return code
 
     def __unicode__(self):
         return "%s - %s" % (self.tipo_gestion.name, self.destinatario)
