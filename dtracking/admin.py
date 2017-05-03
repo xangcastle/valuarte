@@ -40,7 +40,7 @@ class gestion_admin(entidad_admin):
     'municipio__name', 'barrio__name', 'zona__name')
 
     fields = (('fecha', 'barra'), 'destinatario', ('identificacion', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
-             ('barrio', 'tipo_gestion'))
+             ('barrio', 'tipo_gestion'), 'json')
 
     readonly_fields = ('barra', 'user')
 

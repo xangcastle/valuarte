@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Examen Previo {{ obj.barra }}</title>
+    <link rel="stylesheet" href="/static/dtracking/css/bootstrap.css" type="text/css">
+</head>
+<body>
+<table class="table table-bordered table-striped table-hover table-responsive">
+    <thead>
+    <tr>
+        <th>Variable</th>
+        <th>Valor</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in obj.variables %}
+    <tr>
+        <td>{{ v.titulo }}</td>
+        <td>{{ v.value }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

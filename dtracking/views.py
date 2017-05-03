@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from django.contrib.auth import authenticate
 from geoposition import Geoposition
+from django.shortcuts import render
 
 
 class barrios_huerfanos(TemplateView):
@@ -68,6 +69,7 @@ def cargar_gestion(request):
         g.json = request.POST.get('json', '')
         g.realizada = True
         g.save()
+        g.log(g.user, g.fecha, ESTADOS_LOG_GESTION[2][0])
         obj = g.to_json()
         obj['mensaje'] = "gestion subida con exito"
         data = [obj, ]
@@ -204,3 +206,8 @@ def get_log_gestion(request):
 
     data = json.dumps(jresponse)
     return HttpResponse(data, content_type='application/json')
+
+@csrf_exempt
+def examen_previo(request):
+    data = {'obj': Gestion.objects.get(id=int(request.GET.get('gestion', '')))}
+    return render(request, "dtracking/examen_previo.html", data)

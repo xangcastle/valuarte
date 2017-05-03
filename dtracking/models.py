@@ -255,7 +255,7 @@ class Gestion(models.Model):
             for a in self.media():
                 o['media'].append(a.to_json())
         if self.json:
-            o['data'] = self.json
+            o['data'] = json.loads(str(self.json).replace("'", "\""))
         return o
 
     def numero_gestor(self):
@@ -263,12 +263,22 @@ class Gestion(models.Model):
 
     def _realizada(self):
         if self.realizada:
-            return '<a data-id="%s" class="detalle">Ver&nbsp;<img src="/static/admin/img/icon-yes.svg" alt="True"></a>' \
+            return '<a class="ver-examen" data-des="/dtracking/examen_previo/?gestion=%s" class="detalle">Ver&nbsp;<img src="/static/admin/img/icon-yes.svg" alt="True"></a>' \
             % self.id
         else:
             return '<img src="/static/admin/img/icon-no.svg" alt="False">'
     _realizada.allow_tags = True
     _realizada.short_description = "Realizada"
+
+    def variables(self):
+        variables = []
+        o = json.loads(str(self.json).replace("'", "\""))
+        for a, k in o.items():
+            v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
+            obj = v.to_json()
+            obj['value'] = k
+            variables.append(obj)
+        return variables
 
     class Meta:
         verbose_name_plural = "gestiones"
@@ -479,7 +489,7 @@ class Log_Gestion(models.Model):
                                                                                  self.gestion.fecha_asignacion.hour,
                                                                                  self.gestion.fecha_asignacion.minute))
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
-            txt = "Inicio del Proceso."
+            txt = "Levantamiento fisico realizado."
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
             txt = "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[4][0]:
