@@ -275,10 +275,7 @@ class Gestion(models.Model):
         for a, k in o.items():
             v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
             obj = v.to_json()
-            if v.tipo in ['combobox', 'radio']:
-                obj['value'] = Elemento.objects.get(id=k).valor
-            else:
-                obj['value'] = k
+            obj['value'] = k
             variables.append(obj)
         return variables
 
