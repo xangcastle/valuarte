@@ -3,3 +3,17 @@
 {% block content %}
 {{ block.super }}
 {% endblock content %}
+
+{% block content %}
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function () {
+                var examen_previo = function(){
+                window.open($(this).data('des'), "ExamenPrevio", "width=900, height=900,  status=no, scrollbars=no, toolbars=no, menubar=no, location=no");
+            }
+            $('.ver-examen').on('click', examen_previo);
+            });
+        })(grp.jQuery)
+    </script>
+{{ block.super }}
+{% endblock content %}

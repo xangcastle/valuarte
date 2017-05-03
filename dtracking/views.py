@@ -209,5 +209,5 @@ def get_log_gestion(request):
 
 @csrf_exempt
 def examen_previo(request):
-    data = {'obj': Gestion.objects.get(id=int(request.POST.get('gestion', '')))}
+    data = {'obj': Gestion.objects.get(id=int(request.GET.get('gestion', '')))}
     return render(request, "dtracking/examen_previo.html", data)

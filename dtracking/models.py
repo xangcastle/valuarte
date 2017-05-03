@@ -262,7 +262,7 @@ class Gestion(models.Model):
 
     def _realizada(self):
         if self.realizada:
-            return '<a data-id="%s" class="detalle">Ver&nbsp;<img src="/static/admin/img/icon-yes.svg" alt="True"></a>' \
+            return '<a class="ver-examen" data-des="/dtracking/examen_previo/?gestion=%s" class="detalle">Ver&nbsp;<img src="/static/admin/img/icon-yes.svg" alt="True"></a>' \
             % self.id
         else:
             return '<img src="/static/admin/img/icon-no.svg" alt="False">'
