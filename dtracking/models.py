@@ -254,7 +254,7 @@ class Gestion(models.Model):
             for a in self.media():
                 o['media'].append(a.to_json())
         if self.json:
-            o['data'] = self.json
+            o['data'] = json.loads(str(self.json).replace("'", "\""))
         return o
 
     def numero_gestor(self):
@@ -268,6 +268,16 @@ class Gestion(models.Model):
             return '<img src="/static/admin/img/icon-no.svg" alt="False">'
     _realizada.allow_tags = True
     _realizada.short_description = "Realizada"
+
+    def variables(self):
+        variables = []
+        o = json.loads(str(self.json).replace("'", "\""))
+        for a, k in o.items():
+            v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
+            obj = v.to_json()
+            obj['value'] = k
+            variables.append(obj)
+        return variables
 
     class Meta:
         verbose_name_plural = "gestiones"
