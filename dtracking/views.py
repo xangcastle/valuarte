@@ -72,8 +72,8 @@ def cargar_gestion(request):
         obj['mensaje'] = "gestion subida con exito"
         data = [obj, ]
         data = json.dumps(data)
-    except:
-        data.append({'error': "esta gestion no existe"})
+    except Exception, e:
+        data.append({'error': "esta gestion no existe" + e.message})
     return HttpResponse(data, content_type='application/json')
 
 
