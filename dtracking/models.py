@@ -478,7 +478,7 @@ class Log_Gestion(models.Model):
                                                                                  self.gestion.fecha_asignacion.hour,
                                                                                  self.gestion.fecha_asignacion.minute))
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
-            txt = "Levantamiento físico realizado."
+            txt = "Levantamiento fisico realizado."
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
             txt = "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[4][0]:
