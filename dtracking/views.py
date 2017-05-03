@@ -68,6 +68,7 @@ def cargar_gestion(request):
         g.json = request.POST.get('json', '')
         g.realizada = True
         g.save()
+        g.log(g.user, g.fecha, ESTADOS_LOG_GESTION[2][0])
         obj = g.to_json()
         obj['mensaje'] = "gestion subida con exito"
         data = [obj, ]
