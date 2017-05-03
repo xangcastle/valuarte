@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^get_log_gestion/', get_log_gestion,
         name='get_log_gestion'),
     url(r'^asignar_gestion/', asignar_gestion,
-        name='asignar_gestion')
+        name='asignar_gestion'),
     url(r'^examen_previo/', examen_previo,
         name='examen_previo')
 ]
