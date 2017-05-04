@@ -127,6 +127,7 @@ TIPOS = (
 ('combobox', 'combobox'),
 ('checkbox', 'checkbox'),
 ('foto', 'foto'),
+('multi foto', 'multi foto'),
 ('firma', 'firma'),
 )
 
