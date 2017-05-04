@@ -33,7 +33,7 @@ class tipoGestion_admin(entidad_admin):
 class gestion_admin(entidad_admin):
     change_list_template = "dtracking/gestiones.html"
     date_hierarchy = "fecha"
-    list_display = ('destinatario', 'direccion', 'departamento', 'municipio',
+    list_display = ('barra', 'destinatario', 'direccion', 'departamento', 'municipio',
     'barrio', 'tipo_gestion', 'user', '_realizada')
     list_filter = ('tipo_gestion', 'departamento', 'municipio', 'zona', 'user', 'realizada')
     search_fields = ('destinatario', 'departamento__name',

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from base.models import Entidad
 from django.contrib.auth.models import User
@@ -5,6 +6,7 @@ from django.db import models
 from geoposition.fields import GeopositionField
 from jsonfield import JSONField
 from datetime import datetime
+from django.utils.safestring import mark_safe
 import json
 
 def ifnull(var, val):
@@ -32,8 +34,8 @@ class Gestor(models.Model):
     default='WIFI', null=True, blank=True)
     sms_gateway = models.CharField(max_length=20, null=True)
     foto = models.ImageField(null=True)
-    zonas = models.ManyToManyField('Zona', null=True, blank=True)
-    tipo_gestion = models.ManyToManyField('TipoGestion', null=True, blank=True)
+    zonas = models.ManyToManyField('Zona', blank=True)
+    tipo_gestion = models.ManyToManyField('TipoGestion', blank=True)
     intervalo = models.PositiveIntegerField(null=True, verbose_name="intervalo de seguimiento",
     help_text="esto determina que tan seguido el gestor reportara su posicion gps en segundos")
 
@@ -65,7 +67,16 @@ class Gestor(models.Model):
         return "%s %s" % (ifnull(self.user.first_name, self.user.username), ifnull(self.user.last_name, ""))
 
     class Meta:
-        verbose_name_plural = "Evaluadores"
+        verbose_name_plural = "Peritos de Campo"
+        verbose_name = "Perito"
+
+
+class Perito(models.Model):
+    user = models.OneToOneField(User, null=True)
+
+    class Meta:
+        verbose_name_plural = "Peritos Valuadores"
+        verbose_name = "Perito"
 
 
 class Departamento(Entidad):
@@ -106,7 +117,7 @@ class TipoGestion(Entidad):
         return obj
 
     class Meta:
-        verbose_name_plural = "tipos de gestiones"
+        verbose_name_plural = "tipos de avalúos"
 
 
 TIPOS = (
@@ -177,7 +188,7 @@ class Elemento(models.Model):
 
 
 class Gestion(models.Model):
-    barra = models.CharField(max_length=65, null=True, verbose_name="codigo de gestion")
+    barra = models.CharField(max_length=65, null=True, verbose_name="codigo de avalúo")
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
     identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificacion")
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia Bancaria")
@@ -188,7 +199,7 @@ class Gestion(models.Model):
     barrio = models.ForeignKey(Barrio, null=True)
     zona = models.ForeignKey(Zona, null=True)
     tipo_gestion = models.ForeignKey(TipoGestion)
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True, verbose_name="perito valuador")
     realizada = models.BooleanField(default=False)
     position = GeopositionField(null=True, blank=True)
     fecha = models.DateField(null=True, blank=True)
@@ -280,7 +291,7 @@ class Gestion(models.Model):
         return variables
 
     class Meta:
-        verbose_name_plural = "gestiones"
+        verbose_name_plural = "Avalúos"
 
 
 class Archivo(models.Model):
@@ -477,10 +488,11 @@ class Log_Gestion(models.Model):
     estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION)
 
     def anexo(self):
+        txt = ""
         if self.estado == ESTADOS_LOG_GESTION[0][0]:
-            return "Inicio del Proceso."
+            txt = "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[1][0]:
-            return "Asignado a %s. Visita Programada para el %s a las %s horas." % (get_gestor(self.gestion.user).full_name(),
+            txt = "Asignado a %s. Visita Programada para el %s a las %s horas." % (get_gestor(self.gestion.user).full_name(),
                                                                              "{}-{}-{}".format(str(self.gestion.fecha_asignacion.day).zfill(2),
                                                                                              str(self.gestion.fecha_asignacion.month).zfill(2),
                                                                                                self.gestion.fecha_asignacion.year),
@@ -488,9 +500,10 @@ class Log_Gestion(models.Model):
                                                                                  self.gestion.fecha_asignacion.hour,
                                                                                  self.gestion.fecha_asignacion.minute))
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
-            txt = "Levantamiento fisico realizado."
+            txt = 'Levantamiento fisico realizado. <a href="/dtracking/examen_previo/?gestion=%s">Ver Examen Previo</a>' % self.gestion.id
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
             txt = "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[4][0]:
             txt = "Inicio del Proceso."
-        return txt
+        return mark_safe(txt)
+
