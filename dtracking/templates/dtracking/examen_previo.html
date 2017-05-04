@@ -23,7 +23,17 @@
     </tbody>
 </table>
 {% for i in obj.media %}
-    <img src="{{ i.archivo.url }}" class="img-rounded" alt="Cinque Terre" width="304" height="236">
+     <div class="row">
+        <div class="col-md-4">
+            <div class="thumbnail">
+              <a href="{{ i.archivo.url }}">
+                <img src="{{ i.archivo.url }}" alt="{{ i.nombre }}" style="width:100%">
+                <div class="caption">
+                  <p>{{ i.nombre }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
 {% endfor %}
 </body>
 </html>
