@@ -308,7 +308,7 @@ class Archivo(models.Model):
         'archivo': self.archivo.url}
 
     def nombre(self):
-        return DetalleGestion.objects.get(gestion=self.gestion, nombreVariable=self.variable).titulo
+        return DetalleGestion.objects.get(tipo_gestion=self.gestion.tipo_gestion, nombreVariable=self.variable).titulo
 
     class Meta:
         verbose_name_plural = "Archivos Media"
