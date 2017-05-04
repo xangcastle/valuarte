@@ -200,14 +200,20 @@ class Gestion(models.Model):
     barrio = models.ForeignKey(Barrio, null=True)
     zona = models.ForeignKey(Zona, null=True)
     tipo_gestion = models.ForeignKey(TipoGestion)
-    user = models.ForeignKey(User, null=True, blank=True, verbose_name="perito valuador")
+    user = models.ForeignKey(User, null=True, blank=True, related_name="perito_de_campo",
+                             verbose_name="perito de campo")
+    valuador = models.ForeignKey(User, null=True, blank=True, related_name="perito_valuador",
+                             verbose_name="perito valuador")
     realizada = models.BooleanField(default=False)
     position = GeopositionField(null=True, blank=True)
     fecha = models.DateField(null=True, blank=True)
     fecha_asignacion = models.DateTimeField(null=True, blank=True)
+    fecha_asignacion_valuador = models.DateTimeField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
     observaciones = models.TextField(max_length=255, null=True, blank=True)
+    status_gestion = models.CharField(max_length=100, null=True, blank=True)
+
 
     def save(self, *args, **kwargs):
         if not self.barra:
@@ -227,6 +233,8 @@ class Gestion(models.Model):
         return code
 
     def log(self, usuario, fecha, estado):
+        self.status_gestion = estado
+        self.save()
         return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
 

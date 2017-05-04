@@ -40,9 +40,9 @@ class gestion_admin(entidad_admin):
     'municipio__name', 'barrio__name', 'zona__name')
 
     fields = (('fecha', 'barra'), 'destinatario', ('identificacion', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
-             ('barrio', 'tipo_gestion'), 'json')
+             ('barrio', 'tipo_gestion'), 'json', 'status_gestion')
 
-    readonly_fields = ('barra', 'user')
+    readonly_fields = ('barra', 'user', 'status_gestion')
 
     def save_model(self, request, obj, form, change):
         super(gestion_admin, self).save_model(request, obj, form, change)
