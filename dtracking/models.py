@@ -71,14 +71,6 @@ class Gestor(models.Model):
         verbose_name = "Perito"
 
 
-class Perito(models.Model):
-    user = models.OneToOneField(User, null=True)
-
-    class Meta:
-        verbose_name_plural = "Peritos Valuadores"
-        verbose_name = "Perito"
-
-
 class Departamento(Entidad):
     pass
 
