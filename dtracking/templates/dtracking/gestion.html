@@ -1,0 +1,38 @@
+{% extends "admin/change_form.html" %}
+
+
+{% block extrahead %}
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function () {
+               $('#id_municipio').empty();
+               $('#id_barrio').empty();
+               var cargar_municipios = function () {
+                   $.ajax('/dtracking/get_municipios/',
+                       {type: 'POST',
+                       data:{'departamento': $(this).val()},
+                       success: function (result) {
+                           $('#id_municipio').empty();
+                           $.each(result, function (i, o) {
+                               $('#id_municipio').append("<option value="+o.id+">"+o.name+"</option>");
+                           });
+                       }});
+               }
+               $('#id_departamento').on('change', cargar_municipios);
+
+               var cargar_barrios = function () {
+                   $.ajax('/dtracking/get_barrios/',
+                       {type: 'POST',
+                       data:{'municipio': $(this).val()},
+                       success: function (result) {
+                           $('#id_barrio').empty();
+                           $.each(result, function (i, o) {
+                               $('#id_barrio').append("<option value="+o.id+">"+o.name+"</option>");
+                           });
+                       }});
+               }
+               $('#id_municipio').on('change', cargar_barrios);
+            });
+        })(grp.jQuery)
+    </script>
+{% endblock %}

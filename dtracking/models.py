@@ -78,9 +78,21 @@ class Departamento(Entidad):
 class Municipio(Entidad):
     departamento = models.ForeignKey(Departamento)
 
+    def to_json(self):
+        return {'id': self.id,
+                'code': self.code,
+                'name': self.name,
+                'departamento': self.departamento.id}
+
 
 class Barrio(Entidad):
     municipio = models.ForeignKey(Municipio)
+
+    def to_json(self):
+        return {'id': self.id,
+                'code': self.code,
+                'name': self.name,
+                'municipio': self.municipio.id}
 
     def referencias(self):
         return Gestion.objects.filter(barrio=self).values_list('direccion', flat=True)[:5]

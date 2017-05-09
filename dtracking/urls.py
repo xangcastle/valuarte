@@ -32,5 +32,9 @@ urlpatterns = [
     url(r'^asignar_gestion/', asignar_gestion,
         name='asignar_gestion'),
     url(r'^examen_previo/', examen_previo,
-        name='examen_previo')
+        name='examen_previo'),
+    url(r'^get_municipios/', get_municipios,
+        name='get_municipios'),
+    url(r'^get_barrios/', get_barrios,
+        name='get_barrios')
 ]
