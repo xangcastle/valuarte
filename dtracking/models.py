@@ -295,7 +295,9 @@ class Gestion(models.Model):
 
     def variables(self):
         variables = []
-        o = json.loads(str(self.json).replace("'", "\""))
+        o = json.loads(
+
+        )
         for a, k in o.items():
             v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
             obj = v.to_json()

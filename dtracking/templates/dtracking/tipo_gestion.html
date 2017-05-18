@@ -94,7 +94,7 @@ function  guardar_elementos() {
         method:"post",
         data:data,
         success:function (response) {
-            alert(response.mensaje);
+            $("#modal-default").iziModal('close');
         }
     });
     return false;
