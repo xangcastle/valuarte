@@ -173,6 +173,7 @@ def guardar_elementos(request):
     data = json.dumps(jresponse)
     return HttpResponse(data, content_type='application/json')
 
+
 def get_log_gestion(request):
     jresponse = {}
     codigo_gestion = request.GET.get("gestion", None)
@@ -186,11 +187,11 @@ def get_log_gestion(request):
                 jresponse['mensaje'] = "Gestion no encontrada"
                 jresponse['code'] = 400
             else:
-                logs=Log_Gestion.objects.filter(gestion=gestion)
-                jlogs=[]
+                logs = Log_Gestion.objects.filter(gestion=gestion)
+                jlogs = []
                 for log in logs:
-                    jlog={"fecha": str(log.fecha), "estado":log.estado, "atiende":log.usuario.username,
-                          "anexo": log.anexo()}
+                    jlog = {"fecha": str(log.fecha), "estado": log.estado, "atiende": log.usuario.username,
+                            "anexo": log.anexo()}
                     jlogs.append(jlog)
 
                 jresponse['codigo_gestion'] = gestion.barra
@@ -206,6 +207,7 @@ def get_log_gestion(request):
 
     data = json.dumps(jresponse)
     return HttpResponse(data, content_type='application/json')
+
 
 @csrf_exempt
 def examen_previo(request):
