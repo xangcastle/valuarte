@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="149f5cbc-495f-44b3-acc6-7c15d2887275" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/valuarte.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -693,7 +688,14 @@
       <option name="project" value="LOCAL" />
       <updated>1495139909531</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="se quita carpeta de configuracion de pycharm">
+      <created>1497038782229</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1497038782229</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -836,7 +838,8 @@
     <MESSAGE value="examen previo" />
     <MESSAGE value="dashboard" />
     <MESSAGE value="filtro de municipios y barrios" />
-    <option name="LAST_COMMIT_MESSAGE" value="filtro de municipios y barrios" />
+    <MESSAGE value="se quita carpeta de configuracion de pycharm" />
+    <option name="LAST_COMMIT_MESSAGE" value="se quita carpeta de configuracion de pycharm" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
