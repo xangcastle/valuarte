@@ -10,4 +10,4 @@ class Import_Export_admin(ImportExportModelAdmin):
     pass
 
 
-admin.site.register(nicaragua_import, ImportExportModelAdmin)
+#admin.site.register(nicaragua_import, ImportExportModelAdmin)

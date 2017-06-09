@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/static/dtracking/css/bootstrap.css" type="text/css">
 </head>
 <body>
+<div class="container">
+<div class="well">
 <table class="table table-bordered table-striped table-hover table-responsive">
     <thead>
     <tr>
@@ -22,5 +24,23 @@
     {% endfor %}
     </tbody>
 </table>
+{% for i in obj.media %}
+     <div class="row" style="
+    padding: 35px;
+">
+        <div class="col-md-4">
+            <div class="thumbnail">
+              <a href="{{ i.archivo.url }}">
+                <img src="{{ i.archivo.url }}" alt="{{ i.nombre }}" style="width:100%">
+                <div class="caption">
+                  <p>{{ i.nombre }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
+    </div>
+{% endfor %}
+</div>
+</div>
 </body>
 </html>

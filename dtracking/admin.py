@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from base.admin import entidad_admin
 from grappelli.forms import GrappelliSortableHiddenMixin
@@ -13,7 +14,6 @@ from django.contrib.auth.models import User
 from django.contrib.admin import site
 import adminactions.actions as actions
 actions.add_to_site(site)
-
 
 
 class detalle_tabular(GrappelliSortableHiddenMixin, admin.TabularInline):
@@ -32,35 +32,41 @@ class tipoGestion_admin(entidad_admin):
 
 class gestion_admin(entidad_admin):
     change_list_template = "dtracking/gestiones.html"
+    change_form_template = "dtracking/gestion.html"
     date_hierarchy = "fecha"
-    list_display = ('destinatario', 'direccion', 'departamento', 'municipio',
+    list_display = ('barra', 'destinatario', 'direccion', 'departamento', 'municipio',
     'barrio', 'tipo_gestion', 'user', '_realizada')
     list_filter = ('tipo_gestion', 'departamento', 'municipio', 'zona', 'user', 'realizada')
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
     fields = (('fecha', 'barra'), 'destinatario', ('identificacion', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
-             ('barrio', 'tipo_gestion'), 'json')
+             ('barrio', 'tipo_gestion'), 'json', 'status_gestion')
 
-    readonly_fields = ('barra', 'user')
+    readonly_fields = ('barra', 'user', 'status_gestion')
 
     def save_model(self, request, obj, form, change):
         super(gestion_admin, self).save_model(request, obj, form, change)
         if not change:
             obj.log(request.user, obj.fecha, ESTADOS_LOG_GESTION[0][0])
 
-    actions = ['action_asignar', 'action_cancelar',]
+    actions = ['action_asignar', 'action_perito', 'action_cancelar',]
 
     class asignacion_form(forms.Form):
         fecha_asignacion = forms.DateTimeField(
             widget=widgets.AdminDateWidget())
         hora_asignacion = forms.DateTimeField(
             widget=widgets.AdminTimeWidget())
-        usuario = forms.ModelChoiceField(label="Perito Evaluador",
+        usuario = forms.ModelChoiceField(label="Perito de Campo",
                                          queryset=User.objects.filter(
                                              id__in=Gestor.objects.all().values_list('user', flat=True)
                                          ))
 
+    class valuador_form(forms.Form):
+        usuario = forms.ModelChoiceField(label="Perito Evaluador",
+                                         queryset=User.objects.exclude(
+                                             id__in=Gestor.objects.all().values_list('user', flat=True)
+                                         ))
 
     def action_asignar(self, request, queryset):
         data = {
@@ -69,7 +75,16 @@ class gestion_admin(entidad_admin):
         'form':self.asignacion_form
         }
         return render_to_response('dtracking/asignacion.html', data)
-    action_asignar.short_description = "Asignar Avaluo a Perito Valuador"
+    action_asignar.short_description = "Asignar Avaluo a Perito de Campo"
+
+    def action_perito(self, request, queryset):
+        data = {
+        'queryset':queryset.filter(valuador__isnull=True),
+        'total':queryset.filter(valuador__isnull=True).count(),
+        'form':self.valuador_form
+        }
+        return render_to_response('dtracking/asignacion.html', data)
+    action_perito.short_description = "Asignar Preparación del Reporte Final"
 
     def action_cancelar(self, request, queryset):
         motivo = "Gestiones canceladas por %s el %s" % (
@@ -78,11 +93,6 @@ class gestion_admin(entidad_admin):
         cancelar_gestiones(queryset, motivo)
         self.message_user(request, motivo)
     action_cancelar.short_description = "Cancelar la ejecucion de gestiones seleccionadas"
-
-
-class elemento_admin(admin.ModelAdmin):
-    list_display = ('valor', 'combo')
-    list_filter = ('combo',)
 
 
 class barrio_admin(entidad_admin):
@@ -162,38 +172,10 @@ class import_admin(entidad_admin):
         return render_to_response('admin/base_action.html', data)
 
 
-class archivo_admin(admin.ModelAdmin):
-    list_display = ('gestion', 'variable', 'archivo')
-
-
-class seguimiento_admin(admin.ModelAdmin):
-    list_display = ('user', 'fecha')
-    list_filter = ('user',)
-    actions = ['action_view_on_map',]
-
-    def action_view_on_map(self, request, queryset):
-        puntos = []
-        for q in queryset:
-            puntos.append(q.to_json())
-        last = queryset.order_by('-fecha')[0]
-        data = {'queryset': puntos,
-        'init': {'latitude': last.position.latitude, 'longitude': last.position.longitude}}
-        return render_to_response('admin/view_on_map.html', data)
-
-
-class sms_admin(admin.ModelAdmin):
-    list_display = ('texto', 'enviado', 'user', 'fecha_envio')
-    list_filter = ('enviado', 'user')
-
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
 admin.site.register(Departamento, entidad_admin)
 admin.site.register(Municipio, entidad_admin)
 admin.site.register(Barrio, barrio_admin)
 admin.site.register(Zona, entidad_admin)
-admin.site.register(Elemento, elemento_admin)
 admin.site.register(Gestor, gestor_admin)
-admin.site.register(Import, import_admin)
-admin.site.register(Archivo)
-admin.site.register(SMS, sms_admin)
-admin.site.register(Position, seguimiento_admin)

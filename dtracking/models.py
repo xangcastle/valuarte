@@ -5,6 +5,7 @@ from django.db import models
 from geoposition.fields import GeopositionField
 from jsonfield import JSONField
 from datetime import datetime
+from django.utils.safestring import mark_safe
 import json
 
 def ifnull(var, val):

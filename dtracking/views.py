@@ -213,3 +213,17 @@ def get_log_gestion(request):
 def examen_previo(request):
     data = {'obj': Gestion.objects.get(id=int(request.GET.get('gestion', '')))}
     return render(request, "dtracking/examen_previo.html", data)
+
+
+@csrf_exempt
+def get_municipios(request):
+    municipios = Municipio.objects.filter(departamento=int(request.POST.get('departamento', None)))
+    data = json.dumps([x.to_json() for x in municipios])
+    return HttpResponse(data, content_type='application/json')
+
+
+@csrf_exempt
+def get_barrios(request):
+    barrios = Barrio.objects.filter(municipio=int(request.POST.get('municipio', None)))
+    data = json.dumps([x.to_json() for x in barrios])
+    return HttpResponse(data, content_type='application/json')
