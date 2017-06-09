@@ -25,6 +25,12 @@ CONECTIONS = (
 ('WIFI', 'WIFI'),
 )
 
+ESTADOS_LOG_GESTION=(('RECEPCIONADO','RECEPCIONADO'), #0 0
+                     ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'), #1 0
+                     ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'), #2 0
+                     ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'), #3 0
+                     ('TERMINADO', 'TERMINADO')) #4 0
+
 
 class Gestor(models.Model):
     user = models.OneToOneField(User)
@@ -198,6 +204,8 @@ class Gestion(models.Model):
     fecha_vence = models.DateField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
     observaciones = models.TextField(max_length=255, null=True, blank=True)
+    status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
+                                      default=ESTADOS_LOG_GESTION[0][0])
 
     def save(self, *args, **kwargs):
         if not self.barra:
@@ -466,12 +474,6 @@ def cancelar_gestiones(gestiones, motivo=""):
     gestiones.update(realizada=True, observaciones=motivo)
 
 
-ESTADOS_LOG_GESTION=(('RECEPCIONADO','RECEPCIONADO'), #0 0
-                     ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'), #1 0
-                     ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'), #2 0
-                     ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'), #3 0
-                     ('TERMINADO', 'TERMINADO')) #4 0
-
 class Log_Gestion(models.Model):
     gestion = models.ForeignKey(Gestion)
     usuario = models.ForeignKey(User)
@@ -496,3 +498,8 @@ class Log_Gestion(models.Model):
         if self.estado == ESTADOS_LOG_GESTION[4][0]:
             txt = "Inicio del Proceso."
         return txt
+
+    def save(self, *args, **kwargs):
+        self.gestion.status_gestion = self.estado
+        self.gestion.save()
+        super(Log_Gestion, self).save(*args, **kwargs)

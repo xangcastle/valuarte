@@ -27,11 +27,18 @@ class data_Node(template.Node):
 
         for s in ESTADOS_LOG_GESTION:
             p = gestiones.filter(status_gestion=s[0]).order_by('-fecha')
-            obj = {}
-            obj['status'] = s[0]
-            obj['total'] = p.count()
-            obj['tipos'] = por_tipo(p)
-            data.append(obj)
+            if p:
+                obj = {}
+                obj['status'] = s[0]
+                obj['total'] = p.count()
+                obj['tipos'] = por_tipo(p)
+                data.append(obj)
+            else:
+                obj = {}
+                obj['status'] = s[0]
+                obj['total'] = 0
+                obj['tipos'] = []
+                data.append(obj)
 
         context[self.varname] = data
         return ''
