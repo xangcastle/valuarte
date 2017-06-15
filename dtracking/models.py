@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+import sys
+
 from base.models import Entidad
 from django.contrib.auth.models import User
 from django.db import models
@@ -280,13 +283,19 @@ class Gestion(models.Model):
     _realizada.short_description = "Realizada"
 
     def variables(self):
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
         variables = []
-        o = json.loads(str(self.json).replace("'", "\""))
+        o = json.loads(str(smart_str(self.json)).replace("'", "\""))
         for a, k in o.items():
-            v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
-            obj = v.to_json()
-            obj['value'] = k
-            variables.append(obj)
+            try:
+                v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
+                obj = v.to_json()
+                obj['value'] = k
+                variables.append(obj)
+            except:
+                print "Oops!  That was no valid number.  Try again..."
+
         return variables
 
     class Meta:

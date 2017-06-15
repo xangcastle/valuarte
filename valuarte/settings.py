@@ -86,6 +86,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'ABC123#$',
         'HOST': 'localhost',
+        #'HOST': 'www.valuarte.com.ni',
         'PORT': '5432',
     },
 }
