@@ -10,6 +10,7 @@ from jsonfield import JSONField
 from datetime import datetime
 from django.utils.safestring import mark_safe
 import json
+from django.utils.encoding import smart_str
 
 def ifnull(var, val):
   if var is None:
