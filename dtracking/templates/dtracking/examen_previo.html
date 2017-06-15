@@ -19,7 +19,25 @@
     {% for v in obj.variables %}
     <tr>
         <td>{{ v.titulo }}</td>
-        <td>{{ v.value }}</td>
+        <td>
+          {% if v.tipo == "combobox" or v.tipo ==  "radio" %}
+          <div class="row" style="margin-left:5px">
+            {% for elemento in v.elementos %}
+              <div class="col-sm-1">
+                <div class="checkbox disabled">
+                  {% if elemento.selecionado %}
+                    <label><input type="checkbox" value="" disabled checked>{{ elemento.value }}</label>
+                  {% else %}
+                    <label><input type="checkbox" value="" disabled>{{ elemento.value }}</label>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          {% else %}
+            {{ v.value }}
+          {% endif %}
+        </td>
     </tr>
     {% endfor %}
     </tbody>

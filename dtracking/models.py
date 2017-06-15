@@ -300,9 +300,17 @@ class Gestion(models.Model):
                 obj = v.to_json()
 
                 if v.tipo == "combobox" or v.tipo ==  "radio":
-                    elemento = v.elementos().filter(id=int(k)).first()
-                    if elemento:
-                        obj['value'] = elemento.valor
+                    elementos = v.elementos()
+                    if elementos:
+                        obj_elementos = []
+                        for elemento in v.elementos():
+                            selecionado=False
+                            if elemento.id==int(k):
+                                obj['value'] = elemento.valor
+                                selecionado=True
+                            obj_elementos.append({'value': elemento.valor, 'selecionado': selecionado})
+
+                        obj['elementos']=obj_elementos
                     else:
                         obj['value'] = k
                 else:
