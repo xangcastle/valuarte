@@ -85,7 +85,9 @@ def cargar_media(request):
     variable = request.POST.get('variable', '')
     imagen = request.FILES['imagen']
     g.cargar_archivo(imagen, variable)
-    data = [g.to_json(), ]
+    obj = g.to_json()
+    obj['mensaje'] = "media subida con exito"
+    data = [obj, ]
     data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')
 

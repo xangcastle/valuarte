@@ -273,7 +273,11 @@ class Gestion(models.Model):
             for a in self.media():
                 o['media'].append(a.to_json())
         if self.json:
-            o['data'] = json.loads(str(self.json).replace("'", "\""))
+            try:
+                o['data'] = json.loads(str(smart_str(self.json)).replace("'", "\""))
+            except:
+                pass
+
         return o
 
     def numero_gestor(self):
