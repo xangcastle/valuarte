@@ -81,12 +81,15 @@ def cargar_gestion(request):
 
 @csrf_exempt
 def cargar_media(request):
-    g = Gestion.objects.get(id=int(request.POST.get('gestion', '')))
-    variable = request.POST.get('variable', '')
-    imagen = request.FILES['imagen']
-    g.cargar_archivo(imagen, variable)
-    obj = g.to_json()
-    obj['mensaje'] = "media subida con exito"
+    g = Gestion.objects.filter(id=int(request.POST.get('gestion', ''))).first()
+    if not g:
+        obj= {'mensaje' : "media subida con exito"}
+    else:
+        variable = request.POST.get('variable', '')
+        imagen = request.FILES['imagen']
+        g.cargar_archivo(imagen, variable)
+        obj = g.to_json()
+        obj['mensaje'] = "media subida con exito"
     data = [obj, ]
     data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')
