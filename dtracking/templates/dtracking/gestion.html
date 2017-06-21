@@ -5,46 +5,56 @@
     <script type="text/javascript">
         (function($) {
             $(document).ready(function () {
-               $('#id_municipio').empty();
-               $('#id_barrio').empty();
-               $('#id_uso_gestion').empty();
-               var cargar_municipios = function () {
-                   $.ajax('/dtracking/get_municipios/',
-                       {type: 'POST',
-                       data:{'departamento': $(this).val()},
-                       success: function (result) {
-                           $('#id_municipio').empty();
-                           $.each(result, function (i, o) {
-                               $('#id_municipio').append("<option value="+o.id+">"+o.name+"</option>");
-                           });
-                       }});
-               };
-               $('#id_departamento').on('change', cargar_municipios);
+                if (String($('#id_municipio').val()).length === 0)
+                    $('#id_municipio').empty();
+                if (String($('#id_barrio').val()).length === 0)
+                    $('#id_barrio').empty();
+                if (String($('#id_uso_gestion').val()).length === 0)
+                    $('#id_uso_gestion').empty();
 
-               var cargar_barrios = function () {
-                   $.ajax('/dtracking/get_barrios/',
-                       {type: 'POST',
-                       data:{'municipio': $(this).val()},
-                       success: function (result) {
-                           $('#id_barrio').empty();
-                           $.each(result, function (i, o) {
-                               $('#id_barrio').append("<option value="+o.id+">"+o.name+"</option>");
-                           });
-                       }});
-               };
-               $('#id_municipio').on('change', cargar_barrios);
+                var cargar_municipios = function () {
+                    $.ajax('/dtracking/get_municipios/',
+                        {
+                            type: 'POST',
+                            data: {'departamento': $(this).val()},
+                            success: function (result) {
+                                $('#id_municipio').empty();
+                                $.each(result, function (i, o) {
+                                    $('#id_municipio').append("<option value=" + o.id + ">" + o.name + "</option>");
+                                });
+                            }
+                        });
+                };
+                $('#id_departamento').on('change', cargar_municipios);
 
-               var cargar_usos_gestion = function () {
-                  $.ajax('/dtracking/get_usos_gestion/',
-                       {type: 'POST',
-                       data:{'fin': $(this).val()},
-                       success: function (result) {
-                           $('#id_uso_gestion').empty();
-                           $.each(result, function (i, o) {
-                               $('#id_uso_gestion').append("<option value="+o.id+">"+o.name+"</option>");
-                           });
-                       }});
-               };
+                var cargar_barrios = function () {
+                    $.ajax('/dtracking/get_barrios/',
+                        {
+                            type: 'POST',
+                            data: {'municipio': $(this).val()},
+                            success: function (result) {
+                                $('#id_barrio').empty();
+                                $.each(result, function (i, o) {
+                                    $('#id_barrio').append("<option value=" + o.id + ">" + o.name + "</option>");
+                                });
+                            }
+                        });
+                };
+                $('#id_municipio').on('change', cargar_barrios);
+
+                var cargar_usos_gestion = function () {
+                    $.ajax('/dtracking/get_usos_gestion/',
+                        {
+                            type: 'POST',
+                            data: {'fin': $(this).val()},
+                            success: function (result) {
+                                $('#id_uso_gestion').empty();
+                                $.each(result, function (i, o) {
+                                    $('#id_uso_gestion').append("<option value=" + o.id + ">" + o.name + "</option>");
+                                });
+                            }
+                        });
+                };
                 $('#id_fin_gestion').on('change', cargar_usos_gestion);
             });
         })(grp.jQuery)
