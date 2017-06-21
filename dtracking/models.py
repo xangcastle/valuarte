@@ -195,7 +195,7 @@ class Elemento(models.Model):
         return {'combo': self.combo.id, 'valor': self.valor}
 
 BANCOS = (
-    ('BAMPRO', 'BAMPRO'),
+    ('BANPRO', 'BANPRO'),
     ('BANCENTRO', 'BANCENTRO'),
     ('BAC', 'BAC'),
     ('BDF', 'BDF'),
@@ -220,14 +220,14 @@ class Gestion_Uso(Entidad):
 class Gestion(models.Model):
     barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo")
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    contacto = models.CharField(max_length=125, null=True, verbose_name="Contacto")
-    contacto_telefono = models.CharField(max_length=125, null=True, verbose_name="Teléfono del contacto")
+    contacto = models.CharField(max_length=125,  null=True, blank=True, verbose_name="Contacto")
+    contacto_telefono = models.CharField(max_length=125, null=True, blank=True, verbose_name="Teléfono del contacto")
     identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación")
     banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
     banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario")
     direccion = models.TextField(max_length=255, null=True, verbose_name="Dirección")
-    direccion_envio = models.TextField(max_length=255, null=True, verbose_name="Dirección de envío")
+    direccion_envio = models.TextField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)
     municipio = models.ForeignKey(Municipio, null=True)
