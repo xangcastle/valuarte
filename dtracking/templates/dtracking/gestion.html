@@ -7,6 +7,7 @@
             $(document).ready(function () {
                $('#id_municipio').empty();
                $('#id_barrio').empty();
+               $('#id_uso_gestion').empty();
                var cargar_municipios = function () {
                    $.ajax('/dtracking/get_municipios/',
                        {type: 'POST',
@@ -17,7 +18,7 @@
                                $('#id_municipio').append("<option value="+o.id+">"+o.name+"</option>");
                            });
                        }});
-               }
+               };
                $('#id_departamento').on('change', cargar_municipios);
 
                var cargar_barrios = function () {
@@ -30,8 +31,21 @@
                                $('#id_barrio').append("<option value="+o.id+">"+o.name+"</option>");
                            });
                        }});
-               }
+               };
                $('#id_municipio').on('change', cargar_barrios);
+
+               var cargar_usos_gestion = function () {
+                  $.ajax('/dtracking/get_usos_gestion/',
+                       {type: 'POST',
+                       data:{'fin': $(this).val()},
+                       success: function (result) {
+                           $('#id_uso_gestion').empty();
+                           $.each(result, function (i, o) {
+                               $('#id_uso_gestion').append("<option value="+o.id+">"+o.name+"</option>");
+                           });
+                       }});
+               };
+                $('#id_fin_gestion').on('change', cargar_usos_gestion);
             });
         })(grp.jQuery)
     </script>

@@ -40,8 +40,14 @@ class gestion_admin(entidad_admin):
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    fields = (('fecha', 'barra'), 'destinatario', ('identificacion', 'referencia'), 'direccion', 'telefono', ('departamento', 'municipio'),
-             ('barrio', 'tipo_gestion'), 'json', 'status_gestion')
+    fields = (('fecha', 'barra'),
+              ('destinatario',  'identificacion'),
+              'telefono', ('contacto', 'contacto_telefono'),
+              ('banco', 'referencia'),'banco_ejecutivo',
+              'direccion','direccion_envio', ('departamento', 'municipio'),
+             ('barrio', 'tipo_gestion'),
+              ('fin_gestion', 'uso_gestion'),
+              'status_gestion', 'observaciones')
 
     readonly_fields = ('barra', 'user')
 
@@ -174,6 +180,8 @@ class import_admin(entidad_admin):
 
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
+admin.site.register(Gestion_Fin)
+admin.site.register(Gestion_Uso)
 admin.site.register(Departamento, entidad_admin)
 admin.site.register(Municipio, entidad_admin)
 admin.site.register(Barrio, barrio_admin)

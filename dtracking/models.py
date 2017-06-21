@@ -1,3 +1,4 @@
+# coding=utf-8
 from __future__ import unicode_literals
 
 import sys
@@ -193,19 +194,48 @@ class Elemento(models.Model):
     def to_json(self):
         return {'combo': self.combo.id, 'valor': self.valor}
 
+BANCOS = (
+    ('BAMPRO', 'BAMPRO'),
+    ('BANCENTRO', 'BANCENTRO'),
+    ('BAC', 'BAC'),
+    ('BDF', 'BDF'),
+    ('FICOHSA', 'FICOHSA'),
+    ('PROCREDIT', 'PROCREDIT'),
+)
+
+class Gestion_Fin(Entidad):
+    pass
+
+    class Meta:
+        verbose_name_plural = "Fines de Avaluo"
+        verbose_name = "Finalidad de avaluo"
+
+class Gestion_Uso(Entidad):
+    fin = models.ForeignKey(Gestion_Fin)
+
+    class Meta:
+        verbose_name_plural = "Usos de Avaluo"
+        verbose_name = "Uso de avaluo"
 
 class Gestion(models.Model):
-    barra = models.CharField(max_length=65, null=True, verbose_name="codigo de gestion")
+    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo")
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificacion")
-    referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia Bancaria")
-    direccion = models.TextField(max_length=255, null=True)
+    contacto = models.CharField(max_length=125, null=True, verbose_name="Contacto")
+    contacto_telefono = models.CharField(max_length=125, null=True, verbose_name="Teléfono del contacto")
+    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación")
+    banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
+    referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
+    banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario")
+    direccion = models.TextField(max_length=255, null=True, verbose_name="Dirección")
+    direccion_envio = models.TextField(max_length=255, null=True, verbose_name="Dirección de envío")
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)
     municipio = models.ForeignKey(Municipio, null=True)
     barrio = models.ForeignKey(Barrio, null=True)
     zona = models.ForeignKey(Zona, null=True)
     tipo_gestion = models.ForeignKey(TipoGestion)
+    fin_gestion = models.ForeignKey(Gestion_Fin, null=True, blank=True)
+    uso_gestion = models.ForeignKey(Gestion_Uso, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
     realizada = models.BooleanField(default=False)
     position = GeopositionField(null=True, blank=True)
@@ -328,7 +358,8 @@ class Gestion(models.Model):
         return variables
 
     class Meta:
-        verbose_name_plural = "gestiones"
+        verbose_name_plural = "Avaluos"
+        verbose_name = "Avaluo"
 
 
 class Archivo(models.Model):

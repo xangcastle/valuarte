@@ -234,3 +234,9 @@ def get_barrios(request):
     barrios = Barrio.objects.filter(municipio=int(request.POST.get('municipio', None)))
     data = json.dumps([x.to_json() for x in barrios])
     return HttpResponse(data, content_type='application/json')
+
+@csrf_exempt
+def get_usos_gestion(request):
+    usos = Gestion_Uso.objects.filter(fin=int(request.POST.get('fin', None)))
+    data = json.dumps([x.to_json() for x in usos])
+    return HttpResponse(data, content_type='application/json')
