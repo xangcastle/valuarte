@@ -81,11 +81,16 @@ def cargar_gestion(request):
 
 @csrf_exempt
 def cargar_media(request):
-    g = Gestion.objects.get(id=int(request.POST.get('gestion', '')))
-    variable = request.POST.get('variable', '')
-    imagen = request.FILES['imagen']
-    g.cargar_archivo(imagen, variable)
-    data = [g.to_json(), ]
+    g = Gestion.objects.filter(id=int(request.POST.get('gestion', ''))).first()
+    if not g:
+        obj= {'mensaje' : "media subida con exito"}
+    else:
+        variable = request.POST.get('variable', '')
+        imagen = request.FILES['imagen']
+        g.cargar_archivo(imagen, variable)
+        obj = g.to_json()
+        obj['mensaje'] = "media subida con exito"
+    data = [obj, ]
     data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')
 
@@ -211,7 +216,9 @@ def get_log_gestion(request):
 
 @csrf_exempt
 def examen_previo(request):
-    data = {'obj': Gestion.objects.get(id=int(request.GET.get('gestion', '')))}
+    gestion = Gestion.objects.get(id=int(request.GET.get('gestion', '')))
+    data = {'obj': gestion}
+    # variables = gestion.variables()
     return render(request, "dtracking/examen_previo.html", data)
 
 
@@ -226,4 +233,10 @@ def get_municipios(request):
 def get_barrios(request):
     barrios = Barrio.objects.filter(municipio=int(request.POST.get('municipio', None)))
     data = json.dumps([x.to_json() for x in barrios])
+    return HttpResponse(data, content_type='application/json')
+
+@csrf_exempt
+def get_usos_gestion(request):
+    usos = Gestion_Uso.objects.filter(fin=int(request.POST.get('fin', None)))
+    data = json.dumps([x.to_json() for x in usos])
     return HttpResponse(data, content_type='application/json')

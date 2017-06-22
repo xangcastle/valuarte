@@ -1,4 +1,8 @@
+# coding=utf-8
 from __future__ import unicode_literals
+
+import sys
+
 from base.models import Entidad
 from django.contrib.auth.models import User
 from django.db import models
@@ -7,11 +11,14 @@ from jsonfield import JSONField
 from datetime import datetime
 from django.utils.safestring import mark_safe
 import json
+from django.utils.encoding import smart_str
+
 
 def ifnull(var, val):
-  if var is None:
-    return val
-  return var
+    if var is None:
+        return val
+    return var
+
 
 def get_gestor(user):
     try:
@@ -19,33 +26,35 @@ def get_gestor(user):
     except:
         return None
 
+
 CONECTIONS = (
-('SMS + WIFI', 'SMS + WIFI'),
-('3G + WIFI', '3G + WIFI'),
-('WIFI', 'WIFI'),
+    ('SMS + WIFI', 'SMS + WIFI'),
+    ('3G + WIFI', '3G + WIFI'),
+    ('WIFI', 'WIFI'),
 )
 
-ESTADOS_LOG_GESTION=(('RECEPCIONADO','RECEPCIONADO'), #0 0
-                     ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'), #1 0
-                     ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'), #2 0
-                     ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'), #3 0
-                     ('TERMINADO', 'TERMINADO')) #4 0
+ESTADOS_LOG_GESTION = (('RECEPCIONADO', 'RECEPCIONADO'),  # 0 0
+                       ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'),  # 1 0
+                       ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'),  # 2 0
+                       ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'),  # 3 0
+                       ('TERMINADO', 'TERMINADO'))  # 4 0
 
 
 class Gestor(models.Model):
     user = models.OneToOneField(User)
     numero = models.CharField(max_length=8, help_text="numero de celular")
     server_conection = models.CharField(max_length=25, choices=CONECTIONS,
-    default='WIFI', null=True, blank=True)
+                                        default='WIFI', null=True, blank=True)
     sms_gateway = models.CharField(max_length=20, null=True)
     foto = models.ImageField(null=True)
     zonas = models.ManyToManyField('Zona')
     tipo_gestion = models.ManyToManyField('TipoGestion', null=True, blank=True)
     intervalo = models.PositiveIntegerField(null=True, verbose_name="intervalo de seguimiento",
-    help_text="esto determina que tan seguido el gestor reportara su posicion gps en segundos")
+                                            help_text="esto determina que tan seguido el gestor reportara su posicion gps en segundos")
 
     def image_thumb(self):
         return '<img src="/media/%s" width="100" height="60" />' % (self.foto)
+
     image_thumb.allow_tags = True
     image_thumb.short_description = "Imagen"
 
@@ -102,6 +111,7 @@ class ZonaBarrio(models.Model):
 
 class TipoGestion(Entidad):
     prefijo = models.CharField(max_length=6, null=True, blank=False)
+
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
 
@@ -117,15 +127,16 @@ class TipoGestion(Entidad):
 
 
 TIPOS = (
-('input', 'input'),
-('radio', 'radio'),
-('textarea', 'textarea'),
-('combobox', 'combobox'),
-('checkbox', 'checkbox'),
-('foto', 'foto'),
-('multi foto', 'multi foto'),
-('firma', 'firma'),
+    ('input', 'input'),
+    ('radio', 'radio'),
+    ('textarea', 'textarea'),
+    ('combobox', 'combobox'),
+    ('checkbox', 'checkbox'),
+    ('foto', 'foto'),
+    ('multi foto', 'multi foto'),
+    ('firma', 'firma'),
 )
+
 
 class DetalleGestion(models.Model):
     tipo_gestion = models.ForeignKey(TipoGestion)
@@ -157,16 +168,16 @@ class DetalleGestion(models.Model):
             o['elementos'].append({'id': e.id, 'valor': e.valor})
         return o
 
-
     class Meta:
         verbose_name = "campo"
         verbose_name_plural = "campos requeridos por la gestion"
-        ordering =['orden', ]
+        ordering = ['orden', ]
 
 
 class especiales(models.Manager):
     def get_queryset(self):
         return super(especiales, self).get_queryset().filter(tipo__in=['combobox', 'radio'])
+
 
 class EspecialField(DetalleGestion):
     objects = models.Manager()
@@ -183,19 +194,48 @@ class Elemento(models.Model):
     def to_json(self):
         return {'combo': self.combo.id, 'valor': self.valor}
 
+BANCOS = (
+    ('BANPRO', 'BANPRO'),
+    ('BANCENTRO', 'BANCENTRO'),
+    ('BAC', 'BAC'),
+    ('BDF', 'BDF'),
+    ('FICOHSA', 'FICOHSA'),
+    ('PROCREDIT', 'PROCREDIT'),
+)
+
+class Gestion_Fin(Entidad):
+    pass
+
+    class Meta:
+        verbose_name_plural = "Fines de Avaluo"
+        verbose_name = "Finalidad de avaluo"
+
+class Gestion_Uso(Entidad):
+    fin = models.ForeignKey(Gestion_Fin)
+
+    class Meta:
+        verbose_name_plural = "Usos de Avaluo"
+        verbose_name = "Uso de avaluo"
 
 class Gestion(models.Model):
-    barra = models.CharField(max_length=65, null=True, verbose_name="codigo de gestion")
+    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo")
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificacion")
-    referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia Bancaria")
-    direccion = models.TextField(max_length=255, null=True)
+    contacto = models.CharField(max_length=125,  null=True, blank=True, verbose_name="Contacto")
+    contacto_telefono = models.CharField(max_length=125, null=True, blank=True, verbose_name="Teléfono del contacto")
+    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación")
+    banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
+    referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
+    banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario")
+    direccion = models.TextField(max_length=255, null=True, verbose_name="Dirección")
+    direccion_envio = models.TextField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)
     municipio = models.ForeignKey(Municipio, null=True)
     barrio = models.ForeignKey(Barrio, null=True)
     zona = models.ForeignKey(Zona, null=True)
     tipo_gestion = models.ForeignKey(TipoGestion)
+    fin_gestion = models.ForeignKey(Gestion_Fin, null=True, blank=True)
+    uso_gestion = models.ForeignKey(Gestion_Uso, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
     realizada = models.BooleanField(default=False)
     position = GeopositionField(null=True, blank=True)
@@ -226,13 +266,12 @@ class Gestion(models.Model):
     def log(self, usuario, fecha, estado):
         return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
-
     def __unicode__(self):
         return "%s - %s" % (self.tipo_gestion.name, self.destinatario)
 
     def cargar_archivo(self, archivo, variable):
         a, created = Archivo.objects.get_or_create(gestion=self,
-        variable=variable)
+                                                   variable=variable)
         a.archivo = archivo
         a.save()
         return a
@@ -263,7 +302,11 @@ class Gestion(models.Model):
             for a in self.media():
                 o['media'].append(a.to_json())
         if self.json:
-            o['data'] = json.loads(str(self.json).replace("'", "\""))
+            try:
+                o['data'] = json.loads(str(smart_str(self.json)).replace("'", "\""))
+            except:
+                pass
+
         return o
 
     def numero_gestor(self):
@@ -272,24 +315,50 @@ class Gestion(models.Model):
     def _realizada(self):
         if self.realizada:
             return '<a class="ver-examen" data-des="/dtracking/examen_previo/?gestion=%s" class="detalle">Ver&nbsp;<img src="/static/admin/img/icon-yes.svg" alt="True"></a>' \
-            % self.id
+                   % self.id
         else:
             return '<img src="/static/admin/img/icon-no.svg" alt="False">'
+
     _realizada.allow_tags = True
     _realizada.short_description = "Realizada"
 
     def variables(self):
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
         variables = []
-        o = json.loads(str(self.json).replace("'", "\""))
+        o = json.loads(str(smart_str(self.json)).replace("'", "\""))
         for a, k in o.items():
-            v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
-            obj = v.to_json()
-            obj['value'] = k
-            variables.append(obj)
+            try:
+                v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
+                obj = v.to_json()
+
+                if v.tipo == "combobox" or v.tipo ==  "radio":
+                    elementos = v.elementos()
+                    if elementos:
+                        obj_elementos = []
+                        for elemento in v.elementos():
+                            selecionado=False
+                            if elemento.id==int(k):
+                                obj['value'] = elemento.valor
+                                selecionado=True
+                            obj_elementos.append({'value': elemento.valor, 'selecionado': selecionado})
+
+                        obj['elementos']=obj_elementos
+                    else:
+                        obj['value'] = k
+                else:
+                    obj['value'] = k
+
+
+                variables.append(obj)
+            except:
+                print "Oops!  That was no valid number.  Try again..."
+
         return variables
 
     class Meta:
-        verbose_name_plural = "gestiones"
+        verbose_name_plural = "Avaluos"
+        verbose_name = "Avaluo"
 
 
 class Archivo(models.Model):
@@ -302,7 +371,7 @@ class Archivo(models.Model):
 
     def to_json(self):
         return {'variable': self.variable,
-        'archivo': self.archivo.url}
+                'archivo': self.archivo.url}
 
     class Meta:
         verbose_name_plural = "Archivos Media"
@@ -315,11 +384,11 @@ class Position(models.Model):
 
     def to_json(self):
         return {
-        'label': self.user.username[0].upper(),
-        'usuario': self.user.username,
-        'latitude': self.position.latitude,
-        'longitude': self.position.longitude,
-        'fecha': str(self.fecha),
+            'label': self.user.username[0].upper(),
+            'usuario': self.user.username,
+            'latitude': self.position.latitude,
+            'longitude': self.position.longitude,
+            'fecha': str(self.fecha),
         }
 
     class Meta:
@@ -335,11 +404,11 @@ class Import(models.Model):
     municipio = models.CharField(max_length=150, null=True, blank=True)
     departamento = models.CharField(max_length=150, null=True, blank=True)
     idbarrio = models.ForeignKey('Barrio', null=True, blank=True,
-        db_column='idbarrio', verbose_name='barrio')
+                                 db_column='idbarrio', verbose_name='barrio')
     iddepartamento = models.ForeignKey('Departamento', null=True, blank=True,
-        db_column='iddepartamento', verbose_name='departamento')
+                                       db_column='iddepartamento', verbose_name='departamento')
     idmunicipio = models.ForeignKey('Municipio', null=True, blank=True,
-        db_column='idmunicipio', verbose_name='municipio')
+                                    db_column='idmunicipio', verbose_name='municipio')
 
     def __unicode__(self):
         return "%s - %s" % (self.destinatario, self.direccion)
@@ -359,7 +428,7 @@ class Import(models.Model):
         try:
             if self.municipio and self.iddepartamento:
                 m = Municipio.objects.get(departamento=self.iddepartamento,
-                    name_alt=self.municipio)
+                                          name_alt=self.municipio)
         except:
             m, created = Municipio.objects.get_or_create(
                 departamento=self.iddepartamento, name=self.municipio)
@@ -370,10 +439,10 @@ class Import(models.Model):
         try:
             if self.barrio and self.idmunicipio and self.iddepartamento:
                 b, created = Barrio.objects.get_or_create(
-                municipio=self.idmunicipio, name=self.barrio)
+                    municipio=self.idmunicipio, name=self.barrio)
         except:
             b = Barrio.objects.filter(municipio=self.idmunicipio,
-            name=self.barrio)[0]
+                                      name=self.barrio)[0]
         return b
 
     def integrar_registro(self, fecha_asignacion, fecha_vence, tipo_gestion, eliminar=False):
@@ -393,12 +462,14 @@ class Import(models.Model):
         if eliminar:
             self.delete()
 
+
 def get_zona(barrio):
     try:
         return Zona.objects.get(
             id=zona_barrio.objects.filter(barrio=barrio)[0].zona.id)
     except:
         return None
+
 
 def get_user(zona):
     try:
@@ -430,16 +501,16 @@ def integrar(ps):
         'departamento', 'municipio')
     for m in ms:
         qs = ps.filter(departamento=m.departamento,
-            municipio=m.municipio)
+                       municipio=m.municipio)
         qs.update(idmunicipio=m.get_municipio().id)
     bs = ps.order_by('departamento', 'municipio', 'barrio').distinct(
         'departamento', 'municipio', 'barrio')
     for b in bs:
         qs = ps.filter(departamento=b.departamento,
-            municipio=b.municipio, barrio=b.barrio)
+                       municipio=b.municipio, barrio=b.barrio)
         qs.update(idbarrio=b.get_barrio().id)
     message += "integrado, total de gestiones = %s end %s departamentos" \
-    % (str(ps.count()), str(ds.count()))
+               % (str(ps.count()), str(ds.count()))
     return message
 
 
@@ -461,6 +532,7 @@ def send_sms(texto):
     m.save()
     return m
 
+
 def cancelar_gestiones(gestiones, motivo=""):
     usuarios = gestiones.filter(user__isnull=False).order_by('user').distinct('user')
     for u in usuarios:
@@ -468,7 +540,7 @@ def cancelar_gestiones(gestiones, motivo=""):
         ids = gs.values_list('id', flat=True)
         ids = '[' + ','.join([str(x) for x in ids]) + ']'
         texto = 'MEN{"g":%s,"c":"%s","m":"%s"}MEN' % (ids, u.user.id,
-        ("%s gestiones eliminadas" % gs.count()))
+                                                      ("%s gestiones eliminadas" % gs.count()))
         send_sms(texto, gs[0].numero_gestor())
     gestiones.update(realizada=True, observaciones=motivo)
 
@@ -483,13 +555,14 @@ class Log_Gestion(models.Model):
         if self.estado == ESTADOS_LOG_GESTION[0][0]:
             return "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[1][0]:
-            return "Asignado a %s. Visita Programada para el %s a las %s horas." % (get_gestor(self.gestion.user).full_name(),
-                                                                             "{}-{}-{}".format(str(self.gestion.fecha_asignacion.day).zfill(2),
-                                                                                             str(self.gestion.fecha_asignacion.month).zfill(2),
-                                                                                               self.gestion.fecha_asignacion.year),
-                                                                             "{:d}:{:02d}".format(
-                                                                                 self.gestion.fecha_asignacion.hour,
-                                                                                 self.gestion.fecha_asignacion.minute))
+            return "Asignado a %s. Visita Programada para el %s a las %s horas." % (
+            get_gestor(self.gestion.user).full_name(),
+            "{}-{}-{}".format(str(self.gestion.fecha_asignacion.day).zfill(2),
+                              str(self.gestion.fecha_asignacion.month).zfill(2),
+                              self.gestion.fecha_asignacion.year),
+            "{:d}:{:02d}".format(
+                self.gestion.fecha_asignacion.hour,
+                self.gestion.fecha_asignacion.minute))
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
             txt = "Levantamiento fisico realizado."
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
