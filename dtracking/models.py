@@ -217,11 +217,10 @@ class Gestion(models.Model):
         if self.fecha and self.tipo_gestion:
             numero = ""
             try:
-                numero = type(self).objects.filter(tipo_gestion=self.tipo_gestion,
-                                                   fecha__year=self.fecha.year).count() + 1
+                numero = type(self).objects.filter(fecha__year=self.fecha.year).count() + 1
             except:
                 numero = 1
-            code = "%s-%s-%s" % (str(self.fecha.year), self.tipo_gestion.prefijo, str(numero).zfill(4))
+            code = "%s-%s-%s" % (str(numero).zfill(4), self.tipo_gestion.prefijo, str(self.fecha.year))
         return code
 
     def log(self, usuario, fecha, estado):
