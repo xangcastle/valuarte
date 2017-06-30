@@ -35,28 +35,27 @@ class gestion_admin(entidad_admin):
     change_form_template = "dtracking/gestion.html"
     date_hierarchy = "fecha"
     list_display = ('barra', 'destinatario', 'direccion', 'departamento', 'municipio',
-    'barrio', 'tipo_gestion', 'user', '_realizada')
+    'tipo_gestion', 'user', '_realizada')
     list_filter = ('tipo_gestion', 'departamento', 'municipio', 'zona', 'user', 'realizada')
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    fields = (('fecha', 'barra'),
+    fields = (('fecha', 'barra', 'tipo_gestion'),
               ('destinatario',  'identificacion'),
               'telefono', ('contacto', 'contacto_telefono'),
               ('banco', 'referencia'),'banco_ejecutivo',
               'direccion','direccion_envio', ('departamento', 'municipio'),
-             ('barrio', 'tipo_gestion'),
               ('fin_gestion', 'uso_gestion'),
               'status_gestion', 'observaciones')
 
-    readonly_fields = ('barra', 'user')
+    readonly_fields = ('user', )
 
     def save_model(self, request, obj, form, change):
         super(gestion_admin, self).save_model(request, obj, form, change)
         if not change:
             obj.log(request.user, obj.fecha, ESTADOS_LOG_GESTION[0][0])
 
-    actions = ['action_asignar', 'action_perito', 'action_cancelar',]
+    actions = ['action_perito', 'action_cancelar', 'action_asignar']
 
     class asignacion_form(forms.Form):
         fecha_asignacion = forms.DateTimeField(

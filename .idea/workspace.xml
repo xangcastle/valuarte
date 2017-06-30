@@ -6,9 +6,12 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/valuarte.iml" afterPath="$PROJECT_DIR$/.idea/valuarte.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+<<<<<<< Updated upstream
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dtracking/admin.py" afterPath="$PROJECT_DIR$/dtracking/admin.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dtracking/models.py" afterPath="$PROJECT_DIR$/dtracking/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dtracking/templatetags/data_dashboard.py" afterPath="$PROJECT_DIR$/dtracking/templatetags/data_dashboard.py" />
+=======
+>>>>>>> Stashed changes
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -750,7 +753,25 @@
       <option name="project" value="LOCAL" />
       <updated>1495139909531</updated>
     </task>
+<<<<<<< Updated upstream
     <option name="localTasksCounter" value="39" />
+=======
+    <task id="LOCAL-00039" summary="filtro de municipios y barrios">
+      <created>1497036613568</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1497036613568</updated>
+    </task>
+    <task id="LOCAL-00040" summary="correccion en el codigo de gestion">
+      <created>1498090274706</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1498090274706</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
+>>>>>>> Stashed changes
     <servers />
   </component>
   <component name="TestHistory">
@@ -889,7 +910,8 @@
     <MESSAGE value="examen previo" />
     <MESSAGE value="dashboard" />
     <MESSAGE value="filtro de municipios y barrios" />
-    <option name="LAST_COMMIT_MESSAGE" value="filtro de municipios y barrios" />
+    <MESSAGE value="correccion en el codigo de gestion" />
+    <option name="LAST_COMMIT_MESSAGE" value="correccion en el codigo de gestion" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
