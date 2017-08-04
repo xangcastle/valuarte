@@ -2,5 +2,7 @@
 *.pyo
 /static
 /media
+venv/
+.idea/
 /venv
 /.idea
