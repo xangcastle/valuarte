@@ -122,6 +122,13 @@ class TipoGestion(Entidad):
             obj['campos'].append(d.to_json())
         return obj
 
+    def errores(self):
+        errors = ''
+        for d in self.detalles():
+            if d.error():
+                errors += 'El campo %s es de tipo %s, pero no contiene ningun elemento para seleccionar. ' % (d.titulo, d.tipo)
+        return errors
+
     class Meta:
         verbose_name_plural = "tipos de gestiones"
 
@@ -173,6 +180,11 @@ class DetalleGestion(models.Model):
         verbose_name_plural = "campos requeridos por la gestion"
         ordering = ['orden', ]
 
+    def error(self):
+        if (self.tipo == 'combobox' or self.tipo == 'radio') and self.elementos().count() == 0:
+            return True
+        else:
+            return False
 
 class especiales(models.Manager):
     def get_queryset(self):
