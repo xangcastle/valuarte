@@ -299,7 +299,7 @@ class Gestion(models.Model):
         o['telefono'] = self.telefono
         o['departamento'] = self.departamento.name
         o['municipio'] = self.municipio.name
-        o['barrio'] = self.barrio.name
+        #o['barrio'] = self.barrio.name
         o['barra'] = self.barra
         if self.zona:
             o['zona'] = self.zona.name
@@ -587,3 +587,12 @@ class Log_Gestion(models.Model):
         self.gestion.status_gestion = self.estado
         self.gestion.save()
         super(Log_Gestion, self).save(*args, **kwargs)
+
+class Registro(models.Model):
+    tag = models.CharField(max_length=100, null=False, blank=False)
+    mensaje = models.TextField(null=False, blank=False)
+    fecha = models.DateTimeField(null=False, blank=False)
+    usuario = models.CharField(max_length=100, null=True, blank=True)
+
+    def __unicode__(self):
+        return  "%s %s" % (self.tag, self.usuario)

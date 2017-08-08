@@ -177,6 +177,9 @@ class import_admin(entidad_admin):
         return render_to_response('admin/base_action.html', data)
 
 
+class RegistroAdmin(admin.ModelAdmin):
+    list_display = ('tag', 'usuario', 'fecha')
+
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
 admin.site.register(Gestion_Fin)
@@ -186,3 +189,4 @@ admin.site.register(Municipio, entidad_admin)
 admin.site.register(Barrio, barrio_admin)
 admin.site.register(Zona, entidad_admin)
 admin.site.register(Gestor, gestor_admin)
+admin.site.register(Registro, RegistroAdmin)

@@ -240,3 +240,39 @@ def get_usos_gestion(request):
     usos = Gestion_Uso.objects.filter(fin=int(request.POST.get('fin', None)))
     data = json.dumps([x.to_json() for x in usos])
     return HttpResponse(data, content_type='application/json')
+
+@csrf_exempt
+def agregar_registro(request):
+    obj_json = {}
+    tag = request.POST.get("tag", None)
+    mensaje = request.POST.get("mensaje", None)
+    fecha = request.POST.get("fecha", None)
+    usuario = request.POST.get("usuario", None)
+
+    if not tag:
+        obj_json['code'] = 400
+        obj_json['mensaje'] = "TAG no encontrada"
+    elif not mensaje:
+        obj_json['code'] = 400
+        obj_json['mensaje'] = "Mensaje no encontrado"
+    elif not fecha:
+        obj_json['code'] = 400
+        obj_json['mensaje'] = "Fecha no encontrado"
+    elif not usuario:
+        obj_json['code'] = 400
+        obj_json['mensaje'] = "Fecha no encontrado"
+    else:
+        registro, c = Registro.objects.get_or_create(
+            tag=tag,
+            mensaje=mensaje,
+            fecha=fecha,
+            usuario=usuario
+        )
+        if not registro:
+            obj_json['code'] = 500
+            obj_json['mensaje'] = "No fue posible crear el registro"
+        else:
+            obj_json['code'] = 200
+            obj_json['mensaje'] = "Registro creado exitosamente"
+    data = json.dumps(obj_json)
+    return HttpResponse(data, content_type='application/json')

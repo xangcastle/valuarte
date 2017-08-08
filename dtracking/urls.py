@@ -15,6 +15,8 @@ urlpatterns = [
         name='cargar_gestion'),
     url(r'^movil/cargar_media/$', cargar_media,
         name='cargar_media'),
+    url(r'^movil/agregar_registro/$', agregar_registro,
+        name='agregar_registro'),
     url(r'^barrios_huerfanos/', barrios_huerfanos.as_view(),
         name='barrios_huerfanos'),
     url(r'^movil/seguimiento_gps/', seguimiento_gps,
