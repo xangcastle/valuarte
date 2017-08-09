@@ -339,7 +339,8 @@ class Gestion(models.Model):
         sys.setdefaultencoding('utf-8')
         variables = []
         o = json.loads(str(smart_str(self.json)).replace("'", "\""))
-        for a, k in o.items():
+        campos = o['campos']
+        for a, k in campos.items():
             try:
                 v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
                 obj = v.to_json()
@@ -363,8 +364,8 @@ class Gestion(models.Model):
 
 
                 variables.append(obj)
-            except:
-                print "Oops!  That was no valid number.  Try again..."
+            except Exception as e:
+                print "Oops!  That was no valid number.  Try again... %s" % e.message
 
         return variables
 
