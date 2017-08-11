@@ -7,44 +7,47 @@
 </head>
 <body>
 <button class="btn btn-primary" onclick="exportarWord()">Exportar a Word</button>
-<div class="container googoose-wrapper" id="page-content">
+<div class="container">
 <div class="well">
-
-<table class="table table-bordered table-striped table-hover table-responsive">
-    <thead>
-    <tr>
-        <th>Variable</th>
-        <th>Valor</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for v in obj.variables %}
-    <tr>
-        <td>{{ v.titulo }}</td>
-        <td>
-          {% if v.tipo == "combobox" or v.tipo ==  "radio" %}
-          <div class="row" style="margin-left:5px">
-            {% for elemento in v.elementos %}
-              <div class="col-sm-1">
-                <div class="checkbox disabled">
-                  {% if elemento.selecionado %}
-                    <label><input type="checkbox" value="" disabled checked>{{ elemento.value }}</label>
-                  {% else %}
-                    <label><input type="checkbox" value="" disabled>{{ elemento.value }}</label>
-                  {% endif %}
+<div id="page-content" class="googoose-wrapper">
+  <table  class="table table-bordered table-striped table-hover table-responsive">
+      <thead>
+      <tr>
+          <th>Variable</th>
+          <th>Valor</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for v in obj.variables %}
+        {% if v.tipo != "foto" and v.tipo != "multi foto" and v.tipo != "firma"%}
+          <tr>
+              <td>{{ v.titulo }}</td>
+              <td>
+                {% if v.tipo == "combobox" or v.tipo ==  "radio" %}
+                <div class="row" style="margin-left:5px">
+                  {% for elemento in v.elementos %}
+                    <div class="col-sm-1">
+                      <div class="checkbox disabled">
+                        {% if elemento.selecionado %}
+                          <label><input type="checkbox" value="" disabled checked><strong>{{ elemento.value }}</strong></label>
+                        {% else %}
+                          <label><input type="checkbox" value="" disabled>{{ elemento.value }}</label>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endfor %}
                 </div>
-              </div>
-            {% endfor %}
-          </div>
-          {% else %}
-            {{ v.value }}
-          {% endif %}
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% for i in obj.media %}
+                {% else %}
+                  {{ v.value }}
+                {% endif %}
+              </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+  </table>
+</div>
+  {% for i in obj.media %}
      <div class="row" style="
     padding: 35px;
 ">
@@ -70,11 +73,11 @@
 
 <script>
   function exportarWord() {
-      //$("#page-content").wordExport();
+      //$("#page-content").wordExport({fileName:"prueb.doc"});
       var o = {
           filename: 'Examen Previo.doc'
       };
-      $(document).googoose(o);
+      $("#page-content").googoose(o);
   }
 
 </script>
