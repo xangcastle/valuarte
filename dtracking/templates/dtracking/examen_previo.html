@@ -80,17 +80,11 @@ padding: 35px;
               <td>{{ v.titulo }}</td>
               <td>
                 {% if v.tipo == "combobox" or v.tipo ==  "radio" %}
-                <div class="row" style="margin-left:5px">
                   {% for elemento in v.elementos %}
-                    <div class="col-sm-1">
-                      <div class="checkbox disabled">
-                        {% if elemento.selecionado %}
-                          <label>{{ elemento.value }}</label>
-                        {% endif %}
-                      </div>
-                    </div>
+                    {% if elemento.selecionado %}
+                      {{ elemento.value }}
+                    {% endif %}
                   {% endfor %}
-                </div>
                 {% else %}
                   {{ v.value }}
                 {% endif %}
@@ -128,11 +122,11 @@ padding: 35px;
 
 <script>
   function exportarWord() {
-      //$("#page-content").wordExport({fileName:"prueb.doc"});
-      var o = {
+      $("#page-content").wordExport();
+      {% comment %}var o = {
           filename: 'Examen Previo.doc'
       };
-      $("#page-content").googoose(o);
+      $("#page-content").googoose(o);{% endcomment %}
   }
 
 </script>
