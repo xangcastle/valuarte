@@ -9,7 +9,63 @@
 <button class="btn btn-primary" onclick="exportarWord()">Exportar a Word</button>
 <div class="container">
 <div class="well">
-<div id="page-content" class="googoose-wrapper">
+
+<table  class="table table-bordered table-striped table-hover table-responsive">
+    <thead>
+    <tr>
+        <th>Variable</th>
+        <th>Valor</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in obj.variables %}
+      {% if v.tipo != "foto" and v.tipo != "multi foto" and v.tipo != "firma"%}
+        <tr>
+            <td>{{ v.titulo }}</td>
+            <td>
+              {% if v.tipo == "combobox" or v.tipo ==  "radio" %}
+              <div class="row" style="margin-left:5px">
+                {% for elemento in v.elementos %}
+                  <div class="col-sm-1">
+                    <div class="checkbox disabled">
+                      {% if elemento.selecionado %}
+                        <label><input type="checkbox" value="" disabled checked><strong>{{ elemento.value }}</strong></label>
+                      {% else %}
+                        <label><input type="checkbox" value="" disabled>{{ elemento.value }}</label>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              {% else %}
+                {{ v.value }}
+              {% endif %}
+            </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+{% for i in obj.media %}
+ <div class="row" style="
+padding: 35px;
+">
+    <div class="col-md-4">
+        <div class="thumbnail">
+          <h3>{{ i.variable }}</h3>
+          <a href="{{ i.archivo.url }}">
+            <img src="{{ i.archivo.url }}" alt="{{ i.nombre }}" style="width:100%">
+            <div class="caption">
+              <p>{{ i.nombre }}</p>
+            </div>
+          </a>
+        </div>
+      </div>
+</div>
+{% endfor %}
+
+
+<div id="page-content" class="googoose-wrapper" style="display:none">
   <table  class="table table-bordered table-striped table-hover table-responsive">
       <thead>
       <tr>
@@ -29,9 +85,7 @@
                     <div class="col-sm-1">
                       <div class="checkbox disabled">
                         {% if elemento.selecionado %}
-                          <label><input type="checkbox" value="" disabled checked><strong>{{ elemento.value }}</strong></label>
-                        {% else %}
-                          <label><input type="checkbox" value="" disabled>{{ elemento.value }}</label>
+                          <label>{{ elemento.value }}</label>
                         {% endif %}
                       </div>
                     </div>
@@ -46,24 +100,25 @@
       {% endfor %}
       </tbody>
   </table>
-</div>
   {% for i in obj.media %}
-     <div class="row" style="
-    padding: 35px;
+   <div class="row" style="
+  padding: 35px;
 ">
-        <div class="col-md-4">
-            <div class="thumbnail">
-              <h3>{{ i.variable }}</h3>
-              <a href="{{ i.archivo.url }}">
-                <img src="{{ i.archivo.url }}" alt="{{ i.nombre }}" style="width:100%">
-                <div class="caption">
-                  <p>{{ i.nombre }}</p>
-                </div>
-              </a>
-            </div>
+      <div class="col-md-4">
+          <div class="thumbnail">
+            <h3>{{ i.variable }}</h3>
+            <a href="{{ i.archivo.url }}">
+              <img src="{{ i.archivo.url }}" alt="{{ i.nombre }}" style="width:100%">
+              <div class="caption">
+                <p>{{ i.nombre }}</p>
+              </div>
+            </a>
           </div>
-    </div>
-{% endfor %}
+        </div>
+  </div>
+  {% endfor %}
+</div>
+
 </div>
 </div>
 <script type="text/javascript" src="/static/home/js/jquery.js"></script>
