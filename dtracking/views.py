@@ -276,3 +276,12 @@ def agregar_registro(request):
             obj_json['mensaje'] = "Registro creado exitosamente"
     data = json.dumps(obj_json)
     return HttpResponse(data, content_type='application/json')
+
+def get_avaluo_mes_posiciones(request):
+    anio = request.POST.get("anio", 0)
+    mes = request.POST.get("mes", 0)
+    gestiones = Gestion.objects.filter(fecha__year=anio, fecha__month=mes).exclude(position__in=[None])
+    data = json.dumps([x.to_json() for x in gestiones])
+    return HttpResponse(data, content_type='application/json')
+
+

@@ -313,6 +313,8 @@ class Gestion(models.Model):
             o['media'] = []
             for a in self.media():
                 o['media'].append(a.to_json())
+        if self.status_gestion:
+            o['estado'] = str(self.status_gestion)
         if self.json:
             try:
                 o['data'] = json.loads(str(smart_str(self.json)).replace("'", "\""))

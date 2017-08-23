@@ -40,6 +40,9 @@ urlpatterns = [
     url(r'^get_barrios/', get_barrios,
         name='get_barrios'),
     url(r'^get_usos_gestion/', get_usos_gestion,
-        name='get_usos_gestion')
+        name='get_usos_gestion'),
+    url(r'^get_avaluos_posicion/', get_avaluo_mes_posiciones,
+        name='get_avaluos_posicion'),
+
 
 ]

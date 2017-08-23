@@ -91,10 +91,36 @@
             'Imagery © <a href="http://mapbox.com">Mapbox</a>',
         id: 'mapbox.streets'
     }).addTo(mymap);
+    (function($) {
+        $(document).ready(function () {
+        var d = new Date();
+        var data = {
+            anio: d.getFullYear(),
+            mes: (d.getMonth()+1),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+       $.ajax({
+           url: "{% url "get_avaluos_posicion" %}",
+           method: "POST",
+           data: data,
+           success: function(result){
+               $.each( result, function( key, value ) {
+                   L.marker([value.latitude, value.longitude])
+                       .addTo(mymap)
+                       .bindPopup('<strong>Codigo: <strong>' + value.barra +
+                                  '<br><strong>Destinatario: <strong>' + value.destinatario +
+                                  '<br><strong>Direccion: <strong>' + value.direccion +
+                                  '<br><strong>Telefono: <strong>' + value.telefono +
+                                  '<br><strong>Estado: <strong>' + value.estado);
+               });
+           }
+       });
+    });
+    })(grp.jQuery);
 
-    L.marker([12.09, -86.16]).addTo(mymap);
 
-    L.circle([12.09, -86.17], {
+
+   {% comment %} L.circle([12.09, -86.17], {
         color: 'red',
         fillColor: '#f03',
         fillOpacity: 0.5,
@@ -105,7 +131,7 @@
         [12.409, -86.08],
         [12.503, -86.06],
         [12.61, -86.047]
-    ]).addTo(mymap);
+    ]).addTo(mymap);{% endcomment %}
 
 
     </script>
