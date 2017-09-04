@@ -30,25 +30,36 @@ class tipoGestion_admin(entidad_admin):
     list_display = ('prefijo', 'name', 'errores')
 
 
+class ArchivoTabularInline(admin.TabularInline):
+    model = Archivo
+    extra = 0
+    fields =('user', 'fecha', 'archivo')
+
+
 class gestion_admin(entidad_admin):
     change_list_template = "dtracking/gestiones.html"
     change_form_template = "dtracking/gestion.html"
     date_hierarchy = "fecha"
-    list_display = ('barra', 'destinatario', 'direccion', 'departamento', 'municipio',
-    'tipo_gestion', 'user', '_realizada')
-    list_filter = ('tipo_gestion', 'departamento', 'municipio', 'zona', 'user', 'realizada')
+    list_display = ('barra', 'banco', 'destinatario', 'tipo_gestion', 'valor', 'categoria',
+                    'user', '_realizada')
+    list_filter = ('banco', 'tipo_gestion', 'categoria','departamento', 'municipio', 'zona', 'user', 'realizada')
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    fields = (('fecha', 'barra', 'tipo_gestion'),
+    fields = (('fecha', 'barra'),
+              ('status_gestion','tipo_gestion'),
+              ('valor', 'categoria'),
               ('destinatario',  'identificacion'),
               'telefono', ('contacto', 'contacto_telefono'),
               ('banco', 'referencia'),'banco_ejecutivo',
-              'direccion','direccion_envio', ('departamento', 'municipio'),
+              'direccion','direccion_envio',
+              ('departamento', 'municipio'),
               ('fin_gestion', 'uso_gestion'),
-              'status_gestion', 'observaciones')
+              'observaciones')
 
-    readonly_fields = ('user', )
+    readonly_fields = ('user',)
+
+    inlines = [ArchivoTabularInline, ]
 
     def save_model(self, request, obj, form, change):
         super(gestion_admin, self).save_model(request, obj, form, change)

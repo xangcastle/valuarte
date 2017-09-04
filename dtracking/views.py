@@ -17,6 +17,37 @@ class barrios_huerfanos(TemplateView):
             id__in=ZonaBarrio.objects.all().values_list('barrio', flat=True))
         return context
 
+class gestion_adjuntos(TemplateView):
+    template_name = "dtracking/documentos_adjuntos.html"
+
+    def get(self, request, *args, **kwargs):
+        context = super(gestion_adjuntos, self).get_context_data(**kwargs)
+        context['archivos'] = Archivo.objects.filter(
+            gestion__id=request.GET.get("pk")
+        )
+        context['pk_gestion'] = request.GET.get("pk")
+        return super(gestion_adjuntos, self).render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(gestion_adjuntos, self).get_context_data(**kwargs)
+        pk_gestion = request.POST.get("pk_gestion", None)
+        archivo = request.FILES['archivo']
+        if pk_gestion:
+            gestion = Gestion.objects.get(pk=pk_gestion)
+            a = Archivo.objects.create(gestion=gestion,
+                                       variable="Documento Adjunto de Gestion")
+            a.archivo = archivo
+            a.user = request.user
+            a.fecha = datetime.now()
+            a.save()
+        
+        context['archivos'] = Archivo.objects.filter(
+            gestion__id=pk_gestion
+        )
+        context['pk_gestion'] = pk_gestion
+        return super(gestion_adjuntos, self).render_to_response(context)
+
+
 
 @csrf_exempt
 def movil_login(request):

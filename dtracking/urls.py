@@ -44,5 +44,8 @@ urlpatterns = [
     url(r'^get_avaluos_posicion/', get_avaluo_mes_posiciones,
         name='get_avaluos_posicion'),
 
+    url(r'^gestion_adjuntos/', gestion_adjuntos.as_view(),
+        name='gestion_adjuntos'),
+
 
 ]

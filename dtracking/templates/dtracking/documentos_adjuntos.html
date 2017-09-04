@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Examen Previo {{ obj.barra }}</title>
+    <link rel="stylesheet" href="/static/dtracking/css/bootstrap.css" type="text/css">
+    <script src="https://use.fontawesome.com/a709970381.js"></script>
+</head>
+<body>
+<div class="">
+    <div class="well">
+        {% if archivos|length > 0 %}
+        <table  class="table table-bordered table-striped table-hover table-responsive">
+            <thead>
+            <tr>
+                <th>Creado por</th>
+                <th>Fecha</th>
+                <th>Adjunto</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for archivo in archivos %}
+                <tr>
+                    <td>{{ archivo.user }}</td>
+                    <td>{{ archivo.fecha }}</td>
+                    <td><a href="{{ archivo.archivo.url }}"><i class="fa fa-cloud-download"></i> {{ archivo.archivo.name }}</a> </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-info">No hay Adjuntos</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="pk_gestion" value="{{ pk_gestion }}">
+            <div class="input-group">
+              <input type="file" name="archivo" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-cloud-upload"></i> Subir adjunto</button>
+        </form>
+    </div>
+
+</div>
+<script type="text/javascript" src="/static/home/js/jquery.js"></script>
+<script type="text/javascript" src="/static/dtracking/js/FileSaver.js"></script>
+<script type="text/javascript" src="/static/dtracking/js/jquery.wordexport.js"></script>
+<script type="text/javascript" src="/static/dtracking/js/jquery.googoose.js"></script>
+
+
+</body>
+</html>

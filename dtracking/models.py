@@ -126,7 +126,8 @@ class TipoGestion(Entidad):
         errors = ''
         for d in self.detalles():
             if d.error():
-                errors += 'El campo %s es de tipo %s, pero no contiene ningun elemento para seleccionar. ' % (d.titulo, d.tipo)
+                errors += 'El campo %s es de tipo %s, pero no contiene ningun elemento para seleccionar. ' % (
+                    d.titulo, d.tipo)
         return errors
 
     class Meta:
@@ -186,6 +187,7 @@ class DetalleGestion(models.Model):
         else:
             return False
 
+
 class especiales(models.Manager):
     def get_queryset(self):
         return super(especiales, self).get_queryset().filter(tipo__in=['combobox', 'radio'])
@@ -206,6 +208,7 @@ class Elemento(models.Model):
     def to_json(self):
         return {'combo': self.combo.id, 'valor': self.valor}
 
+
 BANCOS = (
     ('BANPRO', 'BANPRO'),
     ('BANCENTRO', 'BANCENTRO'),
@@ -215,12 +218,14 @@ BANCOS = (
     ('PROCREDIT', 'PROCREDIT'),
 )
 
+
 class Gestion_Fin(Entidad):
     pass
 
     class Meta:
         verbose_name_plural = "Fines de Avaluo"
         verbose_name = "Finalidad de avaluo"
+
 
 class Gestion_Uso(Entidad):
     fin = models.ForeignKey(Gestion_Fin)
@@ -229,10 +234,12 @@ class Gestion_Uso(Entidad):
         verbose_name_plural = "Usos de Avaluo"
         verbose_name = "Uso de avaluo"
 
+
+
 class Gestion(models.Model):
     barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo")
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    contacto = models.CharField(max_length=125,  null=True, blank=True, verbose_name="Contacto")
+    contacto = models.CharField(max_length=125, null=True, blank=True, verbose_name="Contacto")
     contacto_telefono = models.CharField(max_length=125, null=True, blank=True, verbose_name="Teléfono del contacto")
     identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación")
     banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
@@ -254,14 +261,30 @@ class Gestion(models.Model):
     fecha = models.DateField(null=True, blank=True)
     fecha_asignacion = models.DateTimeField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
+    fecha_entrega_efectiva = models.DateField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
     observaciones = models.TextField(max_length=255, null=True, blank=True)
     status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
                                       default=ESTADOS_LOG_GESTION[0][0])
+    valor = models.FloatField(null=True, blank=True)
+    categoria = models.CharField(max_length=50, null=True, blank=True)
+
 
     def save(self, *args, **kwargs):
         if not self.barra:
             self.barra = self.get_code()
+
+        if self.valor <= 100:
+            self.categoria = "Cat. 1"
+        elif 100 < self.valor <= 200:
+            self.categoria = "Cat. 2"
+        elif 201 < self.valor <= 500:
+            self.categoria = "Cat. 3"
+        elif 501 < self.valor <= 1000:
+            self.categoria = "Cat. 4"
+        elif self.valor > 1000:
+            self.categoria = "Cat. 5"
+
         super(Gestion, self).save()
 
     def get_code(self):
@@ -299,7 +322,7 @@ class Gestion(models.Model):
         o['telefono'] = self.telefono
         o['departamento'] = self.departamento.name
         o['municipio'] = self.municipio.name
-        #o['barrio'] = self.barrio.name
+        # o['barrio'] = self.barrio.name
         o['barra'] = self.barra
         if self.zona:
             o['zona'] = self.zona.name
@@ -347,23 +370,22 @@ class Gestion(models.Model):
                 v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
                 obj = v.to_json()
 
-                if v.tipo == "combobox" or v.tipo ==  "radio":
+                if v.tipo == "combobox" or v.tipo == "radio":
                     elementos = v.elementos()
                     if elementos:
                         obj_elementos = []
                         for elemento in v.elementos():
-                            selecionado=False
-                            if elemento.id==int(k):
+                            selecionado = False
+                            if elemento.id == int(k):
                                 obj['value'] = elemento.valor
-                                selecionado=True
+                                selecionado = True
                             obj_elementos.append({'value': elemento.valor, 'selecionado': selecionado})
 
-                        obj['elementos']=obj_elementos
+                        obj['elementos'] = obj_elementos
                     else:
                         obj['value'] = k
                 else:
                     obj['value'] = k
-
 
                 variables.append(obj)
             except Exception as e:
@@ -380,6 +402,8 @@ class Archivo(models.Model):
     gestion = models.ForeignKey(Gestion)
     variable = models.CharField(max_length=80)
     archivo = models.FileField(null=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    fecha = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         return "%s %s" % (self.gestion, self.archivo)
@@ -571,13 +595,13 @@ class Log_Gestion(models.Model):
             return "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[1][0]:
             return "Asignado a %s. Visita Programada para el %s a las %s horas." % (
-            get_gestor(self.gestion.user).full_name(),
-            "{}-{}-{}".format(str(self.gestion.fecha_asignacion.day).zfill(2),
-                              str(self.gestion.fecha_asignacion.month).zfill(2),
-                              self.gestion.fecha_asignacion.year),
-            "{:d}:{:02d}".format(
-                self.gestion.fecha_asignacion.hour,
-                self.gestion.fecha_asignacion.minute))
+                get_gestor(self.gestion.user).full_name(),
+                "{}-{}-{}".format(str(self.gestion.fecha_asignacion.day).zfill(2),
+                                  str(self.gestion.fecha_asignacion.month).zfill(2),
+                                  self.gestion.fecha_asignacion.year),
+                "{:d}:{:02d}".format(
+                    self.gestion.fecha_asignacion.hour,
+                    self.gestion.fecha_asignacion.minute))
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
             txt = "Levantamiento fisico realizado."
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
@@ -591,6 +615,7 @@ class Log_Gestion(models.Model):
         self.gestion.save()
         super(Log_Gestion, self).save(*args, **kwargs)
 
+
 class Registro(models.Model):
     tag = models.CharField(max_length=100, null=False, blank=False)
     mensaje = models.TextField(null=False, blank=False)
@@ -598,4 +623,4 @@ class Registro(models.Model):
     usuario = models.CharField(max_length=100, null=True, blank=True)
 
     def __unicode__(self):
-        return  "%s %s" % (self.tag, self.usuario)
+        return "%s %s" % (self.tag, self.usuario)
