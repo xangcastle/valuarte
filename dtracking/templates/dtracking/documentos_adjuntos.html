@@ -23,7 +23,7 @@
                 <tr>
                     <td>{{ archivo.user }}</td>
                     <td>{{ archivo.fecha }}</td>
-                    <td><a href="{{ archivo.archivo.url }}"><i class="fa fa-cloud-download"></i> {{ archivo.archivo.name }}</a> </td>
+                    <td><a href="{{ archivo.archivo.url }}" download="filename"><i class="fa fa-cloud-download"></i> {{ archivo.archivo.name }}</a> </td>
                 </tr>
 
             {% endfor %}
