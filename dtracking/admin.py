@@ -30,11 +30,6 @@ class tipoGestion_admin(entidad_admin):
     list_display = ('prefijo', 'name', 'errores')
 
 
-class ArchivoTabularInline(admin.TabularInline):
-    model = Archivo
-    extra = 0
-    fields =('user', 'fecha', 'archivo')
-
 
 class gestion_admin(entidad_admin):
     change_list_template = "dtracking/gestiones.html"
@@ -59,7 +54,6 @@ class gestion_admin(entidad_admin):
 
     readonly_fields = ('user',)
 
-    inlines = [ArchivoTabularInline, ]
 
     def save_model(self, request, obj, form, change):
         super(gestion_admin, self).save_model(request, obj, form, change)
