@@ -85,8 +85,8 @@ DATABASES = {
         'NAME': 'valuarte',
         'USER': 'postgres',
         'PASSWORD': 'ABC123#$',
-        'HOST': 'localhost',
-        #'HOST': 'www.valuarte.com.ni',
+        #'HOST': 'localhost',
+        'HOST': 'www.valuarte.com.ni',
         'PORT': '5432',
     },
 }
@@ -132,6 +132,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'YOUR_API_KEY'
+
+
+# Variables para el envio por gmail
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'xangcastle@gmail.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = 'ABcq12!@'
+EMAIL_PORT = 587
+
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
