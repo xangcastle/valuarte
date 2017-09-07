@@ -7,10 +7,11 @@
                 <li>
                     <a id="show_atachments" href="#" class="addlink" data-url="{% url "gestion_adjuntos" %}?pk={{ original.pk }}"
                        data-name="Documentos Adjuntos">
-                    Agregar Adjunto
+                    Documentos Adjuntos
                     </a>
                 </li>
             {% endif %}
+            {{ block.super }}
         {% endblock %}
     </ul>
 {% endblock %}

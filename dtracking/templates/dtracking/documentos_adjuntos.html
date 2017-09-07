@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Examen Previo {{ obj.barra }}</title>
+    <title>Documentos Ajuntos|{{ obj.barra }}</title>
     <link rel="stylesheet" href="/static/dtracking/css/bootstrap.css" type="text/css">
     <script src="https://use.fontawesome.com/a709970381.js"></script>
 </head>
@@ -23,7 +23,7 @@
                 <tr>
                     <td>{{ archivo.user }}</td>
                     <td>{{ archivo.fecha }}</td>
-                    <td><a href="{{ archivo.archivo.url }}" download="{{ archivo.archivo.name }}"><i class="fa fa-cloud-download"></i> {{ archivo.archivo.name }}</a> </td>
+                    <td><a href="{{ archivo.archivo.url }}" target="_self"> {{ archivo.archivo.name }}</a> </td>
                 </tr>
 
             {% endfor %}
