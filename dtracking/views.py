@@ -170,29 +170,34 @@ def asignar_gestion(request):
     g.user = User.objects.get(id=int(request.POST.get('user', '')))
     g.fecha_asignacion = request.POST.get('fecha', '')
 
-    g.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
 
-    render_to_pdf(
-        'dtracking/examen_previo.html',
-        {
-            'pagesize': 'A4',
-            'obj': g,
-        }
-    )
+
+
     try:
-        email = EmailMessage("Asignación de Avaluo",
-                             "<h1/>Se le ha asignado el avaluo: %s - %s<h1>"
-                             "Datos del cliente:<br>"
-                             "<span>Nombre: %s</span><br>"
-                             "<span>Direccion: %s</span><br>"
-                             "<span>Telefono: %s</span><br>" % (g.destinatario, g.barra,g.destinatario,g.direccion,g.telefono),
-                             to=[g.user.email,
-                                 'jwgarcia003@gmail.com'],
-                             )
+        if g.user.email:
+            render_to_pdf(
+                'dtracking/examen_impreso.html',
+                {
+                    'pagesize': 'A4',
+                    'obj': g,
+                }
+            )
 
-        email.content_subtype = "html"
-        email.attach_file("out.pdf")
-        email.send()
+            email = EmailMessage("Asignación de Avaluo",
+                                 "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
+                                 "Datos del cliente:<br>"
+                                 "<span>Nombre: %s</span><br>"
+                                 "<span>Direccion: %s</span><br>"
+                                 "<span>Telefono: %s</span><br>" % (g.destinatario, g.barra,g.destinatario,g.direccion,g.telefono),
+                                 to=[g.user.email,
+                                     'jwgarcia003@gmail.com'],
+                                 )
+
+            email.content_subtype = "html"
+            email.attach_file("out.pdf")
+            email.send()
+
+        g.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
 
         g.save()
     except Exception, e:

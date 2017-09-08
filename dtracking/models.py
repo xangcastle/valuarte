@@ -393,6 +393,34 @@ class Gestion(models.Model):
 
         return variables
 
+    def variables_plantilla(self):
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
+        arr_variables = []
+        try:
+            variables = DetalleGestion.objects.filter(tipo_gestion=self.tipo_gestion)
+            for v in variables:
+
+                obj = v.to_json()
+                if v.tipo == "combobox" or v.tipo == "radio":
+                    elementos = v.elementos()
+                    if elementos:
+                        obj_elementos = []
+                        for elemento in v.elementos():
+                            selecionado = False
+                            obj_elementos.append({'value': elemento.valor, 'selecionado': selecionado})
+
+                        obj['elementos'] = obj_elementos
+                    else:
+                        obj['value'] = ""
+                else:
+                    obj['value'] = ""
+
+                arr_variables.append(obj)
+        except Exception as e:
+            print "Oops!  That was no valid number.  Try again... %s" % e.message
+        return arr_variables
+
     class Meta:
         verbose_name_plural = "Avaluos"
         verbose_name = "Avaluo"

@@ -9,10 +9,10 @@ import pdfkit
 def render_to_pdf(template_src, context_dict):
     template = get_template(template_src)
     context = Context(context_dict)
-    html = template.render(context)
+    html = template.render(context_dict)
 
-    pwd = os.path.dirname(__file__)
-    css = pwd + '/static/app/bootstrap/css/bootstrap.css'
+    pwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    css = pwd + '/static/dtracking/css/bootstrap.css'
     pdfkit.from_string(html, 'out.pdf', css=css)
     pdf = open("out.pdf")
     response = HttpResponse(pdf.read(), content_type='application/pdf')
