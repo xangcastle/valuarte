@@ -169,8 +169,8 @@ def asignar_gestion(request):
     g = Gestion.objects.get(id=int(request.POST.get('gestion', '')))
     g.user = User.objects.get(id=int(request.POST.get('user', '')))
     g.fecha_asignacion = request.POST.get('fecha', '')
-
-
+    mensaje = "Asignacion Exitosa!"
+    code = 200
 
 
     try:
@@ -202,8 +202,10 @@ def asignar_gestion(request):
         g.save()
     except Exception, e:
         print e.message
+        mensaje = e.message
+        code = 500
 
-    return HttpResponse(json.dumps({'mensaje': "Asignacion Exitosa!", 'code': 200}),
+    return HttpResponse(json.dumps({'mensaje': mensaje, 'code': code}),
                         content_type="application/json")
 
 
