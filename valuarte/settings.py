@@ -157,3 +157,6 @@ BOWER_PATH = 'C:/Users/Jose Williams Garcia/AppData/Roaming/npm/node_modules/bow
 BOWER_INSTALLED_APPS = (
     'izimodal',
 )
+WKHTMLTOPDF_CMD_OPTIONS = {
+    'quiet': True,
+}
