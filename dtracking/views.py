@@ -174,6 +174,7 @@ def asignar_gestion(request):
 
 
     try:
+        print("asignar_gestion: Llamando Metodo para generar PDF")
         if g.user.email:
             render_to_pdf(
                 'dtracking/examen_impreso.html',
@@ -194,9 +195,11 @@ def asignar_gestion(request):
                                  )
 
             email.content_subtype = "html"
+            print("asignar_gestion: Agregando attachmet al correo")
             email.attach_file("out.pdf")
+            print("asignar_gestion: Iniciando envio de correo electronico")
             email.send()
-
+            print("asignar_gestion: Correo electronico enviado")
         g.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
 
         g.save()

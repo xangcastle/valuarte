@@ -7,14 +7,17 @@ from django.http import HttpResponse
 import pdfkit
 
 def render_to_pdf(template_src, context_dict):
+    print("render_to_pdf: Start rendering PDF")
     template = get_template(template_src)
     context = Context(context_dict)
     html = template.render(context_dict)
 
     pwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     css = pwd + '/static/dtracking/css/bootstrap.css'
+    print("render_to_pdf: Loading Template")
     pdfkit.from_string(html, 'out.pdf', css=css)
     pdf = open("out.pdf")
+    print("render_to_pdf: PDF Rendered")
     response = HttpResponse(pdf.read(), content_type='application/pdf')
     pdf.close()
     return response
