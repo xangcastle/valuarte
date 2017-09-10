@@ -1,4 +1,6 @@
 # coding=utf-8
+import traceback
+
 from django.views.generic.base import TemplateView
 from django.http.response import HttpResponse
 import json
@@ -204,7 +206,15 @@ def asignar_gestion(request):
 
         g.save()
     except Exception, e:
-        print e.message
+        trace = traceback.extract_tb(sys.exc_info()[2])
+        # Add the event to the log
+        output = "Error in the server: %s.\n" % (e)
+        output += "\tTraceback is:\n"
+        for (file, linenumber, affected, line) in trace:
+            output += "\t> Error at function %s\n" % (affected)
+            output += "\t  At: %s:%s\n" % (file, linenumber)
+            output += "\t  Source: %s\n" % (line)
+        output += "\t> Exception: %s\n" % (e)
         mensaje = e.message
         code = 500
 
