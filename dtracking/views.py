@@ -54,6 +54,20 @@ class gestion_adjuntos(TemplateView):
         return super(gestion_adjuntos, self).render_to_response(context)
 
 
+@csrf_exempt
+def gestion_borrar_adjunto(request):
+    jresponse = {}
+    a = Archivo.objects.filter(id=request.POST.get("id"))
+    if a:
+        a.delete()
+        jresponse['mensaje'] = "OK"
+        jresponse['code'] = 200
+    else:
+        jresponse['mensaje'] = "Archivo no encontrado"
+        jresponse['code'] = 400
+    data = json.dumps(jresponse)
+    return HttpResponse(data, content_type='application/json')
+
 
 @csrf_exempt
 def movil_login(request):
