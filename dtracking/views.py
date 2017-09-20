@@ -175,48 +175,34 @@ def asignar_gestion(request):
     code = 200
 
 
-    try:
-        print("asignar_gestion: Llamando Metodo para generar PDF")
-        if g.user.email:
-            render_to_pdf(
-                'dtracking/examen_impreso.html',
-                {
-                    'pagesize': 'A4',
-                    'obj': g,
-                }
-            )
+    print("asignar_gestion: Llamando Metodo para generar PDF")
+    if g.user.email:
+        render_to_pdf(
+            'dtracking/examen_impreso.html',
+            {
+                'pagesize': 'A4',
+                'obj': g,
+            }
+        )
 
-            email = EmailMessage("Asignación de Avaluo",
-                                 "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
-                                 "Datos del cliente:<br>"
-                                 "<span>Nombre: %s</span><br>"
-                                 "<span>Direccion: %s</span><br>"
-                                 "<span>Telefono: %s</span><br>" % (g.destinatario, g.barra,g.destinatario,g.direccion,g.telefono),
-                                 to=[g.user.email,
-                                     'jwgarcia003@gmail.com'],
-                                 )
+        email = EmailMessage("Asignación de Avaluo",
+                             "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
+                             "Datos del cliente:<br>"
+                             "<span>Nombre: %s</span><br>"
+                             "<span>Direccion: %s</span><br>"
+                             "<span>Telefono: %s</span><br>" % (g.destinatario, g.barra, g.destinatario,g.direccion,g.telefono),
+                             to=[g.user.email],
+                             )
 
-            email.content_subtype = "html"
-            print("asignar_gestion: Agregando attachmet al correo")
-            email.attach_file("out.pdf")
-            print("asignar_gestion: Iniciando envio de correo electronico")
-            email.send()
-            print("asignar_gestion: Correo electronico enviado")
-        g.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
+        email.content_subtype = "html"
+        print("asignar_gestion: Agregando attachmet al correo")
+        email.attach_file("out.pdf")
+        print("asignar_gestion: Iniciando envio de correo electronico")
+        email.send()
+        print("asignar_gestion: Correo electronico enviado")
+    g.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
 
-        g.save()
-    except Exception, e:
-        trace = traceback.extract_tb(sys.exc_info()[2])
-        # Add the event to the log
-        output = "Error in the server: %s.\n" % (e)
-        output += "\tTraceback is:\n"
-        for (file, linenumber, affected, line) in trace:
-            output += "\t> Error at function %s\n" % (affected)
-            output += "\t  At: %s:%s\n" % (file, linenumber)
-            output += "\t  Source: %s\n" % (line)
-        output += "\t> Exception: %s\n" % (e)
-        mensaje = e.message
-        code = 500
+    g.save()
 
     return HttpResponse(json.dumps({'mensaje': mensaje, 'code': code}),
                         content_type="application/json")

@@ -10,7 +10,7 @@ def render_to_pdf(template_src, context_dict):
     print("render_to_pdf: Start rendering PDF")
     template = get_template(template_src)
     context = Context(context_dict)
-    html = template.render(context_dict)
+    html = template.render(context)
 
     pwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     css = pwd + '/static/dtracking/css/bootstrap.css'
