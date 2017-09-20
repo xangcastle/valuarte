@@ -190,7 +190,7 @@ def asignar_gestion(request):
                              "Datos del cliente:<br>"
                              "<span>Nombre: %s</span><br>"
                              "<span>Direccion: %s</span><br>"
-                             "<span>Telefono: %s</span><br>" % (g.destinatario, g.barra, g.destinatario,g.direccion,g.telefono),
+                             "<span>Telefono: %s</span><br>" % (g.destinatario, g.barra, g.destinatario, g.direccion, g.telefono),
                              to=[g.user.email],
                              )
 
