@@ -47,5 +47,8 @@ urlpatterns = [
     url(r'^gestion_adjuntos/', gestion_adjuntos.as_view(),
         name='gestion_adjuntos'),
 
+    url(r'^gestion_proforma/', generar_proforma,
+        name='gestion_proforma'),
+
 
 ]

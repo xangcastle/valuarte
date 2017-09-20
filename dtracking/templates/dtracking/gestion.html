@@ -5,9 +5,15 @@
         {% block object-tools-items %}
             {% if has_add_permission %}
                 <li>
-                    <a id="show_atachments" href="#" class="addlink" data-url="{% url "gestion_adjuntos" %}?pk={{ original.pk }}"
+                    <a id="adjuntos" href="#" class="addlink show_atachments" data-url="{% url "gestion_adjuntos" %}?pk={{ original.pk }}"
                        data-name="Documentos Adjuntos">
                     Documentos Adjuntos
+                    </a>
+                </li>
+                <li>
+                    <a id="proforma" href="#" class="addlink show_atachments" data-url="{% url "gestion_proforma" %}?gestion={{ original.pk }}"
+                       data-name="Generar Proforma">
+                    Generar Proforma
                     </a>
                 </li>
             {% endif %}
@@ -106,7 +112,7 @@
                         "width=600mm, height=500mm,  status=no, menubar=no, location=no");
                 };
 
-                $('#show_atachments').on('click', atachments_info);
+                $('.show_atachments').on('click', atachments_info);
 
             });
         })(grp.jQuery)
