@@ -185,7 +185,7 @@ def asignar_gestion(request):
             }
         )
 
-        email = EmailMessage("Asignación de Avaluo",
+        email = EmailMessage("Asignación de Avaluo %s" % g.barra,
                              "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
                              "Datos del cliente:<br>"
                              "<span>Nombre: %s</span><br>"
