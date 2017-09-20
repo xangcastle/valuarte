@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <style media="all">
+      .campo {
+        position: absolute;
+        text-align: center;
+        font-size: 13px;
+      }
+      .contacto {
+        top: 58mm;
+        left: 30mm;
+      }
+      .cargo {
+        top: 63mm;
+        left: 30mm;
+      }
+      .empresa {
+        top: 68mm;
+        left: 30mm;
+      }
+
+      .numero {
+        top: 38.5mm;
+        left: 153mm;
+        font-size: 15px;
+        font-weight: bold;
+        color: red;
+        font-style: italic;
+      }
+      .fecha {
+        top: 43.5mm;
+        left: 153mm;
+      }
+      .fecha_vence {
+        top: 48mm;
+        left: 153mm;
+      }
+
+      .total-fob {
+        top: 162mm;
+        left: 165mm;
+      }
+      .iva {
+        top: 169mm;
+        left: 165mm;
+      }
+
+      .total {
+        top: 178mm;
+        left: 165mm;
+      }
+
+      .tiempo-entrega {
+        top: 199mm;
+        left: 42.5mm;
+        font-size: 9px;
+        color: blue;
+      }
+      .user-email{
+        top: 47.5mm;
+        left: 19mm;
+        font-size: 11px;
+      }
+      .user-name{
+        top: 188mm;
+        left: 86mm;
+      }
+
+    </style>
+    <title>{{o.nombre}}</title>
+  </head>
+  <body>
+    {% load static %}
+    {% load humanize %}
+    <embed type="image/svg+xml" src="/static/dtracking/proforma.svg" style="margin: -10;">
+    <div class="campo user-email">{{o.user.email}}</div>
+    <div class="campo numero">{{o.print_numero}}</div>
+    <div class="campo fecha">{{o.fecha}}</div>
+    <div class="campo fecha_vence">{{o.fecha_vence}}</div>
+    <div class="campo contacto">{{o.cliente.contacto}}</div>
+    <div class="campo cargo">{{o.cliente.cargo}}</div>
+    <div class="campo empresa">{{o.cliente.empresa}}</div>
+
+    <div class="campo total-fob">{{o.sub_total|intcomma}}</div>
+    <div class="campo iva">{{o.iva|intcomma}}</div>
+    <div class="campo total">{{o.total|intcomma}}</div>
+    <div class="campo user-name">{{o.user.get_full_name}}</div>
+    <div class="campo tiempo-entrega">{{o.tiempo_entrega}}</div>
+  </body>
+</html>

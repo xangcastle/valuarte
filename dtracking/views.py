@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from django.http.response import HttpResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
-
+from django.template.loader import render_to_string
 from base.html_to_pdf import render_to_pdf
 from .models import *
 from django.contrib.auth import authenticate
@@ -359,6 +359,7 @@ def agregar_registro(request):
     data = json.dumps(obj_json)
     return HttpResponse(data, content_type='application/json')
 
+
 def get_avaluo_mes_posiciones(request):
     anio = request.POST.get("anio", 0)
     mes = request.POST.get("mes", 0)
@@ -367,3 +368,6 @@ def get_avaluo_mes_posiciones(request):
     return HttpResponse(data, content_type='application/json')
 
 
+def generar_proforma(request):
+    html = render_to_string('dtracking/proforma.html', {"o": Gestion.objects.get(id=request.GET.get('gestion', '')), })
+    return HttpResponse(html)
