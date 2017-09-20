@@ -208,6 +208,9 @@ def asignar_gestion(request):
                         content_type="application/json")
 
 
+
+
+
 @csrf_exempt
 def edicion_elementos(request):
     data = []
