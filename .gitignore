@@ -4,6 +4,4 @@
 /media
 venv/
 .idea/
-/venv
-/.idea
 out.pdf
