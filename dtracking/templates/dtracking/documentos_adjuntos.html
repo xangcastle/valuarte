@@ -16,6 +16,7 @@
                 <th>Creado por</th>
                 <th>Fecha</th>
                 <th>Adjunto</th>
+                <th>Accion</th>
             </tr>
             </thead>
             <tbody>
@@ -24,6 +25,7 @@
                     <td>{{ archivo.user }}</td>
                     <td>{{ archivo.fecha }}</td>
                     <td><a href="{{ archivo.archivo.url }}" target="_self"> {{ archivo.archivo.name }}</a> </td>
+                    <td><button onclick="borrar({{ archivo.pk }})" class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
                 </tr>
 
             {% endfor %}
@@ -49,6 +51,26 @@
 <script type="text/javascript" src="/static/dtracking/js/jquery.wordexport.js"></script>
 <script type="text/javascript" src="/static/dtracking/js/jquery.googoose.js"></script>
 
+<script>
+    function borrar(id) {
+        var r = confirm("Desea realmente borrar este adjunto?");
+        if  (r === true) {
+            var data = {id:id};
+            $.ajax({
+                url : '{% url 'gestion_borrar_adjunto' %}',
+                type : 'POST',
+                data : data,
+                success : function(response){
+                    if(response.code===200){
+                        window.location.reload();
+                    }else{
+                        alert(response.mensaje);
+                    }
+                }
+            });
+        }
 
+    }
+</script>
 </body>
 </html>
