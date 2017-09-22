@@ -260,6 +260,8 @@ class Gestion(models.Model):
     position = GeopositionField(null=True, blank=True)
     fecha = models.DateField(null=True, blank=True)
     fecha_asignacion = models.DateTimeField(null=True, blank=True)
+    programacion_incio = models.DateTimeField(null=True, blank=True)
+    programacion_fin = models.DateTimeField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
@@ -344,6 +346,14 @@ class Gestion(models.Model):
             except:
                 pass
 
+        return o
+
+    def to_json_programacion(self):
+        o = {}
+        o['id'] = self.id
+        o['titulo'] = self.destinatario
+        o['descripcion'] = self.observaciones
+        o['color'] = "#3a87ad"
         return o
 
     def numero_gestor(self):

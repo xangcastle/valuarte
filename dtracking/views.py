@@ -374,3 +374,40 @@ def get_avaluo_mes_posiciones(request):
 def generar_proforma(request):
     html = render_to_string('dtracking/proforma.html', {"o": Gestion.objects.get(id=request.GET.get('gestion', '')), })
     return HttpResponse(html)
+
+
+class programaciones(TemplateView):
+    template_name = "dtracking/programaciones.html"
+
+    def get(self, request, *args, **kwargs):
+        context = super(programaciones, self).get_context_data(**kwargs)
+        context['pendientes'] = Gestion.objects.filter(programacion_incio=None)
+        return super(programaciones, self).render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(programaciones, self).get_context_data(**kwargs)
+        return super(programaciones, self).render_to_response(context)
+
+def obtener_citas_grestiones(request):
+    gestiones = Gestion.objects.filter(status_gestion__in=('RECEPCIONADO','ASIGNADO A EVALUADOR'))\
+        .exclude(programacion_incio=None)
+    data = json.dumps([x.to_json_programacion() for x in gestiones])
+    return HttpResponse(data, content_type='application/json')
+
+def programar_gestion(request):
+    obj_json = {}
+    try:
+        gestion = Gestion.objects.get(id=request.POST.get('id',None))
+        gestion.programacion_incio=request.POST.get('inicio',None)
+        gestion.programacion_fin = request.POST.get('fin', None)
+        id_usuario = request.POST.get('id_usuario', None)
+        if id_usuario:
+            gestion.user = User.objects.get(pk=int(id_usuario))
+        gestion.save()
+        obj_json['code'] = 500
+        obj_json['mensaje'] = "Gestion programada exitosamente"
+    except:
+        obj_json['code'] = 500
+        obj_json['mensaje'] = "No fue programar getion"
+    data = json.dumps(obj_json)
+    return HttpResponse(data, content_type='application/json')

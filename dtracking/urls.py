@@ -52,5 +52,10 @@ urlpatterns = [
     url(r'^gestion_proforma/', generar_proforma,
         name='gestion_proforma'),
 
+    url(r'^programaciones/', programaciones.as_view(),
+        name='programaciones'),
+    url(r'^obtenercitas/', obtener_citas_grestiones,
+        name='obtenercitas'),
+
 
 ]
