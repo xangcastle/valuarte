@@ -1,4 +1,5 @@
 {% extends 'dtracking/base.html' %}
+{% load admin_urls %}
 {% block Styles %}
   <link href="/static/dtracking/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
   <link href="/static/dtracking/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
@@ -70,7 +71,10 @@
 			        </div>
 			        <div class="modal-body">
 				        <p id="pDetails"></p>
-			          <button type="button" id="btnEdit" class="btn btn-success btn-sm pull-right" style="margin-right:5px;">
+			          <button type="button" id="btnEdit"
+			                  data-url="{% url 'admin:dtracking_gestion_change' 0 %}"
+			                  class="btn btn-success btn-sm pull-right"
+			                  style="margin-right:5px;">
 			              <span class="glyphicon glyphicon-pencil"></span>Editar
 			          </button>
 
@@ -298,12 +302,13 @@
 				                $(".fc-event[data-idevent*='"+ result.gestion.id +"']").remove();
 				                refreshCalender();
                     }
-
                 }
             });
         }
         $('#btnEdit').click(function () {
-					//TODO: AQUI HACER ALGO PARA QUE ENVIE A LA PANTALLA DE EDICION DEL ADMIN.
+            var url = $(this).data('url');
+            url = url.replace("0",$(this).data('idgestion'));
+						location.href=url;
         });
 
       })//end ready
