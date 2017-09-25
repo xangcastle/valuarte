@@ -58,6 +58,18 @@
 {#          <label for='drop-remove'>remove after drop</label>#}
 {#        </p>#}
       </div>
+			<div id='external-events'>
+        <div id='external-events-listing'>
+          <h4>Leyenda</h4>
+					<div style="background-color: #991957; color: white;">Vencida</div><br>
+	        <div style="background-color: #4d0a54; color: white;">No Asingnada</div><br>
+	        <div style="background-color: #46991a; color: white;">Todo bien</div><br>
+        </div>
+{#        <p>#}
+{#          <input type='checkbox' id='drop-remove'  checked='checked'/>#}
+{#          <label for='drop-remove'>remove after drop</label>#}
+{#        </p>#}
+      </div>
 		</div>
 		<div class="col-xs-12 col-sm-9">
 			<div id="calender">
@@ -203,7 +215,8 @@
                         color: v.color,
 		                    textColor: 'white',
                         allDay: false,
-		                    barra: v.barra
+		                    barra: v.barra,
+		                    user: v.user
                     });
                 });
 
@@ -248,9 +261,10 @@
 							        ProgramEvent(event.eventID, event.start, event.end, null);
 							    }
 							    return $(
-							        '<div class="fc-event">' +
+							        '<div class="fc-event" style="background-color:'+ event.color +'; padding: 3px">' +
 									          '<strong>'+ event.start.format("h(:mm)a") +'</strong> '+ event.barra +'<br> ' +
-									          '<small>' + event.title + '<' +
+									          '<small>' + event.title + '</small><br> ' +
+									          '<strong>'+ event.user +'</strong>' +
 									    '</div>');
 							},
 	            eventDragStop: function( event, jsEvent, ui, view ) {
@@ -273,15 +287,16 @@
 	              console.log(citaSeleccionada);
 	              $('#myModal #eventTitle').text(calEvent.title);
 	              var $description = $('<div/>');
-	              $description.append($('<p/>').html('<b>Barra:</b>' + calEvent.barra));
-
-	              $description.append($('<p/>').html('<b>Start:</b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+	              $description.append($('<p/>').html('<b>Barra: </b>' + calEvent.barra));
+	              if (calEvent.user !== 'None')
+									$description.append($('<p/>').html('<b>Asingando a: </b>' + calEvent.user));
+	              $description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
 
 	              if (calEvent.end != null) {
-	                  $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+	                  $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
 	              }
 
-	              $description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
+	              $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
 	              $('#myModal #pDetails').empty().html($description);
 
 	              //$('#myModal').modal();

@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import sys
 
+from django.utils import timezone
+
 from base.models import Entidad
 from django.contrib.auth.models import User
 from django.db import models
@@ -355,7 +357,15 @@ class Gestion(models.Model):
         o['titulo'] = self.destinatario
         o['descripcion'] = self.observaciones
         o['inicio'] = str(self.programacion_incio)
-        o['color'] = "#3a87ad"
+        o['color'] = "#46991a",
+        if self.user:
+            o['user'] = str(self.user)
+        else:
+            o['user'] = "No asignada"
+            o['color'] = "#4d0a54"
+
+        if timezone.now()>self.programacion_incio:
+            o['color'] = "#991957"
         return o
 
     def numero_gestor(self):
