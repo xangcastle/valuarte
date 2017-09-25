@@ -351,8 +351,10 @@ class Gestion(models.Model):
     def to_json_programacion(self):
         o = {}
         o['id'] = self.id
+        o['barra'] = self.barra
         o['titulo'] = self.destinatario
         o['descripcion'] = self.observaciones
+        o['inicio'] = str(self.programacion_incio)
         o['color'] = "#3a87ad"
         return o
 

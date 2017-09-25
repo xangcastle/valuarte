@@ -56,6 +56,9 @@ urlpatterns = [
         name='programaciones'),
     url(r'^obtenercitas/', obtener_citas_grestiones,
         name='obtenercitas'),
+    url(r'^programar_gestion/', programar_gestion,
+        name='programar_gestion'),
+
 
 
 ]

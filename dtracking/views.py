@@ -1,6 +1,7 @@
 # coding=utf-8
 import traceback
 
+from django.db.models import Q
 from django.views.generic.base import TemplateView
 from django.http.response import HttpResponse
 import json
@@ -389,8 +390,18 @@ class programaciones(TemplateView):
         return super(programaciones, self).render_to_response(context)
 
 def obtener_citas_grestiones(request):
-    gestiones = Gestion.objects.filter(status_gestion__in=('RECEPCIONADO','ASIGNADO A EVALUADOR'))\
-        .exclude(programacion_incio=None)
+    gestiones=None
+    busqueda = request.GET.get("busqueda",None)
+    if busqueda:
+        gestiones = Gestion.objects.\
+            filter(status_gestion__in=('RECEPCIONADO', 'ASIGNADO A EVALUADOR'))\
+            .filter(Q(barra__icontains=busqueda) | Q(destinatario__icontains=busqueda)) \
+            .exclude(programacion_incio=None)
+    else:
+        gestiones = Gestion.objects.filter(
+            status_gestion__in=('RECEPCIONADO','ASIGNADO A EVALUADOR'))\
+            .exclude(programacion_incio=None)
+
     data = json.dumps([x.to_json_programacion() for x in gestiones])
     return HttpResponse(data, content_type='application/json')
 
@@ -404,7 +415,8 @@ def programar_gestion(request):
         if id_usuario:
             gestion.user = User.objects.get(pk=int(id_usuario))
         gestion.save()
-        obj_json['code'] = 500
+        obj_json['gestion'] = gestion.to_json_programacion()
+        obj_json['code'] = 200
         obj_json['mensaje'] = "Gestion programada exitosamente"
     except:
         obj_json['code'] = 500

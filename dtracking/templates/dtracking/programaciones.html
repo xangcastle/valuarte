@@ -42,10 +42,10 @@
 		<div class="col-xs-12 col-sm-3">
 			<div id='external-events'>
         <div id='external-events-listing'>
-          <h4>Draggable Events</h4>
+          <h4>Gestiones no programadas</h4>
 					{% for gestion in pendientes %}
-            <div class='fc-event'>
-              <input type="hidden" value="{{ gestion.id }}">
+            <div class='fc-event' data-idevent="{{ gestion.id }}">
+              <input class="eventid" type="hidden" value="{{ gestion.id }}">
               <span>Codigo: {{ gestion.barra }}</span><br>
 	            <span>{{ gestion.destinatario }}</span><br>
               <span>{{ gestion.user }}</span>
@@ -64,17 +64,16 @@
 			    <div class="modal-dialog">
 			      <div class="modal-content">
 			        <div class="modal-header">
-			          <button type="button" class="close" data-dismiss="modal">&times;</button>
-			          <h4 class="modal-title"><span id="eventTitle"></span></h4>
+
+			          <h7 class="modal-title"><span id="eventTitle"></span></h7>
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
 			        </div>
 			        <div class="modal-body">
-			          <button type="button" id="btnDelete" class="btn btn-danger btn-sm pull-right">
-			              <span class="glyphicon glyphicon-trash"></span>Eliminar
-			          </button>
-			          <button type="button" id="btnEdit" class="btn btn-skin btn-sm pull-right" style="margin-right:5px;">
+				        <p id="pDetails"></p>
+			          <button type="button" id="btnEdit" class="btn btn-success btn-sm pull-right" style="margin-right:5px;">
 			              <span class="glyphicon glyphicon-pencil"></span>Editar
 			          </button>
-			          <p id="pDetails"></p>
+
 
 			        </div>
 			        <div class="modal-footer">
@@ -102,7 +101,6 @@
           revertDuration: false  //  original position after the drag
 	      });
 		  }
-
       $(document).ready(function() {
 
 			  var dragged = null;
@@ -110,6 +108,22 @@
         var events = [];
         var citaSeleccionada = null;
         refreshCalender();
+
+        var globalTimeout = null;
+				$('#nav-search').keyup(function() {
+					if (globalTimeout !== null) {
+						clearTimeout(globalTimeout);
+					}
+					globalTimeout = setTimeout(function() {
+					globalTimeout = null;
+
+					refreshCalender();
+
+					}, 500);
+				});
+
+
+
         /* initialize the external events
         -----------------------------------------------------------------*/
         $('#external-events').find('.fc-event').each(function() {
@@ -168,12 +182,14 @@
 
         function refreshCalender() {
           var events = [];
+          var data = {'busqueda':$('#nav-search').val()};
           $.ajax({
-            type: "GET",
-            url: "{% url 'obtenercitas' %}",
-            success: function (data) {
-                console.log(data);
-                $.each(data, function (i, v) {
+              type: "GET",
+		          data:data,
+	            url: "{% url 'obtenercitas' %}",
+	            success: function (response) {
+                console.log(response);
+                $.each(response, function (i, v) {
                     events.push({
                         eventID: v.id,
                         title: v.titulo,
@@ -182,16 +198,17 @@
                         end: null,
                         color: v.color,
 		                    textColor: 'white',
-                        allDay: false
+                        allDay: false,
+		                    barra: v.barra
                     });
                 });
 
                 GenerateCalender(events);
-            },
-            error: function (error) {
-                alert(JSON.stringify(error.d));
-                console.log(error);
-            }
+	            },
+	            error: function (error) {
+	                alert(JSON.stringify(error.d));
+	                console.log(error);
+	            }
           })//ajax
         }
 
@@ -211,18 +228,31 @@
 	            droppable: true, // this allows things to be dropped onto the calendar
 	            dragRevertDuration: 0,
 		          displayEventTime:true,
-		          defaultDate: new Date(),
+		          //defaultDate: new Date(),
 		          timeFormat: 'h(:mm)a',
 		          selectable:true,
 		          eventColor: '#3a87ad',
 	            drop: function(date, jsEvent, ui, resourceId) {
 	                makeEventsDraggable();
-	                var eventui = $(this);
-
-	                refreshCalender();
+	                var id = $(this).children(".eventid").val();
+			            ProgramEvent(id, date, null, null);
 	            },
+		          eventRender: function( event, element, view ) {
+							    if(event.changing){ // If this event is being changed, grab its render date
+									    event.changing = false;
+							        //$("#currenttime").html("Start: "+event.start.format("YYYY-MM-DD hh:mma")+"<br> End: "+event.end.format("YYYY-MM-DD hh:mma"));
+							        ProgramEvent(event.eventID, event.start, event.end, null);
+							    }
+							    return $(
+							        '<div class="fc-event">' +
+									          '<strong>'+ event.start.format("h(:mm)a") +'</strong> '+ event.barra +'<br> ' +
+									          '<small>' + event.title + '<' +
+									    '</div>');
+							},
 	            eventDragStop: function( event, jsEvent, ui, view ) {
+
 	                makeEventsDraggable();
+
 	            },
 	            eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
 	                makeEventsDraggable();
@@ -231,6 +261,7 @@
 	                makeEventsDraggable();
 	            },
 	            eventDragStart:function( event, jsEvent, ui, view ) {
+	                event.changing = true;
 	                dragged = [ calendar, event ];
 	            },
 		          eventClick: function (calEvent, jsEvent, view) {
@@ -238,42 +269,42 @@
 	              console.log(citaSeleccionada);
 	              $('#myModal #eventTitle').text(calEvent.title);
 	              var $description = $('<div/>');
+	              $description.append($('<p/>').html('<b>Barra:</b>' + calEvent.barra));
+
 	              $description.append($('<p/>').html('<b>Start:</b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+
 	              if (calEvent.end != null) {
 	                  $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
 	              }
+
 	              $description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
 	              $('#myModal #pDetails').empty().html($description);
 
 	              //$('#myModal').modal();
 	              $("#myModal").modal({ backdrop: false ,keyboard: false }, 'toggle','show');
+
+	              $("#btnEdit").data('idgestion',calEvent.eventID);
 	            }
           });
         }
-          $('#btnEdit').click(function () {
+        function ProgramEvent(id, inicio, fin, id_usuario){
+            var data={"id":id, "inicio":new Date(inicio).toISOString(), "fin":new Date(fin).toISOString(), "id_usuario":id_usuario, csrfmiddlewaretoken: '{{ csrf_token }}'};
+            $.ajax({
+		            url:"{% url 'programar_gestion' %}",
+		            type: "POST",
+		            data:data,
+		            success: function (result) {
+				            if(result.code===200){
+				                $(".fc-event[data-idevent*='"+ result.gestion.id +"']").remove();
+				                refreshCalender();
+                    }
 
-          });
-          $('#btnDelete').click(function () {
-              if (citaSeleccionada!=null &&  confirm('Esta seguro de eliminar la cita?')) {
-                  $.ajax({
-                      type: "POST",
-                      url: "/Citas/EliminarCita",
-                      data: { 'citaID': citaSeleccionada.eventID },
-                      success: function (data) {
-
-                              if (data.estado) {
-                                  //Actualiza el calendario
-                                  refreshCalender();
-                                  $("#myModal").modal('hide');
-                              }
-                      },
-                      error: function (error) {
-                          alert('Error inesperado');
-                      }
-
-                  }); //ajax
-              }
-          });
+                }
+            });
+        }
+        $('#btnEdit').click(function () {
+					//TODO: AQUI HACER ALGO PARA QUE ENVIE A LA PANTALLA DE EDICION DEL ADMIN.
+        });
 
       })//end ready
   </script>
