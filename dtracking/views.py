@@ -2,6 +2,7 @@
 import traceback
 
 from django.db.models import Q
+from django.utils.dateparse import parse_date
 from django.views.generic.base import TemplateView
 from django.http.response import HttpResponse
 import json
@@ -13,7 +14,9 @@ from django.contrib.auth import authenticate
 from geoposition import Geoposition
 from django.shortcuts import render
 from django.core.mail import EmailMessage
-
+from datetime import timedelta
+from datetime import datetime
+from email.utils import parsedate_tz
 
 class barrios_huerfanos(TemplateView):
     template_name = "dtracking/barrios_huerfanos.html"
@@ -409,8 +412,15 @@ def programar_gestion(request):
     obj_json = {}
     try:
         gestion = Gestion.objects.get(id=request.POST.get('id',None))
-        gestion.programacion_incio=request.POST.get('inicio',None)
-        gestion.programacion_fin = request.POST.get('fin', None)
+        gestion.programacion_incio=datetime.strptime(request.POST.get('inicio',None)[0:16],'%Y-%m-%dT%H:%M')
+        ffin = datetime.strptime(request.POST.get('fin',None)[0:16],'%Y-%m-%dT%H:%M')
+        if ffin.year<1990:
+            ffin=None
+        if ffin:
+            gestion.programacion_fin = ffin
+        else:
+            gestion.programacion_fin = gestion.programacion_incio + timedelta(
+                minutes = gestion.tipo_gestion.tiempo_ejecucion)
         id_usuario = request.POST.get('id_usuario', None)
         if id_usuario:
             gestion.user = User.objects.get(pk=int(id_usuario))
@@ -418,7 +428,8 @@ def programar_gestion(request):
         obj_json['gestion'] = gestion.to_json_programacion()
         obj_json['code'] = 200
         obj_json['mensaje'] = "Gestion programada exitosamente"
-    except:
+    except Exception as e:
+        print e
         obj_json['code'] = 500
         obj_json['mensaje'] = "No fue programar getion"
     data = json.dumps(obj_json)

@@ -3,6 +3,9 @@
 {% block Styles %}
   <link href="/static/dtracking/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
   <link href="/static/dtracking/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
+
+
+	<link rel="stylesheet" href="/static/dtracking/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
 	<style>
 	 #external-events {
         float: left;
@@ -34,6 +37,10 @@
         margin: 0;
         vertical-align: middle;
     }
+		.hidden {
+		  display: none !important;
+		  visibility: hidden !important;
+		}
 
 
 	</style>
@@ -82,12 +89,43 @@
 				        <button type="button" class="close" data-dismiss="modal">&times;</button>
 			        </div>
 			        <div class="modal-body">
+				        <div class="row">
+							    <div class="col-sm-2">
+								    <b>Start: </b>
+							    </div>
+					        <div class="col-sm-6">
+						        <div class="form-group">
+							        <div class="input-group date" id="datetimepickerstart">
+							          <input type="text" class="form-control" />
+							          <span class="input-group-addon">
+							            <span class="glyphicon glyphicon-calendar"></span>
+							          </span>
+							        </div>
+							      </div>
+					        </div>
+				        </div>
+				        <div class="row" id="div_datetimepickerend">
+							    <div class="col-sm-2">
+								    <b>End: </b>
+							    </div>
+					        <div class="col-sm-6">
+						        <div class="form-group">
+							        <div class="input-group date" id="datetimepickerend">
+							          <input type="text" class="form-control" />
+							          <span class="input-group-addon">
+							            <span class="glyphicon glyphicon-calendar"></span>
+							          </span>
+							        </div>
+							      </div>
+					        </div>
+				        </div>
+
 				        <p id="pDetails"></p>
 			          <button type="button" id="btnEdit"
 			                  data-url="{% url 'admin:dtracking_gestion_change' 0 %}"
 			                  class="btn btn-success btn-sm pull-right"
 			                  style="margin-right:5px;">
-			              <span class="glyphicon glyphicon-pencil"></span>Editar
+			              <span class="glyphicon glyphicon-pencil"></span>Ver mas..
 			          </button>
 
 
@@ -106,9 +144,10 @@
 {% block Scripts %}
 	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
   <script type="text/javascript" src="/static/dtracking/fullcalendar/moment.min.js"></script>
+	<script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone.min.js"></script>
   <script type="text/javascript" src="/static/dtracking/fullcalendar/fullcalendar.min.js"></script>
   <script type="text/javascript" src="/static/dtracking/fullcalendar/es.js"></script>
-
+  <script src="/static/dtracking/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
   <script>
       function makeEventsDraggable() {
 	      $( ".fc-draggable" ).draggable({
@@ -117,6 +156,7 @@
           revertDuration: false  //  original position after the drag
 	      });
 		  }
+		  var currentevent;
       $(document).ready(function() {
 
 			  var dragged = null;
@@ -126,6 +166,13 @@
         refreshCalender();
 
         var globalTimeout = null;
+        $('.date').datetimepicker({
+		        format:  "yyyy-mm-dd hh:ii",
+		        timezone: 'UTC',
+		        showMeridian: true,
+		        autoclose: true,
+		        todayBtn: true
+		    });
 				$('#nav-search').keyup(function() {
 					if (globalTimeout !== null) {
 						clearTimeout(globalTimeout);
@@ -290,21 +337,48 @@
 	              $description.append($('<p/>').html('<b>Barra: </b>' + calEvent.barra));
 	              if (calEvent.user !== 'None')
 									$description.append($('<p/>').html('<b>Asingando a: </b>' + calEvent.user));
-	              $description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+
+
+
+
+
+	              //$description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+								$('#datetimepickerstart').datetimepicker('update',
+										moment.tz(calEvent.start, "UTC").format());
 
 	              if (calEvent.end != null) {
-	                  $description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+	                  $('#div_datetimepickerend').removeClass("hidden");
+	                  $('#datetimepickerend').datetimepicker('update',
+										moment.tz(calEvent.end, "UTC").format());
+	                  //$description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+	              }else{
+	                  $('#div_datetimepickerend').addClass("hidden");
 	              }
+
+	              $('#datetimepickerstart')
+									.datetimepicker()
+									.on('changeDate', function(ev){
+									    citaSeleccionada.start = moment.tz(ev.date, "UTC").format(); //moment.tz(ev.date, "UTC");
+									    console.log(citaSeleccionada);
+									    ProgramEvent(citaSeleccionada.eventID, citaSeleccionada.start, citaSeleccionada.end, null);
+									});
 
 	              $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
 	              $('#myModal #pDetails').empty().html($description);
 
+
+
+								//$('#datetimepickerstart').data({date: new Date(calEvent.start.format("DD-MMM-YYYY HH:mm a"))});
+	              //$("#datetimepickerstart").val(calEvent.start.format("DD-MMM-YYYY HH:mm a"));
 	              //$('#myModal').modal();
 	              $("#myModal").modal({ backdrop: false ,keyboard: false }, 'toggle','show');
 
 	              $("#btnEdit").data('idgestion',calEvent.eventID);
+
+
 	            }
           });
+          $('#calender').fullCalendar('option', 'timezone', 'UTC');
         }
         function ProgramEvent(id, inicio, fin, id_usuario){
             var data={"id":id, "inicio":new Date(inicio).toISOString(), "fin":new Date(fin).toISOString(), "id_usuario":id_usuario, csrfmiddlewaretoken: '{{ csrf_token }}'};

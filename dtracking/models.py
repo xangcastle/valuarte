@@ -113,6 +113,7 @@ class ZonaBarrio(models.Model):
 
 class TipoGestion(Entidad):
     prefijo = models.CharField(max_length=6, null=True, blank=False)
+    tiempo_ejecucion = models.IntegerField(null=True,blank=True,help_text="Tiempo maximo requerido para el levantamiento de datos de este tipo de gestion")
 
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
