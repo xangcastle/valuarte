@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 import sys
 
+from django.core.mail import EmailMessage
 from django.utils import timezone
 
+from base.html_to_pdf import render_to_pdf
 from base.models import Entidad
 from django.contrib.auth.models import User
 from django.db import models
@@ -281,6 +283,39 @@ class Gestion(models.Model):
     fecha_vence = models.DateField(null=True, blank=True)
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)
 
+    def asingar(self, *args, **kwargs):
+        print("asignar_gestion: Llamando Metodo para generar PDF")
+        if self.user.email:
+            render_to_pdf(
+                'dtracking/examen_impreso.html',
+                {
+                    'pagesize': 'A4',
+                    'obj': self,
+                }
+            )
+
+            email = EmailMessage("Asignación de Avaluo %s" % self.barra,
+                                 "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
+                                 "Datos del cliente:<br>"
+                                 "<span>Nombre: %s</span><br>"
+                                 "<span>Direccion: %s</span><br>"
+                                 "<span>Telefono: %s</span><br>" % (
+                                     self.destinatario, self.barra, self.destinatario,
+                                     self.direccion, self.telefono),
+                                 to=[self.user.email],
+                                 )
+
+            email.content_subtype = "html"
+            print("asignar_gestion: Agregando attachmet al correo")
+            email.attach_file("out.pdf")
+            print("asignar_gestion: Iniciando envio de correo electronico")
+            email.send()
+            print("asignar_gestion: Correo electronico enviado")
+
+        if kwargs.has_key('request'):
+            request = kwargs.pop('request')
+            self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
+
     def save(self, *args, **kwargs):
         if not self.barra:
             self.barra = self.get_code()
@@ -297,7 +332,11 @@ class Gestion(models.Model):
             self.categoria = "Cat. 5"
         if self.user and self.fecha_asignacion and not self.realizada:
             self.status_gestion = "ASIGNADO A EVALUADOR"
+            self.asingar(*args, **kwargs)
+
         super(Gestion, self).save()
+
+
 
     def get_code(self):
         code = ""

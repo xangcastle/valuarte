@@ -161,7 +161,7 @@
             });
         }
         var newEvent = function(){
-            var params = "fields=fecha_asignacion-tipo_gestion-user-barra-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
+            var params = "fields=tipo_gestion-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
