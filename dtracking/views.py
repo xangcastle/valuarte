@@ -18,6 +18,7 @@ from datetime import timedelta
 from datetime import datetime
 from email.utils import parsedate_tz
 
+
 class barrios_huerfanos(TemplateView):
     template_name = "dtracking/barrios_huerfanos.html"
 
@@ -26,6 +27,7 @@ class barrios_huerfanos(TemplateView):
         context['barrios'] = Barrio.objects.all().exclude(
             id__in=ZonaBarrio.objects.all().values_list('barrio', flat=True))
         return context
+
 
 class gestion_adjuntos(TemplateView):
     template_name = "dtracking/documentos_adjuntos.html"
@@ -50,7 +52,7 @@ class gestion_adjuntos(TemplateView):
             a.user = request.user
             a.fecha = datetime.now()
             a.save()
-        
+
         context['archivos'] = Archivo.objects.filter(
             gestion__id=pk_gestion
         )
@@ -138,7 +140,7 @@ def cargar_gestion(request):
 def cargar_media(request):
     g = Gestion.objects.filter(id=int(request.POST.get('gestion', ''))).first()
     if not g:
-        obj= {'mensaje' : "media subida con exito"}
+        obj = {'mensaje': "media subida con exito"}
     else:
         variable = request.POST.get('variable', '')
         imagen = request.FILES['imagen']
@@ -192,7 +194,6 @@ def asignar_gestion(request):
     mensaje = "Asignacion Exitosa!"
     code = 200
 
-
     print("asignar_gestion: Llamando Metodo para generar PDF")
     if g.user.email:
         render_to_pdf(
@@ -208,7 +209,8 @@ def asignar_gestion(request):
                              "Datos del cliente:<br>"
                              "<span>Nombre: %s</span><br>"
                              "<span>Direccion: %s</span><br>"
-                             "<span>Telefono: %s</span><br>" % (g.destinatario, g.barra, g.destinatario, g.direccion, g.telefono),
+                             "<span>Telefono: %s</span><br>" % (
+                             g.destinatario, g.barra, g.destinatario, g.direccion, g.telefono),
                              to=[g.user.email],
                              )
 
@@ -224,9 +226,6 @@ def asignar_gestion(request):
 
     return HttpResponse(json.dumps({'mensaje': mensaje, 'code': code}),
                         content_type="application/json")
-
-
-
 
 
 @csrf_exempt
@@ -324,11 +323,13 @@ def get_barrios(request):
     data = json.dumps([x.to_json() for x in barrios])
     return HttpResponse(data, content_type='application/json')
 
+
 @csrf_exempt
 def get_usos_gestion(request):
     usos = Gestion_Uso.objects.filter(fin=int(request.POST.get('fin', None)))
     data = json.dumps([x.to_json() for x in usos])
     return HttpResponse(data, content_type='application/json')
+
 
 @csrf_exempt
 def agregar_registro(request):
@@ -385,42 +386,35 @@ class programaciones(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(programaciones, self).get_context_data(**kwargs)
-        context['pendientes'] = Gestion.objects.filter(programacion_incio=None)
+        context['pendientes'] = Gestion.objects.filter(status_gestion="RECEPCIONADO")
         return super(programaciones, self).render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         context = super(programaciones, self).get_context_data(**kwargs)
         return super(programaciones, self).render_to_response(context)
 
+
 def obtener_citas_grestiones(request):
-    gestiones=None
-    busqueda = request.GET.get("busqueda",None)
+    gestiones = None
+    busqueda = request.GET.get("busqueda", None)
     if busqueda:
-        gestiones = Gestion.objects.\
-            filter(status_gestion__in=('RECEPCIONADO', 'ASIGNADO A EVALUADOR'))\
-            .filter(Q(barra__icontains=busqueda) | Q(destinatario__icontains=busqueda)) \
-            .exclude(programacion_incio=None)
+        gestiones = Gestion.objects. \
+            filter(status_gestion__in=['ASIGNADO A EVALUADOR', ])
     else:
         gestiones = Gestion.objects.filter(
-            status_gestion__in=('RECEPCIONADO','ASIGNADO A EVALUADOR'))\
-            .exclude(programacion_incio=None)
+            status_gestion__in=['ASIGNADO A EVALUADOR', ])
+    print gestiones
 
     data = json.dumps([x.to_json_programacion() for x in gestiones])
     return HttpResponse(data, content_type='application/json')
 
+
 def programar_gestion(request):
     obj_json = {}
     try:
-        gestion = Gestion.objects.get(id=request.POST.get('id',None))
-        gestion.programacion_incio=datetime.strptime(request.POST.get('inicio',None)[0:16],'%Y-%m-%dT%H:%M')
-        ffin = datetime.strptime(request.POST.get('fin',None)[0:16],'%Y-%m-%dT%H:%M')
-        if ffin.year<1990:
-            ffin=None
-        if ffin:
-            gestion.programacion_fin = ffin
-        else:
-            gestion.programacion_fin = gestion.programacion_incio + timedelta(
-                minutes = gestion.tipo_gestion.tiempo_ejecucion)
+        gestion = Gestion.objects.get(id=request.POST.get('id', None))
+        gestion.fecha_asignacion = datetime.strptime(request.POST.get('inicio', None)[0:16], '%Y-%m-%dT%H:%M')
+
         id_usuario = request.POST.get('id_usuario', None)
         if id_usuario:
             gestion.user = User.objects.get(pk=int(id_usuario))

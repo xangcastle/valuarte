@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+
+<form action="{{ action }}" method="{{ method }}" class="form_entrada">
+    {% csrf_token %}
+    {% if id %}
+        <input type="hidden" name="id" value="{{ id }}">
+    {% endif %}
+    <input type="hidden" name="app_label" value="{{ app_label }}"/>
+    <input type="hidden" name="model" value="{{ model }}"/>
+    <input type="hidden" name="fields" value="{{ fields }}"/>
+    {{ form|crispy }}
+    <input type="submit" value="Guardar" class="btn btn-primary">
+</form>

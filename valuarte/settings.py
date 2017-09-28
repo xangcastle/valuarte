@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'base',
     'geoposition',
     'grappelli_dynamic_navbar',
     'import_export',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'dtracking',
     'home',
     'djangobower',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +164,5 @@ BOWER_INSTALLED_APPS = (
 WKHTMLTOPDF_CMD_OPTIONS = {
     'quiet': True,
 }
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"

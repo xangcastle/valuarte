@@ -1,405 +1,390 @@
 {% extends 'dtracking/base.html' %}
 {% load admin_urls %}
 {% block Styles %}
-  <link href="/static/dtracking/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
-  <link href="/static/dtracking/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
+    <link href="/static/dtracking/css/pnotify.css" rel="stylesheet"/>
+    <link href="/static/dtracking/fullcalendar/fullcalendar.min.css" rel="stylesheet"/>
+    <link href="/static/dtracking/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print"/>
+    <link rel="stylesheet" href="/static/dtracking/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <style>
+        #external-events {
+            float: left;
+            width: 90%;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            background: #eee;
+            text-align: left;
+        }
 
+        #external-events h4 {
+            font-size: 16px;
+            margin-top: 0;
+            padding-top: 1em;
+        }
 
-	<link rel="stylesheet" href="/static/dtracking/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-	<style>
-	 #external-events {
-        float: left;
-        width: 90%;
-        padding: 0 10px;
-        border: 1px solid #ccc;
-        background: #eee;
-        text-align: left;
-    }
+        #external-events .fc-event {
+            margin: 10px 0;
+            cursor: pointer;
+        }
 
-    #external-events h4 {
-        font-size: 16px;
-        margin-top: 0;
-        padding-top: 1em;
-    }
+        #external-events p {
+            margin: 1.5em 0;
+            font-size: 11px;
+            color: #666;
+        }
 
-    #external-events .fc-event {
-        margin: 10px 0;
-        cursor: pointer;
-    }
+        #external-events p input {
+            margin: 0;
+            vertical-align: middle;
+        }
 
-    #external-events p {
-        margin: 1.5em 0;
-        font-size: 11px;
-        color: #666;
-    }
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+        }
 
-    #external-events p input {
-        margin: 0;
-        vertical-align: middle;
-    }
-		.hidden {
-		  display: none !important;
-		  visibility: hidden !important;
-		}
+        span.direccion {
+            font-size: 0.8em;
+        }
 
-
-	</style>
+        #new-event{
+            float: right;
+            margin-top: -35px;
+        }
+    </style>
 {% endblock %}
 {% block Content %}
-  <div class="row">
-		<div class="col-xs-12 col-sm-3">
-			<div id='external-events'>
-        <div id='external-events-listing'>
-          <h4>Gestiones no programadas</h4>
-					{% for gestion in pendientes %}
-            <div class='fc-event' data-idevent="{{ gestion.id }}">
-              <input class="eventid" type="hidden" value="{{ gestion.id }}">
-              <span>Codigo: {{ gestion.barra }}</span><br>
-	            <span>{{ gestion.destinatario }}</span><br>
-              <span>{{ gestion.user }}</span>
+    <div class="row">
+        <div class="col-xs-12 col-sm-3">
+            <div id='external-events'>
+                <div id='external-events-listing'>
+                    <h4>Avaluos sin Asignar!</h4><button id="new-event" class="btn btn-sm">Nuevo</button>
+                    {% for gestion in pendientes %}
+                        <div class='fc-event' data-idevent="{{ gestion.id }}">
+                            <input class="eventid" type="hidden" value="{{ gestion.id }}">
+                            <span>Codigo: {{ gestion.barra }}</span><br>
+                            <span>Cliente: {{ gestion.destinatario }}</span><br>
+                            <span>Telefono: {{ gestion.telefono }}</span><br>
+                            <span>Direccion: </span>
+                            <span class="direccion">{{ gestion.direccion }}</span><br>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-	        {% endfor %}
+            <div id='external-events'>
+                <div id='external-events-listing'>
+                    <h4>Leyenda</h4>
+                    <div style="background-color: #991957; color: white;">Vencidas</div>
+                    <br>
+                    <div style="background-color: #4d0a54; color: white;">Para Hoy</div>
+                    <br>
+                    <div style="background-color: #46991a; color: white;">Todo bien</div>
+                    <br>
+                </div>
+            </div>
         </div>
-{#        <p>#}
-{#          <input type='checkbox' id='drop-remove'  checked='checked'/>#}
-{#          <label for='drop-remove'>remove after drop</label>#}
-{#        </p>#}
-      </div>
-			<div id='external-events'>
-        <div id='external-events-listing'>
-          <h4>Leyenda</h4>
-					<div style="background-color: #991957; color: white;">Vencida</div><br>
-	        <div style="background-color: #4d0a54; color: white;">No Asingnada</div><br>
-	        <div style="background-color: #46991a; color: white;">Todo bien</div><br>
+        <div class="col-xs-12 col-sm-9">
+            <div id="calender"></div>
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h7 class="modal-title"><span id="eventTitle"></span></h7>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-{#        <p>#}
-{#          <input type='checkbox' id='drop-remove'  checked='checked'/>#}
-{#          <label for='drop-remove'>remove after drop</label>#}
-{#        </p>#}
-      </div>
-		</div>
-		<div class="col-xs-12 col-sm-9">
-			<div id="calender">
-			  <div id="myModal" class="modal fade" role="dialog">
-			    <div class="modal-dialog">
-			      <div class="modal-content">
-			        <div class="modal-header">
-
-			          <h7 class="modal-title"><span id="eventTitle"></span></h7>
-				        <button type="button" class="close" data-dismiss="modal">&times;</button>
-			        </div>
-			        <div class="modal-body">
-				        <div class="row">
-							    <div class="col-sm-2">
-								    <b>Start: </b>
-							    </div>
-					        <div class="col-sm-6">
-						        <div class="form-group">
-							        <div class="input-group date" id="datetimepickerstart">
-							          <input type="text" class="form-control" />
-							          <span class="input-group-addon">
-							            <span class="glyphicon glyphicon-calendar"></span>
-							          </span>
-							        </div>
-							      </div>
-					        </div>
-				        </div>
-				        <div class="row" id="div_datetimepickerend">
-							    <div class="col-sm-2">
-								    <b>End: </b>
-							    </div>
-					        <div class="col-sm-6">
-						        <div class="form-group">
-							        <div class="input-group date" id="datetimepickerend">
-							          <input type="text" class="form-control" />
-							          <span class="input-group-addon">
-							            <span class="glyphicon glyphicon-calendar"></span>
-							          </span>
-							        </div>
-							      </div>
-					        </div>
-				        </div>
-
-				        <p id="pDetails"></p>
-			          <button type="button" id="btnEdit"
-			                  data-url="{% url 'admin:dtracking_gestion_change' 0 %}"
-			                  class="btn btn-success btn-sm pull-right"
-			                  style="margin-right:5px;">
-			              <span class="glyphicon glyphicon-pencil"></span>Ver mas..
-			          </button>
-
-
-			        </div>
-			        <div class="modal-footer">
-			          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-			        </div>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-		</div>
-  </div>
+    </div>
 
 {% endblock %}
 {% block Scripts %}
-	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
-  <script type="text/javascript" src="/static/dtracking/fullcalendar/moment.min.js"></script>
-	<script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone.min.js"></script>
-  <script type="text/javascript" src="/static/dtracking/fullcalendar/fullcalendar.min.js"></script>
-  <script type="text/javascript" src="/static/dtracking/fullcalendar/es.js"></script>
-  <script src="/static/dtracking/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-  <script>
-      function makeEventsDraggable() {
-	      $( ".fc-draggable" ).draggable({
-          zIndex: 999,
-          revert: true,      // will cause the event to go back to its
-          revertDuration: false  //  original position after the drag
-	      });
-		  }
-		  var currentevent;
-      $(document).ready(function() {
-
-			  var dragged = null;
-				var calendar;
-        var events = [];
-        var citaSeleccionada = null;
-        refreshCalender();
-
-        var globalTimeout = null;
-        $('.date').datetimepicker({
-		        format:  "yyyy-mm-dd hh:ii",
-		        timezone: 'UTC',
-		        showMeridian: true,
-		        autoclose: true,
-		        todayBtn: true
-		    });
-				$('#nav-search').keyup(function() {
-					if (globalTimeout !== null) {
-						clearTimeout(globalTimeout);
-					}
-					globalTimeout = setTimeout(function() {
-					globalTimeout = null;
-
-					refreshCalender();
-
-					}, 500);
-				});
-
-
-
-        /* initialize the external events
-        -----------------------------------------------------------------*/
-        $('#external-events').find('.fc-event').each(function() {
-
-          // store data so the calendar knows to render an event upon drop
-          $(this).data('event', {
-              title: $.trim($(this).text()), // use the element's text as the event title
-              stick: true // maintain when user navigates (see docs on the renderEvent method)
-          });
-
-          // make the event draggable using jQuery UI
-          $(this).draggable({
-              zIndex: 999,
-              revert: true,      // will cause the event to go back to its
-              revertDuration: 0  //  original position after the drag
-          });
-
-        });
-
-				$('#external-events-listing').droppable({
-	        drop: function( event, ui ) {
-	          if ( dragged ) {
-	            var event = dragged[1];
-	            dragged[0].fullCalendar('removeEvents',event._id);
-	            var el = $( "<div class='fc-event'>" ).appendTo( this ).text( event.title );
-	            el.draggable({
-	                zIndex: 999,
-	                revert: true,
-	                revertDuration: 0
-	            });
-	            el.data('event', { title: event.title, id :event.id, stick: true });
-	            dragged = null;
-	            makeEventsDraggable();
-	          }
-	        }
-	      });
-
-        $("body").on("click", "a.dialog-window", null, function (e) {
-
-          e.preventDefault();
-          var $link = $(this);
-          var title = $link.text();
-          $('#AddCita .modal-title').html(title);
-          var url = $(this).attr('href');
-          if (url.indexOf('#') == 0) {
-            $('#AddCita').modal('show');
-
-          }
-          else {
-            $.get(url, function (data) {
-              $('#AddCita .te').html(data);
-              $('#AddCita').modal();
-            }).success(function () { $('input:text:visible:first').focus(); });
-          }
-        });
-
-        function refreshCalender() {
-          var events = [];
-          var data = {'busqueda':$('#nav-search').val()};
-          $.ajax({
-              type: "GET",
-		          data:data,
-	            url: "{% url 'obtenercitas' %}",
-	            success: function (response) {
-                console.log(response);
-                $.each(response, function (i, v) {
-                    events.push({
-                        eventID: v.id,
-                        title: v.titulo,
-                        description: v.descripcion,
-                        start: moment(v.inicio),
-                        end: null,
-                        color: v.color,
-		                    textColor: 'white',
-                        allDay: false,
-		                    barra: v.barra,
-		                    user: v.user
-                    });
-                });
-
-                GenerateCalender(events);
-	            },
-	            error: function (error) {
-	                alert(JSON.stringify(error.d));
-	                console.log(error);
-	            }
-          })//ajax
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/dtracking/fullcalendar/moment.min.js"></script>
+    <script type="text/javascript" src="/static/dtracking/js/pnotify.js"></script>
+    <script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone.min.js"></script>
+    <script type="text/javascript" src="/static/dtracking/fullcalendar/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="/static/dtracking/fullcalendar/es.js"></script>
+    <script src="/static/dtracking/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        function makeEventsDraggable() {
+            $(".fc-draggable").draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: false  //  original position after the drag
+            });
         }
-
-
-        function GenerateCalender(events) {
-
-          $('#calender').fullCalendar('destroy');
-          var calendar = $('#calender').fullCalendar({
-	            header: {
-	                left: 'prev,next today',
-	                center: 'title',
-	                right: 'month,basicWeek,basicDay,agenda'
-	            },
-		          lang: 'es',
-			        events: events,
-	            editable: true,
-	            droppable: true, // this allows things to be dropped onto the calendar
-	            dragRevertDuration: 0,
-		          displayEventTime:true,
-		          //defaultDate: new Date(),
-		          timeFormat: 'h(:mm)a',
-		          selectable:true,
-		          eventColor: '#3a87ad',
-	            drop: function(date, jsEvent, ui, resourceId) {
-	                makeEventsDraggable();
-	                var id = $(this).children(".eventid").val();
-			            ProgramEvent(id, date, null, null);
-	            },
-		          eventRender: function( event, element, view ) {
-							    if(event.changing){ // If this event is being changed, grab its render date
-									    event.changing = false;
-							        //$("#currenttime").html("Start: "+event.start.format("YYYY-MM-DD hh:mma")+"<br> End: "+event.end.format("YYYY-MM-DD hh:mma"));
-							        ProgramEvent(event.eventID, event.start, event.end, null);
-							    }
-							    return $(
-							        '<div class="fc-event" style="background-color:'+ event.color +'; padding: 3px">' +
-									          '<strong>'+ event.start.format("h(:mm)a") +'</strong> '+ event.barra +'<br> ' +
-									          '<small>' + event.title + '</small><br> ' +
-									          '<strong>'+ event.user +'</strong>' +
-									    '</div>');
-							},
-	            eventDragStop: function( event, jsEvent, ui, view ) {
-
-	                makeEventsDraggable();
-
-	            },
-	            eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
-	                makeEventsDraggable();
-	            },
-	            viewRender: function() {
-	                makeEventsDraggable();
-	            },
-	            eventDragStart:function( event, jsEvent, ui, view ) {
-	                event.changing = true;
-	                dragged = [ calendar, event ];
-	            },
-		          eventClick: function (calEvent, jsEvent, view) {
-	              citaSeleccionada = calEvent;
-	              console.log(citaSeleccionada);
-	              $('#myModal #eventTitle').text(calEvent.title);
-	              var $description = $('<div/>');
-	              $description.append($('<p/>').html('<b>Barra: </b>' + calEvent.barra));
-	              if (calEvent.user !== 'None')
-									$description.append($('<p/>').html('<b>Asingando a: </b>' + calEvent.user));
-
-
-
-
-
-	              //$description.append($('<p/>').html('<b>Start: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
-								$('#datetimepickerstart').datetimepicker('update',
-										moment.tz(calEvent.start, "UTC").format());
-
-	              if (calEvent.end != null) {
-	                  $('#div_datetimepickerend').removeClass("hidden");
-	                  $('#datetimepickerend').datetimepicker('update',
-										moment.tz(calEvent.end, "UTC").format());
-	                  //$description.append($('<p/>').html('<b>End: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
-	              }else{
-	                  $('#div_datetimepickerend').addClass("hidden");
-	              }
-
-	              $('#datetimepickerstart')
-									.datetimepicker()
-									.on('changeDate', function(ev){
-									    citaSeleccionada.start = moment.tz(ev.date, "UTC").format(); //moment.tz(ev.date, "UTC");
-									    console.log(citaSeleccionada);
-									    ProgramEvent(citaSeleccionada.eventID, citaSeleccionada.start, citaSeleccionada.end, null);
-									});
-
-	              $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
-	              $('#myModal #pDetails').empty().html($description);
-
-
-
-								//$('#datetimepickerstart').data({date: new Date(calEvent.start.format("DD-MMM-YYYY HH:mm a"))});
-	              //$("#datetimepickerstart").val(calEvent.start.format("DD-MMM-YYYY HH:mm a"));
-	              //$('#myModal').modal();
-	              $("#myModal").modal({ backdrop: false ,keyboard: false }, 'toggle','show');
-
-	              $("#btnEdit").data('idgestion',calEvent.eventID);
-
-
-	            }
-          });
-          $('#calender').fullCalendar('option', 'timezone', 'UTC');
-        }
-        function ProgramEvent(id, inicio, fin, id_usuario){
-            var data={"id":id, "inicio":new Date(inicio).toISOString(), "fin":new Date(fin).toISOString(), "id_usuario":id_usuario, csrfmiddlewaretoken: '{{ csrf_token }}'};
-            $.ajax({
-		            url:"{% url 'programar_gestion' %}",
-		            type: "POST",
-		            data:data,
-		            success: function (result) {
-				            if(result.code===200){
-				                $(".fc-event[data-idevent*='"+ result.gestion.id +"']").remove();
-				                refreshCalender();
-                    }
+        var showEvent = function (id) {
+            var params = "fields=fecha_asignacion-tipo_gestion-user-barra-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion&id=" + id;
+            modal = $("#myModal");
+            body = modal.find(".modal-body").empty();
+            $.ajax("/admin/ajax/get_html_form/?" + params, {
+                method: "GET",
+                success: function (response) {
+                    body.html(response);
+                    modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
                 }
             });
         }
-        $('#btnEdit').click(function () {
-            var url = $(this).data('url');
-            url = url.replace("0",$(this).data('idgestion'));
-						location.href=url;
+        var newEvent = function(){
+            var params = "fields=fecha_asignacion-tipo_gestion-user-barra-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
+            modal = $("#myModal");
+            body = modal.find(".modal-body").empty();
+            $.ajax("/admin/ajax/get_html_form/?" + params, {
+                method: "GET",
+                success: function (response) {
+                    body.html(response);
+                    modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
+                }
+            });
+        }
+        function refreshCalender() {
+                var events = [];
+                var data = {'busqueda': $('#nav-search').val()};
+                $.ajax({
+                    type: "GET",
+                    data: data,
+                    url: "{% url 'obtenercitas' %}",
+                    success: function (response) {
+                        console.log(response);
+                        $.each(response, function (i, v) {
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: null,
+                                color: v.color,
+                                textColor: 'white',
+                                allDay: false,
+                                barra: v.barra,
+                                user: v.user
+                            });
+                        });
+
+                        GenerateCalender(events);
+                    },
+                    error: function (error) {
+                        alert(JSON.stringify(error.d));
+                        console.log(error);
+                    }
+                })//ajax
+            }
+        function GenerateCalender(events) {
+
+                $('#calender').fullCalendar('destroy');
+                var calendar = $('#calender').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay,agenda'
+                    },
+                    lang: 'es',
+                    events: events,
+                    editable: true,
+                    droppable: true, // this allows things to be dropped onto the calendar
+                    dragRevertDuration: 0,
+                    displayEventTime: true,
+                    //defaultDate: new Date(),
+                    timeFormat: 'h(:mm)a',
+                    selectable: true,
+                    eventColor: '#3a87ad',
+                    drop: function (date, jsEvent, ui, resourceId) {
+                        makeEventsDraggable();
+                        var id = $(this).children(".eventid").val();
+                        ProgramEvent(id, date, null, null);
+                    },
+                    evenDropStop: function () {
+                        refreshCalender();
+                    },
+                    eventRender: function (event, element, view) {
+                        if (event.changing) { // If this event is being changed, grab its render date
+                            event.changing = false;
+                            //$("#currenttime").html("Start: "+event.start.format("YYYY-MM-DD hh:mma")+"<br> End: "+event.end.format("YYYY-MM-DD hh:mma"));
+                            ProgramEvent(event.eventID, event.start, event.end, null);
+                        }
+                        return $(
+                            '<div class="fc-event" style="background-color:' + event.color + '; padding: 3px">' +
+                            '<strong>' + event.start.format("h(:mm)a") + '</strong> ' + event.barra + '<br> ' +
+                            '<small>' + event.title + '</small><br> ' +
+                            '<strong>' + event.user + '</strong>' +
+                            '</div>');
+                    },
+                    eventDragStop: function (event, jsEvent, ui, view) {
+
+                        makeEventsDraggable();
+                    },
+                    eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+                        makeEventsDraggable();
+                    },
+                    viewRender: function () {
+                        makeEventsDraggable();
+                    },
+                    eventDragStart: function (event, jsEvent, ui, view) {
+                        event.changing = true;
+                        dragged = [calendar, event];
+                    },
+                    eventClick: function (calEvent, jsEvent, view) {
+                        showEvent(calEvent.eventID);
+                    }
+                });
+                $('#calender').fullCalendar('option', 'timezone', 'UTC');
+            }
+        function ProgramEvent(id, inicio, id_usuario) {
+                var data = {
+                    "id": id,
+                    "inicio": new Date(inicio).toISOString(),
+                    "id_usuario": id_usuario,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                };
+                $.ajax({
+                    url: "{% url 'programar_gestion' %}",
+                    type: "POST",
+                    data: data,
+                    success: function (result) {
+                        if (result.code === 200) {
+                            $(".fc-event[data-idevent*='" + result.gestion.id + "']").remove();
+                        }
+                        refreshCalender();
+                    }
+                });
+
+
+        }
+
+        $(document).on("submit", ".form_entrada", function (e) {
+            e.preventDefault();
+            var formu = $(this);
+            var element = this;
+            var url = $(this).attr("action");
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: 'json',
+                data: formu.serialize(),
+                success: function (e) {
+                    if (typeof(e.error) != "undefined" && e.error != "")
+                        new PNotify({
+                            title: 'Error!',
+                            text: e.error,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    else {
+                        new PNotify({
+                            title: 'Acción Exitosa !',
+                            text: e.result,
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    if (typeof(e.function) != "undefined") {
+                        var name = e.function;
+                        var param = "";
+                        if (typeof(e.param) != "undefined")
+                            param = e.param;
+                        window[name](e, element, param);
+                    }
+                    refreshCalender();
+                    $("#myModal").modal('hide');
+                }, error: function (data) {
+                    new PNotify({
+                        title: 'Error!',
+                        text: data.responseText,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+            });
         });
 
-      })//end ready
-  </script>
+        $(document).ready(function () {
+
+            var dragged = null;
+            var events = [];
+            refreshCalender();
+            $('#nav-search').keyup(function () {
+                if (globalTimeout !== null) {
+                    clearTimeout(globalTimeout);
+                }
+                globalTimeout = setTimeout(function () {
+                    globalTimeout = null;
+
+                    refreshCalender();
+
+                }, 500);
+            });
+
+
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            $('#external-events').find('.fc-event').each(function () {
+
+                // store data so the calendar knows to render an event upon drop
+                $(this).data('event', {
+                    title: $.trim($(this).text()), // use the element's text as the event title
+                    stick: true // maintain when user navigates (see docs on the renderEvent method)
+                });
+
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+
+            });
+
+            $('#external-events-listing').droppable({
+                drop: function (event, ui) {
+                    if (dragged) {
+                        var event = dragged[1];
+                        dragged[0].fullCalendar('removeEvents', event._id);
+                        var el = $("<div class='fc-event'>").appendTo(this).text(event.title);
+                        el.draggable({
+                            zIndex: 999,
+                            revert: true,
+                            revertDuration: 0
+                        });
+                        el.data('event', {title: event.title, id: event.id, stick: true});
+                        dragged = null;
+                        makeEventsDraggable();
+                    }
+                }
+            });
+
+            $("body").on("click", "a.dialog-window", null, function (e) {
+
+                e.preventDefault();
+                showEvent($(this).attr('eventID'));
+            });
+
+
+            $('#btnEdit').click(function () {
+                var url = $(this).data('url');
+                url = url.replace("0", $(this).data('idgestion'));
+                location.href = url;
+            });
+
+            $('#new-event').click(newEvent);
+
+        })//end ready
+
+        $(document).ajaxComplete(function () {
+            $('.datetimeinput').datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                timezone: 'UTC',
+                showMeridian: true,
+                autoclose: true,
+                todayBtn: true,
+                pickDate: false,
+                pickTime: true,
+            });
+        });
+
+    </script>
 {% endblock %}

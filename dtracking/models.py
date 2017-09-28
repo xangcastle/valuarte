@@ -14,6 +14,7 @@ from datetime import datetime
 from django.utils.safestring import mark_safe
 import json
 from django.utils.encoding import smart_str
+from django.utils import timezone
 
 
 def ifnull(var, val):
@@ -113,7 +114,8 @@ class ZonaBarrio(models.Model):
 
 class TipoGestion(Entidad):
     prefijo = models.CharField(max_length=6, null=True, blank=False)
-    tiempo_ejecucion = models.IntegerField(null=True,blank=True,help_text="Tiempo maximo requerido para el levantamiento de datos de este tipo de gestion")
+    tiempo_ejecucion = models.IntegerField(null=True, blank=True,
+                                           help_text="Tiempo maximo requerido para el levantamiento de datos de este tipo de gestion")
 
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
@@ -238,42 +240,46 @@ class Gestion_Uso(Entidad):
         verbose_name = "Uso de avaluo"
 
 
-
 class Gestion(models.Model):
-    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo")
+    fecha = models.DateField(null=True, blank=True)  # fecha en que se recepciona la solicitud del avaluo
+    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo")  # el codigo del avaluo
+    tipo_gestion = models.ForeignKey(TipoGestion)
+    fin_gestion = models.ForeignKey(Gestion_Fin, null=True, blank=True)
+    uso_gestion = models.ForeignKey(Gestion_Uso, null=True, blank=True)
+    observaciones = models.TextField(max_length=255, null=True, blank=True)
+    referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
+    valor = models.FloatField(null=True, blank=True)
+    categoria = models.CharField(max_length=50, null=True, blank=True)
+    status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
+                                      default=ESTADOS_LOG_GESTION[0][0], blank=True)
+
+    # datos del cliente
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
+    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación")
     contacto = models.CharField(max_length=125, null=True, blank=True, verbose_name="Contacto")
     contacto_telefono = models.CharField(max_length=125, null=True, blank=True, verbose_name="Teléfono del contacto")
-    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación")
-    banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
-    referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
-    banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario")
-    direccion = models.TextField(max_length=255, null=True, verbose_name="Dirección")
-    direccion_envio = models.TextField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)
     municipio = models.ForeignKey(Municipio, null=True)
     barrio = models.ForeignKey(Barrio, null=True)
     zona = models.ForeignKey(Zona, null=True)
-    tipo_gestion = models.ForeignKey(TipoGestion)
-    fin_gestion = models.ForeignKey(Gestion_Fin, null=True, blank=True)
-    uso_gestion = models.ForeignKey(Gestion_Uso, null=True, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    realizada = models.BooleanField(default=False)
+    direccion = models.TextField(max_length=255, null=True, verbose_name="Dirección")
+    direccion_envio = models.TextField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
+
+    # contacto del banco
+    banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
+    banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario")
+
+    # peritaje
+    user = models.ForeignKey(User, null=True, blank=True)  # perito de campo al que se le asigna el avaluo
+    fecha_asignacion = models.DateTimeField(null=True, blank=True)  # fecha de programacion incluye hora
+    realizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
     position = GeopositionField(null=True, blank=True)
-    fecha = models.DateField(null=True, blank=True)
-    fecha_asignacion = models.DateTimeField(null=True, blank=True)
-    programacion_incio = models.DateTimeField(null=True, blank=True)
-    programacion_fin = models.DateTimeField(null=True, blank=True)
+    json = JSONField(null=True, blank=True)
+
+    # operaciones
     fecha_vence = models.DateField(null=True, blank=True)
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)
-    json = JSONField(null=True, blank=True)
-    observaciones = models.TextField(max_length=255, null=True, blank=True)
-    status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
-                                      default=ESTADOS_LOG_GESTION[0][0])
-    valor = models.FloatField(null=True, blank=True)
-    categoria = models.CharField(max_length=50, null=True, blank=True)
-
 
     def save(self, *args, **kwargs):
         if not self.barra:
@@ -289,7 +295,8 @@ class Gestion(models.Model):
             self.categoria = "Cat. 4"
         elif self.valor > 1000:
             self.categoria = "Cat. 5"
-
+        if self.user and self.fecha_asignacion and not self.realizada:
+            self.status_gestion = "ASIGNADO A EVALUADOR"
         super(Gestion, self).save()
 
     def get_code(self):
@@ -357,7 +364,10 @@ class Gestion(models.Model):
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
         o['descripcion'] = self.observaciones
-        o['inicio'] = str(self.programacion_incio)
+        if not self.fecha_asignacion:
+            o['inicio'] = str(datetime.now())
+        else:
+            o['inicio'] = str(self.fecha_asignacion)
         o['color'] = "#46991a",
         if self.user:
             o['user'] = str(self.user)
@@ -365,7 +375,7 @@ class Gestion(models.Model):
             o['user'] = "No asignada"
             o['color'] = "#4d0a54"
 
-        if timezone.now()>self.programacion_incio:
+        if self.fecha_asignacion and timezone.now() > self.fecha_asignacion:
             o['color'] = "#991957"
         return o
 
