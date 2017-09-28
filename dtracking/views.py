@@ -387,6 +387,7 @@ class programaciones(TemplateView):
     def get(self, request, *args, **kwargs):
         context = super(programaciones, self).get_context_data(**kwargs)
         context['pendientes'] = Gestion.objects.filter(status_gestion="RECEPCIONADO")
+        context['peritos'] = Gestor.objects.all()
         return super(programaciones, self).render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -397,12 +398,17 @@ class programaciones(TemplateView):
 def obtener_citas_grestiones(request):
     gestiones = None
     busqueda = request.GET.get("busqueda", None)
+    id_perito = request.GET.get("id_perito", None)
+
     if busqueda:
         gestiones = Gestion.objects. \
             filter(status_gestion__in=['ASIGNADO A EVALUADOR', ])
     else:
         gestiones = Gestion.objects.filter(
             status_gestion__in=['ASIGNADO A EVALUADOR', ])
+
+    if id_perito and int(id_perito)>0:
+        gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
     print gestiones
 
     data = json.dumps([x.to_json_programacion() for x in gestiones])

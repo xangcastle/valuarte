@@ -55,6 +55,8 @@
 {% block Content %}
     <div class="row">
         <div class="col-xs-12 col-sm-3">
+
+
             <div id='external-events'>
                 <div id='external-events-listing'>
                     <h4>Avaluos sin Asignar!</h4><button id="new-event" class="btn btn-sm">Nuevo</button>
@@ -69,6 +71,19 @@
                         </div>
                     {% endfor %}
                 </div>
+            </div>
+            <div id='external-events'>
+	            <div class="form-group">
+						    <label for="peritos">Peritos</label>
+						    <select class="form-control" id="peritos" aria-describedby="PeritosHelp" onchange="refreshCalender()" >
+							    <option value="0">Todos</option>
+							    {% for perito in peritos %}
+								    <option value="{{ perito.user.id }}">{{ perito.user }}</option>
+							    {% endfor %}
+						    </select>
+						    <small id="PeritosHelp" class="form-text text-muted">Filtre aqui por perito asignado.</small>
+						  </div>
+
             </div>
             <div id='external-events'>
                 <div id='external-events-listing'>
@@ -171,7 +186,7 @@
         }
         function refreshCalender() {
                 var events = [];
-                var data = {'busqueda': $('#nav-search').val()};
+                var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
                 $.ajax({
                     type: "GET",
                     data: data,
@@ -227,7 +242,6 @@
                         setTimeout(function(){
                             showEvent(id);
                         }, 2000);
-
                     },
                     evenDropStop: function () {
                         refreshCalender();
@@ -237,6 +251,9 @@
                             event.changing = false;
                             //$("#currenttime").html("Start: "+event.start.format("YYYY-MM-DD hh:mma")+"<br> End: "+event.end.format("YYYY-MM-DD hh:mma"));
                             ProgramEvent(event.eventID, event.start, event.end, null);
+                            setTimeout(function(){
+		                            showEvent(event.eventID);
+		                        }, 2000);
                         }
                         return $(
                             '<div class="fc-event" style="background-color:' + event.color + '; padding: 3px">' +
