@@ -224,6 +224,10 @@
                         makeEventsDraggable();
                         var id = $(this).children(".eventid").val();
                         ProgramEvent(id, date, null, null);
+                        setTimeout(function(){
+                            showEvent(id);
+                        }, 2000);
+
                     },
                     evenDropStop: function () {
                         refreshCalender();
