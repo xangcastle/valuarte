@@ -413,7 +413,9 @@ def programar_gestion(request):
     obj_json = {}
     try:
         gestion = Gestion.objects.get(id=request.POST.get('id', None))
-        gestion.fecha_asignacion = datetime.strptime(request.POST.get('inicio', None)[0:16], '%Y-%m-%dT%H:%M')
+        gestion.fecha_asignacion = timezone.make_aware(
+            datetime.strptime(request.POST.get('inicio', None)[0:16], '%Y-%m-%dT%H:%M'),
+            timezone.get_default_timezone())
 
         id_usuario = request.POST.get('id_usuario', None)
         if id_usuario:

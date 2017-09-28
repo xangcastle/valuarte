@@ -127,6 +127,18 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
+                    $("#id_fecha_asignacion").datetimepicker({
+				                format: "dd/mm/yyyy hh:ii",
+				                timezone: 'UTC',
+				                showMeridian: true,
+				                autoclose: true,
+				                todayBtn: true,
+				                pickDate: false,
+				                pickTime: true,
+				            });
+                    var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
+                    $("#id_fecha_asignacion").datetimepicker('update',fecha);
+
                 }
             });
         }
@@ -139,6 +151,15 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
+                    $("#id_fecha_asignacion").datetimepicker({
+				                format: "dd/mm/yyyy hh:ii",
+				                timezone: 'UTC',
+				                showMeridian: true,
+				                autoclose: true,
+				                todayBtn: true,
+				                pickDate: false,
+				                pickTime: true,
+				            });
                 }
             });
         }
@@ -281,6 +302,9 @@
                             type: 'success',
                             styling: 'bootstrap3'
                         });
+
+                        refreshCalender();
+                        $("#myModal").modal('hide');
                     }
                     if (typeof(e.function) != "undefined") {
                         var name = e.function;
@@ -289,8 +313,7 @@
                             param = e.param;
                         window[name](e, element, param);
                     }
-                    refreshCalender();
-                    $("#myModal").modal('hide');
+
                 }, error: function (data) {
                     new PNotify({
                         title: 'Error!',
@@ -374,17 +397,7 @@
 
         })//end ready
 
-        $(document).ajaxComplete(function () {
-            $('.datetimeinput').datetimepicker({
-                format: "yyyy-mm-dd hh:ii",
-                timezone: 'UTC',
-                showMeridian: true,
-                autoclose: true,
-                todayBtn: true,
-                pickDate: false,
-                pickTime: true,
-            });
-        });
+
 
     </script>
 {% endblock %}
