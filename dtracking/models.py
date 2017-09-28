@@ -462,7 +462,6 @@ class Gestion(models.Model):
                 variables.append(obj)
             except Exception as e:
                 print "Oops!  That was no valid number.  Try again... %s" % e.message
-
         return variables
 
     def variables_plantilla(self):

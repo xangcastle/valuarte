@@ -413,8 +413,11 @@ def obtener_citas_grestiones(request):
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
     print gestiones
 
-    data = json.dumps([x.to_json_programacion() for x in gestiones])
-    return HttpResponse(data, content_type='application/json')
+    data = [x.to_json_programacion() for x in gestiones]
+    pendientes = [x.to_json_programacion() for x in Gestion.objects.filter(status_gestion="RECEPCIONADO")]
+
+
+    return HttpResponse(json.dumps({'programadas': data, 'pendientes':pendientes}) , content_type='application/json')
 
 
 def programar_gestion(request):

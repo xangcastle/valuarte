@@ -60,16 +60,16 @@
             <div id='external-events'>
                 <div id='external-events-listing'>
                     <h4>Avaluos sin Asignar!</h4><button id="new-event" class="btn btn-sm">Nuevo</button>
-                    {% for gestion in pendientes %}
-                        <div class='fc-event' data-idevent="{{ gestion.id }}">
-                            <input class="eventid" type="hidden" value="{{ gestion.id }}">
-                            <span>Codigo: {{ gestion.barra }}</span><br>
-                            <span>Cliente: {{ gestion.destinatario }}</span><br>
-                            <span>Telefono: {{ gestion.telefono }}</span><br>
-                            <span>Direccion: </span>
-                            <span class="direccion">{{ gestion.direccion }}</span><br>
-                        </div>
-                    {% endfor %}
+{#                    {% for gestion in pendientes %}#}
+{#                        <div class='fc-event' data-idevent="{{ gestion.id }}">#}
+{#                            <input class="eventid" type="hidden" value="{{ gestion.id }}">#}
+{#                            <span>Codigo: {{ gestion.barra }}</span><br>#}
+{#                            <span>Cliente: {{ gestion.destinatario }}</span><br>#}
+{#                            <span>Telefono: {{ gestion.telefono }}</span><br>#}
+{#                            <span>Direccion: </span>#}
+{#                            <span class="direccion">{{ gestion.direccion }}</span><br>#}
+{#                        </div>#}
+{#                    {% endfor %}#}
                 </div>
             </div>
             <div id='external-events'>
@@ -132,6 +132,40 @@
                 revert: true,      // will cause the event to go back to its
                 revertDuration: false  //  original position after the drag
             });
+            $('#external-events').find('.fc-event').each(function () {
+
+                // store data so the calendar knows to render an event upon drop
+                $(this).data('event', {
+                    title: $.trim($(this).text()), // use the element's text as the event title
+                    stick: true // maintain when user navigates (see docs on the renderEvent method)
+                });
+
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+
+            });
+
+            $('#external-events-listing').droppable({
+                drop: function (event, ui) {
+                    if (dragged) {
+                        var event = dragged[1];
+                        dragged[0].fullCalendar('removeEvents', event._id);
+                        var el = $("<div class='fc-event'>").appendTo(this).text(event.title);
+                        el.draggable({
+                            zIndex: 999,
+                            revert: true,
+                            revertDuration: 0
+                        });
+                        el.data('event', {title: event.title, id: event.id, stick: true});
+                        dragged = null;
+                        makeEventsDraggable();
+                    }
+                }
+            });
         }
         var showEvent = function (id) {
             var params = "fields=fecha_asignacion-tipo_gestion-user-barra-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion&id=" + id;
@@ -193,7 +227,7 @@
                     url: "{% url 'obtenercitas' %}",
                     success: function (response) {
                         console.log(response);
-                        $.each(response, function (i, v) {
+                        $.each(response.programadas, function (i, v) {
                             events.push({
                                 eventID: v.id,
                                 title: v.titulo,
@@ -207,6 +241,21 @@
                                 user: v.user
                             });
                         });
+                        $('#external-events-listing').empty();
+                        $.each(response.pendientes, function (i, v) {
+
+                            $('#external-events-listing').append('<div class="fc-event" data-idevent="' + v.id + '">' +
+																	                                '<input class="eventid" type="hidden" value="'+ v.id +'">'+
+																			                            '<span>Codigo: '+ v.barra +'</span><br>'+
+																			                            '<span>Cliente: '+ v.titulo +'</span><br>'+
+																			                            '<span>Telefono: '+ v.telefono +'</span><br>'+
+																			                            '<span>Direccion: </span>'+
+																			                            '<span class="direccion">'+ v.direccion +'</span><br>'+
+																			                            '</div>'
+                            );
+
+                        });
+                        makeEventsDraggable();
 
                         GenerateCalender(events);
                     },
@@ -372,40 +421,7 @@
 
             /* initialize the external events
              -----------------------------------------------------------------*/
-            $('#external-events').find('.fc-event').each(function () {
-
-                // store data so the calendar knows to render an event upon drop
-                $(this).data('event', {
-                    title: $.trim($(this).text()), // use the element's text as the event title
-                    stick: true // maintain when user navigates (see docs on the renderEvent method)
-                });
-
-                // make the event draggable using jQuery UI
-                $(this).draggable({
-                    zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
-                });
-
-            });
-
-            $('#external-events-listing').droppable({
-                drop: function (event, ui) {
-                    if (dragged) {
-                        var event = dragged[1];
-                        dragged[0].fullCalendar('removeEvents', event._id);
-                        var el = $("<div class='fc-event'>").appendTo(this).text(event.title);
-                        el.draggable({
-                            zIndex: 999,
-                            revert: true,
-                            revertDuration: 0
-                        });
-                        el.data('event', {title: event.title, id: event.id, stick: true});
-                        dragged = null;
-                        makeEventsDraggable();
-                    }
-                }
-            });
+            makeEventsDraggable();
 
             $("body").on("click", "a.dialog-window", null, function (e) {
 
