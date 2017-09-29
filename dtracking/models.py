@@ -332,6 +332,25 @@ class Gestion(models.Model):
         super(Gestion, self).save()
 
 
+    def contacto_envio(self):
+        if self.banco and self.banco_ejecutivo:
+            return "%s / %s" % (self.banco, self.banco_ejecutivo)
+        elif self.contacto and (self.contacto <> self.destinatario):
+            return self.contacto
+        else:
+            return ""
+
+    def iva(self):
+        if self.valor:
+            return round((self.valor / 1.15) * 0.15, 2)
+        else:
+            return 0.0
+
+    def subtotal(self):
+        if self.valor:
+            return round(self.valor / 1.15, 2)
+        else:
+            return 0.0
 
     def get_code(self):
         code = ""
