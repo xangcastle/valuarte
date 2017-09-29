@@ -414,7 +414,7 @@ def obtener_citas_grestiones(request):
     print gestiones
 
     data = [x.to_json_programacion() for x in gestiones]
-    pendientes = [x.to_json_programacion() for x in Gestion.objects.filter(status_gestion="RECEPCIONADO")]
+    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion="RECEPCIONADO")]
 
 
     return HttpResponse(json.dumps({'programadas': data, 'pendientes':pendientes}) , content_type='application/json')
