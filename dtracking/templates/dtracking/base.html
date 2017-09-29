@@ -5,16 +5,31 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+
     <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="/static/dtracking/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <style>
+    <link href="/static/dtracking/css/pnotify.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/dtracking/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <link href="/static/dtracking/jquery-ui/jquery-ui.css"  rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/dtracking/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/static/dtracking/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- fullCalendar -->
+    <link rel="stylesheet" href="/static/dtracking/bower_components/fullcalendar/dist/fullcalendar.min.css">
+    <link rel="stylesheet" href="/static/dtracking/bower_components/fullcalendar/dist/fullcalendar.print.min.css" media="print">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/dtracking/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/static/dtracking/dist/css/skins/_all-skins.min.css">
+<style>
 	    .container-fluid{
 		    margin-top: 20px;
 	    }
-
-
-
-
+      .ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}
     </style>
 	  {% block Styles %}
     {% endblock %}
@@ -39,26 +54,47 @@
           </li>
         </ul>
         <div class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Buscar" aria-label="Buscar" id="nav-search">
+          <input class="form-control mr-sm-2" type="text" placeholder="Buscar" aria-label="Buscar" id="nav-search"/>
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="submit-search">Buscar</button>
         </div>
       </div>
     </nav>
-    <div class="container-fluid">
+
+    <div class="container-fluid" >
 	    {% block Content %}{% endblock %}
     </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-			  src="https://code.jquery.com/jquery-3.2.1.min.js"
-			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-			  crossorigin="anonymous"></script>
+    <script src="/static/dtracking/bower_components/jquery/dist/jquery.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
             integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    {% block Scripts %}{% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--
+     Bootstrap 3.3.7
+    <script src="/static/dtracking/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+    <!-- jQuery UI 1.11.4 -->
+
+     <script src="/static/dtracking/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Slimscroll -->
+    <script src="/static/dtracking/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="/static/dtracking/bower_components/fastclick/lib/fastclick.js"></script>
+    <!-- fullCalendar -->
+
+        <!--<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>-->
+        <script type="text/javascript" src="/static/dtracking/fullcalendar/moment.min.js"></script>
+        <script type="text/javascript" src="/static/dtracking/js/pnotify.js"></script>
+        <script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone.min.js"></script>
+        <script type="text/javascript" src="/static/dtracking/fullcalendar/fullcalendar.min.js"></script>
+        <script type="text/javascript" src="/static/dtracking/fullcalendar/es.js"></script>
+        <script src="/static/dtracking/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+  {% block Scripts %}{% endblock %}
   </body>
 </html>
