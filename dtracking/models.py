@@ -2,18 +2,14 @@
 from __future__ import unicode_literals
 
 import sys
-
 from django.core.mail import EmailMessage
-from django.utils import timezone
-
 from base.html_to_pdf import render_to_pdf
 from base.models import Entidad
 from django.contrib.auth.models import User
 from django.db import models
 from geoposition.fields import GeopositionField
 from jsonfield import JSONField
-from datetime import datetime
-from django.utils.safestring import mark_safe
+from datetime import datetime, timedelta
 import json
 from django.utils.encoding import smart_str
 from django.utils import timezone
@@ -117,7 +113,7 @@ class ZonaBarrio(models.Model):
 class TipoGestion(Entidad):
     prefijo = models.CharField(max_length=6, null=True, blank=False)
     tiempo_ejecucion = models.IntegerField(null=True, blank=True,
-                                           help_text="Tiempo maximo requerido para el levantamiento de datos de este tipo de gestion")
+                                           help_text="Tiempo requerido en minutos para el levantamiento de datos de este tipo de avaluo")
 
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
@@ -138,7 +134,8 @@ class TipoGestion(Entidad):
         return errors
 
     class Meta:
-        verbose_name_plural = "tipos de gestiones"
+        verbose_name = "tipo de avaluo"
+        verbose_name_plural = "tipos de avaluos"
 
 
 TIPOS = (
@@ -274,7 +271,7 @@ class Gestion(models.Model):
 
     # peritaje
     notify = models.BooleanField(default=False, verbose_name="notificar")  # indica si se le notificara via email al perito asignado
-    user = models.ForeignKey(User, null=True, blank=True)  # perito de campo al que se le asigna el avaluo
+    user = models.ForeignKey('Perito', null=True, blank=True)  # perito de campo al que se le asigna el avaluo
     fecha_asignacion = models.DateTimeField(null=True, blank=True)  # fecha de programacion incluye hora
     realizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
     position = GeopositionField(null=True, blank=True)
@@ -395,16 +392,20 @@ class Gestion(models.Model):
 
         return o
 
+    def get_fecha_asignacion(self):
+        if not self.fecha_asignacion:
+            return datetime.now()
+        else:
+            return self.fecha_asignacion
+
     def to_json_programacion(self):
         o = {}
         o['id'] = self.id
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
         o['descripcion'] = self.direccion
-        if not self.fecha_asignacion:
-            o['inicio'] = str(datetime.now())
-        else:
-            o['inicio'] = str(self.fecha_asignacion)
+        o['inicio'] = str(self.get_fecha_asignacion())
+        o['fin'] = str(self.get_fecha_asignacion() + timedelta(minutes=self.tipo_gestion.tiempo_ejecucion))
         o['color'] = "#46991a",
         if self.user:
             o['user'] = str(self.user)
@@ -721,3 +722,16 @@ class Registro(models.Model):
 
     def __unicode__(self):
         return "%s %s" % (self.tag, self.usuario)
+
+
+class PeritoManager(models.Manager):
+    def get_queryset(self):
+        return super(PeritoManager, self).get_queryset().filter(id__in=Gestor.objects.all().values_list('user', flat=True))
+
+
+class Perito(User):
+    objects = models.Manager()
+    objects = PeritoManager()
+
+    class Meta:
+        proxy = True

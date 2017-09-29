@@ -411,7 +411,6 @@ def obtener_citas_grestiones(request):
 
     if id_perito and int(id_perito)>0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
-    print gestiones
 
     data = [x.to_json_programacion() for x in gestiones]
     pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion="RECEPCIONADO")]
