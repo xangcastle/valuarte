@@ -352,6 +352,14 @@ class Gestion(models.Model):
         else:
             return 0.0
 
+    def descripcion(self):
+        if self.tipo_gestion and self.observaciones:
+            return "%s. %s" % (self.tipo_gestion.name, self.observaciones)
+        elif self.tipo_gestion and not self.observaciones:
+            return self.tipo_gestion.name
+        else:
+            return ""
+
     def get_code(self):
         code = ""
         if self.fecha and self.tipo_gestion:
