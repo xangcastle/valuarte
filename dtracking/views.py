@@ -422,22 +422,28 @@ def obtener_citas_grestiones(request):
 
 def programar_gestion(request):
     obj_json = {}
+    gestion = Gestion.objects.get(id=request.POST.get('id', None))
     try:
-        gestion = Gestion.objects.get(id=request.POST.get('id', None))
         gestion.fecha_asignacion = timezone.make_aware(
-            datetime.strptime(request.POST.get('inicio', None)[0:16], '%Y-%m-%dT%H:%M'),
+                datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%Y-%m-%dT%H:%M'),
+                timezone.get_default_timezone())
+    except:
+        gestion.fecha_asignacion = timezone.make_aware(
+            datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%Y-%m-%d %H:%M'),
             timezone.get_default_timezone())
-
-        id_usuario = request.POST.get('id_usuario', None)
-        if id_usuario:
-            gestion.user = User.objects.get(pk=int(id_usuario))
-        gestion.save()
-        obj_json['gestion'] = gestion.to_json_programacion()
-        obj_json['code'] = 200
-        obj_json['mensaje'] = "Gestion programada exitosamente"
-    except Exception as e:
-        print e
-        obj_json['code'] = 500
-        obj_json['mensaje'] = "No fue programar getion"
+    barra = request.POST.get('barra', None)
+    gestion.status_gestion = "ASIGNADO A EVALUADOR"
+    id_usuario = request.POST.get('user', None)
+    if id_usuario:
+        gestion.user = User.objects.get(pk=int(id_usuario))
+    if barra:
+        gestion.barra = barra
+    gestion.save()
+    notify = request.POST.get('notify', None)
+    if notify:
+        gestion.notificar()
+    obj_json['gestion'] = gestion.to_json_programacion()
+    obj_json['code'] = 200
+    obj_json['result'] = "Gestion programada exitosamente"
     data = json.dumps(obj_json)
     return HttpResponse(data, content_type='application/json')

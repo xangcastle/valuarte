@@ -273,6 +273,7 @@ class Gestion(models.Model):
     banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario")
 
     # peritaje
+    notify = models.BooleanField(default=False, verbose_name="notificar")  # indica si se le notificara via email al perito asignado
     user = models.ForeignKey(User, null=True, blank=True)  # perito de campo al que se le asigna el avaluo
     fecha_asignacion = models.DateTimeField(null=True, blank=True)  # fecha de programacion incluye hora
     realizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
@@ -283,7 +284,7 @@ class Gestion(models.Model):
     fecha_vence = models.DateField(null=True, blank=True)
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)
 
-    def asingar(self, *args, **kwargs):
+    def notificar(self, *args, **kwargs):
         print("asignar_gestion: Llamando Metodo para generar PDF")
         if self.user.email:
             render_to_pdf(
@@ -330,9 +331,6 @@ class Gestion(models.Model):
             self.categoria = "Cat. 4"
         elif self.valor > 1000:
             self.categoria = "Cat. 5"
-        if self.user and self.fecha_asignacion and not self.realizada:
-            self.status_gestion = "ASIGNADO A EVALUADOR"
-            self.asingar(*args, **kwargs)
 
         super(Gestion, self).save()
 
@@ -402,7 +400,7 @@ class Gestion(models.Model):
         o['id'] = self.id
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
-        o['descripcion'] = self.observaciones
+        o['descripcion'] = self.direccion
         if not self.fecha_asignacion:
             o['inicio'] = str(datetime.now())
         else:

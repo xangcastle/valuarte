@@ -60,7 +60,11 @@ def get_html_form(request, form=None):
         filter = Filter(app_label=request.GET.get('app_label'),
                         model_name=request.GET.get('model'))
         data['fields'] = request.GET.get('fields')
-        data['action'] = '/admin/ajax/get_html_form/'
+        actions = request.GET.get('action')
+        if actions:
+            data['action'] = actions
+        else:
+            data['action'] = '/admin/ajax/get_html_form/'
         data['app_label'] = filter.app_label
         data['model'] = filter.model_name
         id = request.GET.get('id', None)
