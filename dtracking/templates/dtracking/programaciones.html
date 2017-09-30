@@ -1,6 +1,8 @@
 {% extends 'dtracking/base.html' %}
 {% load admin_urls %}
 {% block Styles %}
+<link rel="stylesheet" href="/static/dtracking/bootstrap-datepicker/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.min.css">
       <style>
         #external-events {
             float: left;
@@ -117,6 +119,9 @@
 
 {% endblock %}
 {% block Scripts %}
+
+<script src="/static/dtracking/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.full.js"></script>
   <script>
         function makeEventsDraggable() {
             $(".fc-draggable").draggable({
@@ -169,18 +174,12 @@
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
                     $("#id_fecha_asignacion").datetimepicker({
-                        format: "yyyy-mm-dd hh:ii",
-                        timezone: 'UTC',
-                        showMeridian: true,
-                        autoclose: true,
-                        todayBtn: false,
+                        formatDate:'DD.MM.YYYY H:m:s',
+                        timepicker:true,
                         minView: 1,
                         maxView: 0,
-                        startView: 1,
-                        disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 18, 19, 20, 21, 22, 23, 24],
-
                     });
-                    var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
+                    var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY H:m:s').toDate();
                     $("#id_fecha_asignacion").datetimepicker('update', fecha);
 
                 }
@@ -195,10 +194,10 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
+
                     $("#id_fecha").datetimepicker({
-                        format: "dd/mm/yyyy",
-                        autoclose: true,
-                        todayBtn: true,
+                        formatDate:'DD.MM.YYYY',
+                        timepicker:false,
                         minView: 1,
                         maxView: 0,
                     });
@@ -218,9 +217,8 @@
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
                     $("#id_fecha").datetimepicker({
-                        format: "dd/mm/yyyy",
-                        autoclose: true,
-                        todayBtn: true,
+                        formatDate:'DD.MM.YYYY',
+                        timepicker:false,
                         minView: 1,
                         maxView: 0,
                     });
@@ -425,7 +423,7 @@
         });
 
         $(document).ready(function () {
-
+            jQuery.datetimepicker.setLocale('en');
             refreshCalender();
 
             $("body").on("click", "a.dialog-window", null, function (e) {
