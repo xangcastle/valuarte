@@ -1,9 +1,9 @@
 {% extends 'dtracking/base.html' %}
 {% load admin_urls %}
 {% block Styles %}
-<link rel="stylesheet" href="/static/dtracking/bootstrap-datepicker/css/bootstrap-datepicker.css">
-<link rel="stylesheet" href="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.min.css">
-      <style>
+    <link rel="stylesheet" href="/static/dtracking/bootstrap-datepicker/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.min.css">
+    <style>
         #external-events {
             float: left;
             width: 90%;
@@ -53,23 +53,10 @@
 {% block Content %}
     <div class="row">
         <div class="col-xs-12 col-sm-3">
-
-
             <div id='external-events'>
                 <h4>Avaluos sin Asignar!</h4>
-                <button id="new-event" class="btn btn-sm btn-warning">Nueva Solicitud</button>
-                <div id='external-events-listing'>
-
-                    {#                    {% for gestion in pendientes %}#}
-                    {#                        <div class='fc-event' data-idevent="{{ gestion.id }}">#}
-                    {#                            <input class="eventid" type="hidden" value="{{ gestion.id }}">#}
-                    {#                            <span>Codigo: {{ gestion.barra }}</span><br>#}
-                    {#                            <span>Cliente: {{ gestion.destinatario }}</span><br>#}
-                    {#                            <span>Telefono: {{ gestion.telefono }}</span><br>#}
-                    {#                            <span>Direccion: </span>#}
-                    {#                            <span class="direccion">{{ gestion.direccion }}</span><br>#}
-                    {#                        </div>#}
-                    {#                    {% endfor %}#}
+                <button id="new-event" class="btn btn-sm btn-warning" data-url="/admin/dtracking/gestion/add/?_popup=1">Nuevo</button>
+                <div id="external-events-listing">
                 </div>
             </div>
             <div id='external-events'>
@@ -87,13 +74,13 @@
 
             </div>
             <div id='external-events'>
-                <div id='external-events-listing'>
+                <div>
                     <h4>Leyenda</h4>
-                    <div style="background-color: #991957; color: white;">Vencidas</div>
+                    <div style="background-color: #991957; color: white;">Vencidas <span style="float: right">{{ total_vencidas }}</span></div>
                     <br>
-                    <div style="background-color: #4d0a54; color: white;">Para Hoy</div>
+                    <div style="background-color: #4d0a54; color: white;">Para Hoy <span style="float: right">{{ total_hoy }}</span></div>
                     <br>
-                    <div style="background-color: #46991a; color: white;">Todo bien</div>
+                    <div style="background-color: #46991a; color: white;">Vigentes <span style="float: right">{{ total_vigentes }}</span></div>
                     <br>
                 </div>
             </div>
@@ -120,9 +107,16 @@
 {% endblock %}
 {% block Scripts %}
 
-<script src="/static/dtracking/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.full.js"></script>
-  <script>
+    <script src="/static/dtracking/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.full.js"></script>
+    <script>
+
+        var cotizar = function(){
+                    window.open(
+                        $(this).data('url'),
+                        $(this).data('name'),
+                        "width=900mm, height=700mm,  status=no, menubar=no, location=no");
+                }
         function makeEventsDraggable() {
             $(".fc-draggable").draggable({
                 zIndex: 999,
@@ -174,19 +168,19 @@
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
                     $("#id_fecha_asignacion").datetimepicker({
-                        formatDate:'DD.MM.YYYY H:m:s',
-                        timepicker:true,
+                        format: 'd/m/Y H:m',
+                        datepicket: false,
+                        timepicker: true,
                         minView: 1,
-                        maxView: 0,
+                        maxView: 1,
                     });
-                    var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY H:m:s').toDate();
+                    var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
                     $("#id_fecha_asignacion").datetimepicker('update', fecha);
-
                 }
             });
         }
         var newEvent = function () {
-            var params = "fields=fecha-tipo_gestion-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
+            var params = "fields=tipo_gestion-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -194,15 +188,6 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
-
-                    $("#id_fecha").datetimepicker({
-                        formatDate:'DD.MM.YYYY',
-                        timepicker:false,
-                        minView: 1,
-                        maxView: 0,
-                    });
-                    var fecha = moment($("#id_fecha").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
-                    $("#id_fecha").datetimepicker('update', fecha);
                 }
             });
         }
@@ -217,8 +202,8 @@
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
                     $("#id_fecha").datetimepicker({
-                        formatDate:'DD.MM.YYYY',
-                        timepicker:false,
+                        format: 'd/m/Y',
+                        timepicker: false,
                         minView: 1,
                         maxView: 0,
                     });
@@ -228,6 +213,18 @@
                 }
             });
         }
+        var createRow = function (v) {
+            var row = '<span class="btn btn-sm btn-success cotizar" data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion='+v.id+'" style="position: relative;float: right;z-index: 999;"> Cotizar</span>' +
+                            '<dic class="fc-event" data-idevent="' + v.id + '">' +
+                            '<input class="eventid" type="hidden" value="' + v.id + '">' +
+                            '<span>Codigo: ' + v.barra + '</span><br>' +
+                            '<span>Cliente: ' + v.destinatario + '</span><br>' +
+                            '<span>Telefono: ' + v.telefono + '</span><br>' +
+                            '<span>Direccion: </span>' +
+                            '<span class="direccion">' + v.direccion + '</span><br></div>';
+            console.log(row);
+            return row;
+        }
         function refreshCalender() {
             var events = [];
             var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
@@ -236,7 +233,6 @@
                 data: data,
                 url: "{% url 'obtenercitas' %}",
                 success: function (response) {
-                    console.log(response);
                     $.each(response.programadas, function (i, v) {
                         events.push({
                             eventID: v.id,
@@ -253,17 +249,8 @@
                     });
                     $('#external-events-listing').empty();
                     $.each(response.pendientes, function (i, v) {
-
-                        $('#external-events-listing').append('<div class="fc-event" data-idevent="' + v.id + '">' +
-                            '<input class="eventid" type="hidden" value="' + v.id + '">' +
-                            '<span>Codigo: ' + v.barra + '</span><br>' +
-                            '<span>Cliente: ' + v.destinatario + '</span><br>' +
-                            '<span>Telefono: ' + v.telefono + '</span><br>' +
-                            '<span>Direccion: </span>' +
-                            '<span class="direccion">' + v.direccion + '</span><br>' +
-                            '</div>'
-                        );
-
+                        console.log(v);
+                        $('#external-events-listing').append(createRow(v));
                     });
                     makeEventsDraggable();
 
@@ -282,17 +269,14 @@
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'month,basicWeek,basicDay,agenda'
+                    right: 'month,agendaWeek,agendaDay,listMonth'
                 },
                 lang: 'es',
                 events: events,
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar
                 dragRevertDuration: 0,
-                displayEventTime: true,
                 timeFormat: 'h(:mm)a',
-                selectable: true,
-                eventColor: '#3a87ad',
                 drop: function (date, jsEvent, ui, resourceId) {
                     makeEventsDraggable();
                     var id = $(this).children(".eventid").val();
@@ -305,18 +289,13 @@
                     refreshCalender();
                 },
                 eventRender: function (event, element, view) {
-                    console.log(element);
-                    if (event.changing) { // If this event is being changed, grab its render date
+                    if (event.changing) {
                         event.changing = false;
-                        //$("#currenttime").html("Start: "+event.start.format("YYYY-MM-DD hh:mma")+"<br> End: "+event.end.format("YYYY-MM-DD hh:mma"));
                         ProgramEvent(event.eventID, event.start, null, null);
-                        setTimeout(function () {
-                            showEvent(event.eventID);
-                        }, 2000);
                     }
                     return $(
-                        '<div class="fc-event" style="background-color:' + event.color + '; padding: 3px">' +
-                         event.barra + '<br> ' +
+                        '<div id="event-'+event.eventID+'" class="fc-event" style="background-color:' + event.color + '; padding: 3px">' +
+                        event.barra + '<br> ' +
                         '<div>' + event.title + '</div>' +
                         '<small>' + event.description + '</small><br> ' +
                         '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
@@ -343,37 +322,35 @@
             $('#calender').fullCalendar('option', 'timezone', 'UTC');
         }
         function ProgramEvent(id, inicio, id_usuario) {
+            var event;
             var data = {
                 "id": id,
                 "fecha_asignacion": new Date(inicio).toISOString(),
                 "user": id_usuario,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             };
-            $.ajax({
+            return $.ajax({
                 url: "{% url 'programar_gestion' %}",
                 type: "POST",
                 data: data,
                 success: function (result) {
                     if (result.code === 200) {
                         $(".fc-event[data-idevent*='" + result.gestion.id + "']").remove();
+                        $("#event-"+result.gestion.id).css('background-color', result.gestion.color[0]);
                     }
-                    refreshCalender();
                 }
             });
-
-
         }
-        var completeEvent = function() {
-          $(this).autocomplete({
-              minLength: 2,
-              source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
-              select: function (i, o) {
-                  console.log(o);
-                  alert('prueba');
-              }
-          });
-      }
-
+        var completeEvent = function () {
+            $(this).autocomplete({
+                minLength: 2,
+                source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
+                select: function (i, o) {
+                    console.log(o);
+                    alert('prueba');
+                }
+            });
+        }
         $(document).on("submit", ".form_entrada", function (e) {
             e.preventDefault();
             var formu = $(this);
@@ -423,24 +400,21 @@
         });
 
         $(document).ready(function () {
-            jQuery.datetimepicker.setLocale('en');
+            jQuery.datetimepicker.setLocale('es');
             refreshCalender();
-
-            $("body").on("click", "a.dialog-window", null, function (e) {
-                e.preventDefault();
-                showEvent($(this).attr('eventID'));
-            });
+            $()
 
             $('#new-event').click(newEvent);
 
             $("body").on('click', '.fc-event', editEvent);
+
+            $("body").on('click', '.cotizar', cotizar);
 
             $('#nav-search').on('keyup', completeEvent);
 
             makeEventsDraggable();
 
         })//end ready
-
 
     </script>
 {% endblock %}

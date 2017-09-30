@@ -366,6 +366,12 @@ class programaciones(TemplateView):
         context = super(programaciones, self).get_context_data(**kwargs)
         context['pendientes'] = Gestion.objects.filter(status_gestion="RECEPCIONADO")
         context['peritos'] = Gestor.objects.all()
+        asignadas = Gestion.objects.filter(status_gestion="ASIGNADO A EVALUADOR")
+        context['total_vigentes'] = asignadas.filter(fecha_asignacion__gt=datetime.now()).count()
+        context['total_vencidas'] = asignadas.filter(fecha_asignacion__lt=datetime.now()).count()
+        context['total_hoy'] = asignadas.filter(fecha_asignacion__year=datetime.now().year,
+                                                fecha_asignacion__month=datetime.now().month,
+                                                fecha_asignacion__day=datetime.now().day).count()
         return super(programaciones, self).render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -404,7 +410,7 @@ def programar_gestion(request):
                 timezone.get_default_timezone())
     except:
         gestion.fecha_asignacion = timezone.make_aware(
-            datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%Y-%m-%d %H:%M'),
+            datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%d/%m/%Y %H:%M'),
             timezone.get_default_timezone())
     barra = request.POST.get('barra', None)
     gestion.status_gestion = "ASIGNADO A EVALUADOR"

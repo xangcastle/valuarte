@@ -55,6 +55,7 @@ def object_execute(request):
 
 @csrf_exempt
 def get_html_form(request, form=None):
+    resp = {}
     if request.method == "GET":
         data = {"method": "POST"}
         filter = Filter(app_label=request.GET.get('app_label'),
@@ -70,7 +71,6 @@ def get_html_form(request, form=None):
         id = request.GET.get('id', None)
         if not form:
             form = modelform_factory(filter.model, fields=data['fields'].split("-"))
-            print form
             if id:
                 form = form(instance=filter.get_instance(int(id)))
                 data['id'] = id
@@ -79,7 +79,6 @@ def get_html_form(request, form=None):
         data['form'] = form
         return HttpResponse(render_to_string("ajax/form.html", data, request))
     if request.method == "POST":
-        result = "error"
         filter = Filter(app_label=request.POST.get('app_label'),
                         model_name=request.POST.get('model'))
         form = modelform_factory(filter.model, fields=request.POST.get('fields').split("-"))
@@ -88,10 +87,16 @@ def get_html_form(request, form=None):
             form = form(request.POST or None, instance=filter.get_instance(int(id)))
         else:
             form = form(request.POST)
+
         if form.is_valid():
             form.save()
-            result = "actualizado"
-    return HttpResponse(json.dumps({"result": result}), content_type="application/json")
+            resp = {"result": "actualizado"}
+        else:
+            err = ""
+            for e in form.errors:
+                err += "error en el campo " + str(e)
+            resp = {'error': err}
+    return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
 

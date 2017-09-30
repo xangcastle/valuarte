@@ -50,7 +50,7 @@ class Gestor(models.Model):
     sms_gateway = models.CharField(max_length=20, null=True)
     foto = models.ImageField(null=True)
     zonas = models.ManyToManyField('Zona')
-    tipo_gestion = models.ManyToManyField('TipoGestion', null=True, blank=True)
+    tipo_gestion = models.ManyToManyField('TipoGestion', blank=True)
     intervalo = models.PositiveIntegerField(null=True, verbose_name="intervalo de seguimiento",
                                             help_text="esto determina que tan seguido el gestor reportara su posicion gps en segundos")
 
@@ -310,6 +310,8 @@ class Gestion(models.Model):
             self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
 
     def save(self, *args, **kwargs):
+        if not self.fecha:
+            self.fecha = datetime.now()
         if not self.barra:
             self.barra = self.get_code()
 
