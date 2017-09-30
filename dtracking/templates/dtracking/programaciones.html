@@ -180,7 +180,7 @@
             });
         }
         var newEvent = function () {
-            var params = "fields=tipo_gestion-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
+            var params = "fields=tipo_gestion-valor-destinatario-identificacion-contacto-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -193,7 +193,7 @@
         }
         var editEvent = function () {
             var id = $(this).data('idevent');
-            var params = "fields=fecha-tipo_gestion-destinatario-identificacion-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion&id=" + id;
+            var params = "fields=fecha-tipo_gestion-valor-destinatario-identificacion-contacto-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
