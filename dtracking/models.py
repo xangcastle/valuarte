@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import sys
 from django.core.mail import EmailMessage
 from base.html_to_pdf import render_to_pdf
+from django.template.loader import render_to_string
 from base.models import Entidad
 from django.contrib.auth.models import User
 from django.db import models
@@ -285,28 +286,21 @@ class Gestion(models.Model):
     def notificar(self, *args, **kwargs):
         print("asignar_gestion: Llamando Metodo para generar PDF")
         if self.user.email:
-            render_to_pdf(
-                'dtracking/examen_impreso.html',
-                {
-                    'pagesize': 'A4',
-                    'obj': self,
-                }
-            )
 
             email = EmailMessage("Asignación de Avaluo %s" % self.barra,
                                  "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
                                  "Datos del cliente:<br>"
                                  "<span>Nombre: %s</span><br>"
                                  "<span>Direccion: %s</span><br>"
-                                 "<span>Telefono: %s</span><br>" % (
+                                 "<a href='www.valuarte.com.ni/dtracking/generar_asignacion/?documento=%s'> Imprimir aqui!</a><br>" % (
                                      self.destinatario, self.barra, self.destinatario,
-                                     self.direccion, self.telefono),
+                                     self.direccion, self.id),
                                  to=[self.user.email],
                                  )
 
             email.content_subtype = "html"
-            print("asignar_gestion: Agregando attachmet al correo")
-            email.attach_file("out.pdf")
+            # print("asignar_gestion: Agregando attachmet al correo")
+            # email.attach_file("out.pdf")
             print("asignar_gestion: Iniciando envio de correo electronico")
             email.send()
             print("asignar_gestion: Correo electronico enviado")
@@ -376,7 +370,7 @@ class Gestion(models.Model):
         return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
     def __unicode__(self):
-        return "%s - %s" % (self.tipo_gestion.name, self.destinatario)
+        return "%s - %s" % (self.barra, self.destinatario)
 
     def cargar_archivo(self, archivo, variable):
         a, created = Archivo.objects.get_or_create(gestion=self,

@@ -195,35 +195,6 @@ def asignar_gestion(request):
     mensaje = "Asignacion Exitosa!"
     code = 200
 
-    #
-    # print("asignar_gestion: Llamando Metodo para generar PDF")
-    # if g.user.email:
-    #     render_to_pdf(
-    #         'dtracking/examen_impreso.html',
-    #         {
-    #             'pagesize': 'A4',
-    #             'obj': g,
-    #         }
-    #     )
-    #
-    #     email = EmailMessage("Asignación de Avaluo %s" % g.barra,
-    #                          "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
-    #                          "Datos del cliente:<br>"
-    #                          "<span>Nombre: %s</span><br>"
-    #                          "<span>Direccion: %s</span><br>"
-    #                          "<span>Telefono: %s</span><br>" % (
-    #                          g.destinatario, g.barra, g.destinatario, g.direccion, g.telefono),
-    #                          to=[g.user.email],
-    #                          )
-    #
-    #     email.content_subtype = "html"
-    #     print("asignar_gestion: Agregando attachmet al correo")
-    #     email.attach_file("out.pdf")
-    #     print("asignar_gestion: Iniciando envio de correo electronico")
-    #     email.send()
-    #     print("asignar_gestion: Correo electronico enviado")
-    # g.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
-
     g.save()
 
     return HttpResponse(json.dumps({'mensaje': mensaje, 'code': code}),
@@ -380,6 +351,11 @@ def get_avaluo_mes_posiciones(request):
 
 def generar_proforma(request):
     html = render_to_string('dtracking/proforma.html', {"o": Gestion.objects.get(id=request.GET.get('gestion', '')), })
+    return HttpResponse(html)
+
+
+def generar_asignacion(request):
+    html = render_to_string('dtracking/attachment.html', {"o": Gestion.objects.get(id=request.GET.get('documento', '')), })
     return HttpResponse(html)
 
 
