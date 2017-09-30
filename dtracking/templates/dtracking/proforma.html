@@ -18,14 +18,14 @@
             left: 83mm;
         }
 
-        .observaciones {
+        .descripcion {
             top: 99mm;
             left: 42mm;
             max-width: 84mm;
             text-align: justify;
         }
 
-        .direccion {
+        .total {
             top: 141mm;
             left: 190mm;
             font-size: 15px;
@@ -33,34 +33,28 @@
             text-align: right;
         }
 
-        .fecha {
+        .subtotal {
             top: 112mm;
             left: 190mm;
             text-align: right;
         }
 
-        .perito {
+        .iva {
             top: 126.5mm;
             left: 190mm;
             text-align: right;
         }
 
-        .tiempo-entrega {
-            top: 199mm;
-            left: 42.5mm;
-            font-size: 9px;
-            color: blue;
+        .precio-unitario {
+            top: 100mm;
+            left: 151mm;
+            float: right;
         }
 
-        .user-email {
-            top: 47.5mm;
-            left: 19mm;
-            font-size: 11px;
-        }
-
-        .user-name {
-            top: 188mm;
-            left: 86mm;
+        .total-detalle {
+            top: 100mm;
+            left: 187mm;
+            float: right;
         }
 
     </style>
@@ -73,6 +67,8 @@
 <div class="campo contacto">{{ o.contacto_envio }}</div>
 <div class="campo descripcion">{{ o.descripcion }}</div>
 <div class="campo subtotal">${{ o.subtotal|intcomma }}</div>
+<div class="campo precio-unitario">${{ o.subtotal|intcomma }}</div>
+<div class="campo total-detalle">${{ o.subtotal|intcomma }}</div>
 <div class="campo iva">${{ o.iva|intcomma }}</div>
 <div class="campo total">${{ o.valor|intcomma }}</div>
 <svg
@@ -397,7 +393,7 @@
            x="0 101.1718 211.914 322.65619 363.67181 474.414"
            y="0"
            sodipodi:role="line"
-           id="tspan4696">$78.26</tspan></text>
+           id="tspan4696"></tspan></text>
 </g><g
        id="g4700"
        transform="matrix(0.05,0,0,0.05,518.09222,286.04941)"><text
@@ -406,7 +402,7 @@
            x="0 101.1718 211.914 322.65619 363.67181 474.414"
            y="0"
            sodipodi:role="line"
-           id="tspan4702">$78.26</tspan></text>
+           id="tspan4702"></tspan></text>
 </g><g
        id="g4706"
        transform="scale(0.05)"><path
@@ -556,24 +552,8 @@
            y="0"
            sodipodi:role="line"
            id="tspan4798">______________________________________________</tspan></text>
-</g><g
-       id="g4802"
-       transform="matrix(0.05,0,0,0.05,53.850002,536.29846)"><text
-         style="font-variant:normal;font-weight:normal;font-size:200px;font-family:Cambria;-inkscape-font-specification:Cambria;writing-mode:lr-tb;fill:#595959;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         id="text4806"><tspan
-           x="0 121.77734 232.22655 299.90234 406.05475 488.76953 544.33594 635.25397 732.91016 843.84772 950.00012 1002.7346 1046.7776 1168.9456 1266.5042 1349.219 1446.7776 1558.3988 1646.5824 1702.1488 1799.8049 1843.8479 1966.016 2063.5745 2175.1958 2272.7544 2355.4692 2453.1252 2507.4221"
-           y="0"
-           sodipodi:role="line"
-           id="tspan4804">Autorizado: Gerencia General:</tspan></text>
-</g><g
-       id="g4808"
-       transform="matrix(0.05,0,0,0.05,197.85001,536.29846)"><text
-         style="font-variant:normal;font-weight:normal;font-size:200px;font-family:Cambria;-inkscape-font-specification:Cambria;writing-mode:lr-tb;fill:#595959;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         id="text4812"><tspan
-           x="0 74.121002 148.242 222.36301 296.48401 370.60501 444.72601 518.84698 592.96802 667.08899 741.21002 815.33099 889.45203 963.573 1037.694 1111.8149 1185.936 1260.057 1334.178 1408.299 1482.42 1556.541 1630.662 1704.783 1778.9041 1853.025 1927.146 2001.267 2075.3879 2149.509 2223.6299 2297.751 2371.8721 2445.9929 2520.114 2594.2351 2668.356 2742.4771 2816.5979 2890.719 2964.8401 3038.9609 3113.082 3187.2029 3261.324 3335.4451 3409.5659"
-           y="0"
-           sodipodi:role="line"
-           id="tspan4810">_______________________________________________</tspan></text>
-</g></g></svg>
+</g>
+
+</svg>
 </body>
 </html>
