@@ -304,7 +304,7 @@
             });
         }
         var newEvent = function () {
-            var params = "fields=tipo_gestion-valor-destinatario-identificacion-contacto-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion";
+            var params = "fields=tipo_gestion-valor-destinatario-identificacion-contacto-telefono-departamento-municipio-direccion-observaciones&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
