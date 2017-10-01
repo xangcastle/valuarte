@@ -244,7 +244,7 @@ def get_log_gestion(request):
     jresponse = {}
     codigo_gestion = request.GET.get("gestion", None)
     if not codigo_gestion:
-        jresponse['mensaje'] = "Gestion no encontrada"
+        jresponse['mensaje'] = "Codigo Invalido"
         jresponse['code'] = 400
     else:
         try:
@@ -256,7 +256,12 @@ def get_log_gestion(request):
                 logs = Log_Gestion.objects.filter(gestion=gestion)
                 jlogs = []
                 for log in logs:
-                    jlog = {"fecha": str(log.fecha), "estado": log.estado, "atiende": log.usuario.username,
+                    user = log.usuario
+                    if not user:
+                        user = 'website'
+                    else:
+                        user = user.username
+                    jlog = {"fecha": str(log.fecha), "estado": log.estado, "atiende": user,
                             "anexo": log.anexo()}
                     jlogs.append(jlog)
 

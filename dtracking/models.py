@@ -251,6 +251,7 @@ class Gestion(models.Model):
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
     valor = models.FloatField(null=True, blank=True)
     categoria = models.CharField(max_length=50, null=True, blank=True)
+    informe_final = models.FileField(upload_to="fichas", null=True, blank=True)  # informe final
     status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
                                       default=ESTADOS_LOG_GESTION[0][0], blank=True)
 
@@ -262,8 +263,8 @@ class Gestion(models.Model):
     telefono = models.CharField(max_length=65, null=True, blank=True)
     departamento = models.ForeignKey(Departamento, null=True)
     municipio = models.ForeignKey(Municipio, null=True)
-    barrio = models.ForeignKey(Barrio, null=True)
-    zona = models.ForeignKey(Zona, null=True)
+    barrio = models.ForeignKey(Barrio, null=True, blank=True)
+    zona = models.ForeignKey(Zona, null=True, blank=True)
     direccion = models.TextField(max_length=255, null=True, verbose_name="Dirección")
     direccion_envio = models.TextField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
 
@@ -273,15 +274,21 @@ class Gestion(models.Model):
 
     # peritaje
     notify = models.BooleanField(default=False, verbose_name="notificar")  # indica si se le notificara via email al perito asignado
-    user = models.ForeignKey('Perito', null=True, blank=True)  # perito de campo al que se le asigna el avaluo
+    user = models.ForeignKey('Perito', null=True, blank=True, verbose_name="perito")  # perito de campo al que se le asigna el avaluo
     fecha_asignacion = models.DateTimeField(null=True, blank=True)  # fecha de programacion incluye hora
     realizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
+    ficha_inspeccion = models.FileField(upload_to="fichas", null=True, blank=True)  # ficha del levantamiento fisico
     position = GeopositionField(null=True, blank=True)
     json = JSONField(null=True, blank=True)
 
     # operaciones
     fecha_vence = models.DateField(null=True, blank=True)
+    armador = models.ForeignKey(User, null=True, blank=True, related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
+    revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)
+
+    def logs(self):
+        return Log_Gestion.objects.filter(gestion=self)
 
     def notificar(self, *args, **kwargs):
         print("asignar_gestion: Llamando Metodo para generar PDF")
@@ -309,24 +316,66 @@ class Gestion(models.Model):
             request = kwargs.pop('request')
             self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
 
+    def get_categoria(self):
+        try:
+            if self.valor <= 100:
+                return "Cat. 1"
+            elif 100 < self.valor <= 200:
+                return "Cat. 2"
+            elif 201 < self.valor <= 500:
+                return "Cat. 3"
+            elif 501 < self.valor <= 1000:
+                return "Cat. 4"
+            elif self.valor > 1000:
+                return "Cat. 5"
+        except:
+            return None
+
+    def get_user_log(self, status):
+        if status == ESTADOS_LOG_GESTION[2][0]:
+            return self.user
+        elif status == ESTADOS_LOG_GESTION[3][0]:
+            return self.armador
+        else:
+            return None
+
+    def log_status_gestion(self, status):
+        l, created = Log_Gestion.objects.get_or_create(gestion=self, estado=status)
+        l.fecha = datetime.now()
+        l.user = self.get_user_log(status)
+        l.save()
+
+    def get_status_gestion(self):
+        actual = ESTADOS_LOG_GESTION[0][0]
+        if not self.user and not self.fecha_asignacion:
+            actual = ESTADOS_LOG_GESTION[0][0]
+        if self.user and self.fecha_asignacion:
+            actual = ESTADOS_LOG_GESTION[1][0]
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion):
+            actual = ESTADOS_LOG_GESTION[2][0]
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.armador:
+            actual = ESTADOS_LOG_GESTION[3][0]
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.armador \
+                and self.informe_final:
+            actual = ESTADOS_LOG_GESTION[4][0]
+
+        return actual
+
+
+    def log(self, usuario, fecha, estado):
+        return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
+
     def save(self, *args, **kwargs):
+        if not self.id:
+            log = True
         if not self.fecha:
             self.fecha = datetime.now()
         if not self.barra:
             self.barra = self.get_code()
-
-        if self.valor <= 100:
-            self.categoria = "Cat. 1"
-        elif 100 < self.valor <= 200:
-            self.categoria = "Cat. 2"
-        elif 201 < self.valor <= 500:
-            self.categoria = "Cat. 3"
-        elif 501 < self.valor <= 1000:
-            self.categoria = "Cat. 4"
-        elif self.valor > 1000:
-            self.categoria = "Cat. 5"
-
+        self.categoria = self.get_categoria()
+        self.status_gestion = self.get_status_gestion()
         super(Gestion, self).save()
+        self.log_status_gestion(self.status_gestion)
 
 
     def contacto_envio(self):
@@ -367,9 +416,6 @@ class Gestion(models.Model):
                 numero = 1
             code = "%s-%s-%s" % (str(numero).zfill(4), self.tipo_gestion.prefijo, str(self.fecha.year))
         return code
-
-    def log(self, usuario, fecha, estado):
-        return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
     def __unicode__(self):
         return "%s - %s" % (self.barra, self.destinatario)
@@ -708,9 +754,9 @@ def cancelar_gestiones(gestiones, motivo=""):
 
 class Log_Gestion(models.Model):
     gestion = models.ForeignKey(Gestion)
-    usuario = models.ForeignKey(User)
-    fecha = models.DateTimeField()
-    estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION)
+    usuario = models.ForeignKey(User, null=True)
+    fecha = models.DateTimeField(null=True)
+    estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION, null=True)
 
     def anexo(self):
         if self.estado == ESTADOS_LOG_GESTION[0][0]:
@@ -725,17 +771,13 @@ class Log_Gestion(models.Model):
                     self.gestion.fecha_asignacion.hour,
                     self.gestion.fecha_asignacion.minute))
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
-            txt = "Levantamiento fisico realizado."
+            txt = "Inspeccion fisica realizada."
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
             txt = "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[4][0]:
             txt = "Inicio del Proceso."
         return txt
 
-    def save(self, *args, **kwargs):
-        self.gestion.status_gestion = self.estado
-        self.gestion.save()
-        super(Log_Gestion, self).save(*args, **kwargs)
 
 
 class Registro(models.Model):
