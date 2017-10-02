@@ -36,8 +36,8 @@ class gestion_admin(entidad_admin):
     change_form_template = "dtracking/gestion.html"
     date_hierarchy = "fecha"
     list_display = ('barra', 'banco', 'destinatario', 'tipo_gestion', 'valor', 'categoria',
-                    'user', '_realizada', 'dias_retrazo')
-    list_filter = ('banco', 'tipo_gestion', 'categoria','departamento', 'municipio', 'zona', 'user', 'realizada')
+                    'banco_ejecutivo', 'user', 'armador', 'status_gestion', 'dias_retrazo')
+    list_filter = ('banco', 'tipo_gestion', 'categoria', 'user', 'armador', 'status_gestion')
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 

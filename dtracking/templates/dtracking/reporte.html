@@ -70,27 +70,26 @@
                 <th>Ejecutivo</th>
                 <th>Banco</th>
                 <th>Nombre del cliente</th>
-                <th>Proceso</th>
                 <th>Tipo de Avaluo</th>
                 <th>Estado</th>
-                <th>Inspeccion</th>
-                <th>Dias retrazo</th>
+                <th>Fecha Inspeccion</th>
+                <th>Fecha Vencimiento</th>
+                <th>Dias de Retrazo</th>
             </thead>
             <tfoot></tfoot>
             <tbody>
                 {% for a in avaluos %}
-                    <tr class="alt">
+                    <tr class="alt" style="background-color: {{ a.tipo_gestion.color }}">
                       <td>{{a.fecha}}</td>
-                      <td>{{ a.user.username }}</td>
+                      <td>{{ a.banco_ejecutivo }}</td>
                       <td>{{ a.banco }}</td>
                       <td>{{ a.destinatario }}</td>
                       <td>{{ a.tipo_gestion.prefijo }}</td>
                       <td>{{ a.status_gestion }}</td>
-                      <td>{{a.fecha_entrega_efectiva}}</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td>{{a.fecha_recepcion}}</td>
+                      <td>{{a.fecha_recepcion}}</td>
+                      <td>{{a.dias_retrazo}}</td>
                     </tr>
-
                 {% endfor %}
             </tbody>
         </table>

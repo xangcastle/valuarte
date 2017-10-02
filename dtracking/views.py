@@ -445,6 +445,8 @@ def programar_gestion(request):
 
 def reporte(request):
     avaluos = Gestion.objects.filter(
-        status_gestion__in=[ESTADOS_LOG_GESTION[0][0], ESTADOS_LOG_GESTION[1][0]])
+        status_gestion__in=[ESTADOS_LOG_GESTION[0][0], ESTADOS_LOG_GESTION[1][0],
+        ESTADOS_LOG_GESTION[2][0]
+                            ]).order_by('fecha_vence')
     return render(request, 'dtracking/reporte.html', {'avaluos': avaluos})
 
