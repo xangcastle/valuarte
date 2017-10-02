@@ -441,3 +441,10 @@ def programar_gestion(request):
     obj_json['result'] = "Gestion programada exitosamente"
     data = json.dumps(obj_json)
     return HttpResponse(data, content_type='application/json')
+
+
+def reporte(request):
+    avaluos = Gestion.objects.filter(
+        status_gestion__in=[ESTADOS_LOG_GESTION[0][0], ESTADOS_LOG_GESTION[1][0]])
+    return render(request, 'dtracking/reporte.html', {'avaluos': avaluos})
+

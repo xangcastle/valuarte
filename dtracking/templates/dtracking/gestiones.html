@@ -1,15 +1,21 @@
 {% extends "admin/change_list.html" %}
 
+{% block object-tools-items %}
+    <li><a href="#" class="have-info" data-des="{% url 'reporte' %}">Reporte de Avaluos</a></li>
+    {{ block.super }}
+{% endblock %}
+
 {% block extrahead %}
     <script type="text/javascript">
-        (function($) {
+        (function ($) {
             $(document).ready(function () {
-                var examen_previo = function(){
-                window.open($(this).data('des'), "ExamenPrevio", "width=900, height=900,  status=no, scrollbars=no, toolbars=no, menubar=no, location=no");
-            }
-            $('.ver-examen').on('click', examen_previo);
+                var have_info = function () {
+                    window.open($(this).data('des'), "ExamenPrevio", "width=900, height=900,  status=no, scrollbars=no, toolbars=no, menubar=no, location=no");
+                }
+                $('.ver-examen').on('click', have_info);
+                $('.have-info').on('click', have_info);
             });
         })(grp.jQuery)
     </script>
-{{ block.super }}
+    {{ block.super }}
 {% endblock %}

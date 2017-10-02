@@ -62,6 +62,8 @@ urlpatterns = [
     url(r'^programar_gestion/', programar_gestion,
         name='programar_gestion'),
 
+    url(r'^reporte/', reporte,
+        name='reporte'),
 
 
 ]

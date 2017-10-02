@@ -304,7 +304,7 @@
             });
         }
         var showEvent = function (id) {
-            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-valor-user-notify-ficha_inspeccion-realizada&app_label=dtracking&model=gestion&id=" + id;
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-valor-user-notify-ficha_inspeccion-realizada-fecha_recepcion&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -319,8 +319,16 @@
                         minView: 1,
                         maxView: 1,
                     });
+                    $("#id_fecha_recepcion").datetimepicker({
+                        format: 'd/m/Y H:m',
+                        datepicket: false,
+                        timepicker: true,
+                        minView: 1,
+                        maxView: 1,
+                    });
                     var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
                     $("#id_fecha_asignacion").datetimepicker('update', fecha);
+                    $("#id_fecha_recepcion").datetimepicker('update', fecha);
                     $(".form_entrada").attr('enctype',"multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }

@@ -10,10 +10,24 @@ from django.contrib.auth.models import User
 from django.db import models
 from geoposition.fields import GeopositionField
 from jsonfield import JSONField
+import datetime
 from datetime import datetime, timedelta
 import json
 from django.utils.encoding import smart_str
 from django.utils import timezone
+
+
+def add_business_days(origin_date, add_days):
+    '''
+    Función que añade días hábiles a una fecha.
+    '''
+    while add_days > 0:
+        origin_date += timedelta(days=1)
+        weekday = origin_date.weekday()  # regresa un entero de 0 - 6
+        if weekday >= 4:  # sunday = 6
+            continue
+        add_days -= 1
+    return origin_date
 
 
 def ifnull(var, val):
@@ -282,6 +296,7 @@ class Gestion(models.Model):
     json = JSONField(null=True, blank=True)
 
     # operaciones
+    fecha_recepcion = models.DateField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
     armador = models.ForeignKey(User, null=True, blank=True, related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
     revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
@@ -331,6 +346,12 @@ class Gestion(models.Model):
         except:
             return None
 
+    def get_fecha_vence(self):
+        if self.fecha_recepcion:
+            return add_business_days(self.fecha_recepcion, 4)
+        else:
+            return None
+
     def get_user_log(self, status):
         if status == ESTADOS_LOG_GESTION[2][0]:
             return self.user
@@ -361,7 +382,6 @@ class Gestion(models.Model):
 
         return actual
 
-
     def log(self, usuario, fecha, estado):
         return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
@@ -374,8 +394,19 @@ class Gestion(models.Model):
             self.barra = self.get_code()
         self.categoria = self.get_categoria()
         self.status_gestion = self.get_status_gestion()
+        self.fecha_vence = self.get_fecha_vence()
         super(Gestion, self).save()
         self.log_status_gestion(self.status_gestion)
+
+    def dias_retrazo(self):
+        dias = 0
+        if self.fecha_recepcion and self.fecha_vence:
+            fv = datetime.combine(self.fecha_vence, datetime.time(datetime.now()))
+            if datetime.now() > fv:
+                dias = (datetime.now() - fv).days
+        return dias
+
+    dias_retrazo.short_description = "dias de retrazo"
 
 
     def contacto_envio(self):
