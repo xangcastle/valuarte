@@ -284,7 +284,7 @@
             });
         }
         var showEvent = function (id) {
-            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-user-notify-realizada&app_label=dtracking&model=gestion&id=" + id;
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-user-notify-ficha_inspeccion-realizada&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -301,6 +301,7 @@
                     });
                     var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
                     $("#id_fecha_asignacion").datetimepicker('update', fecha);
+                    $(".form_entrada").attr('enctype',"multipart/form-data");
                 }
             });
         }
@@ -481,12 +482,15 @@
             e.preventDefault();
             var formu = $(this);
             var url = formu.attr('action');
+            var formData = new FormData($(formu)[0]);
             var element = this;
             $.ajax({
                 type: "POST",
-                url: url,
-                datatype: "json",
-                data: formu.serialize(),
+                url : url,
+                cache: false,
+                contentType: false,
+                processData: false,
+                data : formData,
                 success: function (e) {
                     if (typeof(e.error) != "undefined" && e.error != "")
                         new PNotify({
