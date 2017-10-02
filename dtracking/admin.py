@@ -41,18 +41,18 @@ class gestion_admin(entidad_admin):
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    # fields = (('fecha', 'barra'),
-    #           ('status_gestion','tipo_gestion'),
-    #           ('valor', 'categoria'),
-    #           ('destinatario',  'identificacion'),
-    #           'telefono', ('contacto', 'contacto_telefono'),
-    #           ('banco', 'referencia'),'banco_ejecutivo',
-    #           'direccion','direccion_envio',
-    #           ('departamento', 'municipio'),
-    #           ('fin_gestion', 'uso_gestion'),
-    #           'observaciones')
-    #
-    # readonly_fields = ('user',)
+    fields = (('fecha', 'barra'),
+              ('status_gestion','tipo_gestion'),
+              ('valor', 'categoria'),
+              ('destinatario',  'identificacion'),
+              'telefono', ('contacto', 'contacto_telefono'),
+              ('banco', 'referencia'),'banco_ejecutivo',
+              'direccion','direccion_envio',
+              ('departamento', 'municipio'),
+              ('fin_gestion', 'uso_gestion'),
+              'observaciones')
+
+    readonly_fields = ('user',)
 
     actions = ['action_perito', 'action_cancelar', 'action_asignar']
 

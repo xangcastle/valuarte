@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 import json
 from django.utils.encoding import smart_str
 from django.utils import timezone
+from colorfield.fields import ColorField
 
 
 def add_business_days(origin_date, add_days):
@@ -129,7 +130,7 @@ class TipoGestion(Entidad):
     prefijo = models.CharField(max_length=6, null=True, blank=False)
     tiempo_ejecucion = models.IntegerField(null=True, blank=True,
                                            help_text="Tiempo requerido en minutos para el levantamiento de datos de este tipo de avaluo")
-
+    color = ColorField(default="ffffff")
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
 

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'home',
     'djangobower',
     'crispy_forms',
+    'colorfield',
 ]
 
 MIDDLEWARE = [
