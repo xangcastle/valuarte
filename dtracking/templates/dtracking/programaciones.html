@@ -90,6 +90,13 @@
                     <br>
                 </div>
             </div>
+            <div id='external-events'>
+                <div>
+                    <h4>Reportes</h4>
+                    <div class="btn btn-info">Reporte 1 </div>
+                    <br>
+                </div>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-9">
             <div id="calender"></div>
@@ -236,6 +243,19 @@
                     }
                 });
         };
+        var cargar_usos_gestion = function () {
+                    $.ajax('/dtracking/get_usos_gestion/',
+                        {
+                            type: 'POST',
+                            data: {'fin': $(this).val()},
+                            success: function (result) {
+                                $('#id_uso_gestion').empty();
+                                $.each(result, function (i, o) {
+                                    $('#id_uso_gestion').append("<option value=" + o.id + ">" + o.name + "</option>");
+                                });
+                            }
+                        });
+                }
         var cotizar = function () {
             window.open(
                 $(this).data('url'),
@@ -284,7 +304,7 @@
             });
         }
         var showEvent = function (id) {
-            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-user-notify-ficha_inspeccion-realizada&app_label=dtracking&model=gestion&id=" + id;
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-valor-user-notify-ficha_inspeccion-realizada&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -302,11 +322,12 @@
                     var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
                     $("#id_fecha_asignacion").datetimepicker('update', fecha);
                     $(".form_entrada").attr('enctype',"multipart/form-data");
+                    $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }
             });
         }
         var newEvent = function () {
-            var params = "fields=tipo_gestion-valor-destinatario-identificacion-contacto-telefono-departamento-municipio-direccion-observaciones&app_label=dtracking&model=gestion";
+            var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -315,12 +336,13 @@
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
                     $('#id_departamento').on('change', cargar_municipios);
+                    $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }
             });
         }
         var editEvent = function () {
             var id = $(this).data('idevent');
-            var params = "fields=fecha-tipo_gestion-valor-destinatario-identificacion-contacto-telefono-departamento-municipio-direccion&app_label=dtracking&model=gestion&id=" + id;
+            var params = "fields=fecha-tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -337,6 +359,7 @@
                     $('#id_departamento').on('change', cargar_municipios);
                     var fecha = moment($("#id_fecha").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
                     $("#id_fecha").datetimepicker('update', fecha);
+                    $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }
             });
         }

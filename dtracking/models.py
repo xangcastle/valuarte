@@ -249,7 +249,7 @@ class Gestion(models.Model):
     observaciones = models.TextField(max_length=600, null=True, blank=True)
     observaciones_cotizacion = models.TextField(max_length=255, null=True, blank=True, verbose_name="observaciones en la cotización")
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
-    valor = models.FloatField(null=True, blank=True)
+    valor = models.FloatField(null=True, blank=True, verbose_name="precio del avaluo ya con iva")
     categoria = models.CharField(max_length=50, null=True, blank=True)
     informe_final = models.FileField(upload_to="fichas", null=True, blank=True)  # informe final
     status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
@@ -265,7 +265,7 @@ class Gestion(models.Model):
     municipio = models.ForeignKey(Municipio, null=True)
     barrio = models.ForeignKey(Barrio, null=True, blank=True)
     zona = models.ForeignKey(Zona, null=True, blank=True)
-    direccion = models.TextField(max_length=255, null=True, verbose_name="Dirección")
+    direccion = models.TextField(max_length=255, null=True, verbose_name="Ubicacion del bien a avaluar")
     direccion_envio = models.TextField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
 
     # contacto del banco
