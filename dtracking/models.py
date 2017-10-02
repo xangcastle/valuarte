@@ -779,7 +779,6 @@ class Log_Gestion(models.Model):
         return txt
 
 
-
 class Registro(models.Model):
     tag = models.CharField(max_length=100, null=False, blank=False)
     mensaje = models.TextField(null=False, blank=False)

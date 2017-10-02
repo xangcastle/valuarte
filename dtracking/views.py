@@ -424,6 +424,14 @@ def programar_gestion(request):
         gestion.user = User.objects.get(pk=int(id_usuario))
     if barra:
         gestion.barra = barra
+
+    realizada = request.POST.get('realizada', None)
+    if realizada:
+        gestion.realizada = True
+    try:
+        gestion.ficha_inspeccion = request.FILES['ficha_inspeccion']
+    except:
+        pass
     gestion.save()
     notify = request.POST.get('notify', None)
     if notify:
