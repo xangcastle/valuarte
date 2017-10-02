@@ -41,16 +41,36 @@ class gestion_admin(entidad_admin):
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
 
-    fields = (('fecha', 'barra'),
-              ('status_gestion','tipo_gestion'),
-              ('valor', 'categoria'),
-              ('destinatario',  'identificacion'),
-              'telefono', ('contacto', 'contacto_telefono'),
-              ('banco', 'referencia'),'banco_ejecutivo',
-              'direccion','direccion_envio',
-              ('departamento', 'municipio'),
-              ('fin_gestion', 'uso_gestion'),
-              'observaciones')
+    fieldsets = (
+        ('informacion del cliente', {
+            'classes': ('grp-collapse grp-open',),
+            'fields': (('fecha', 'barra', 'status_gestion'),
+                       ('tipo_gestion', 'fin_gestion', 'uso_gestion'),
+                       ('destinatario', 'identificacion', 'telefono'),
+                       ('departamento', 'municipio', 'barrio'),
+                       'direccion', 'observaciones',
+                       )
+        }),
+        ('informacion adicional', {
+            'classes': ('grp-collapse grp-open',),
+            'fields': (
+                ('contacto', 'contacto_telefono', 'direccion_envio'),
+                ('banco', 'banco_ejecutivo', 'referencia'),
+                ('valor', 'categoria'),
+            )
+        }),
+
+        ('peritaje y operaciones', {
+            'classes': ('grp-collapse grp-open',),
+            'fields': (
+                ('user', 'fecha_asignacion', 'realizada'),
+                ('fecha_recepcion', 'armador', 'fecha_vence'),
+                'revizada',
+                'ficha_inspeccion', 'position', 'json'
+            )
+        }),
+
+    )
 
     readonly_fields = ('user',)
 

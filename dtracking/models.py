@@ -281,7 +281,7 @@ class Gestion(models.Model):
     barrio = models.ForeignKey(Barrio, null=True, blank=True)
     zona = models.ForeignKey(Zona, null=True, blank=True)
     direccion = models.TextField(max_length=255, null=True, verbose_name="Ubicacion del bien a avaluar")
-    direccion_envio = models.TextField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
+    direccion_envio = models.CharField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
 
     # contacto del banco
     banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
@@ -293,7 +293,7 @@ class Gestion(models.Model):
     fecha_asignacion = models.DateTimeField(null=True, blank=True)  # fecha de programacion incluye hora
     realizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
     ficha_inspeccion = models.FileField(upload_to="fichas", null=True, blank=True)  # ficha del levantamiento fisico
-    position = GeopositionField(null=True, blank=True)
+    position = GeopositionField(null=True, blank=True, default='12.129239891689053,-86.26631538391109')
     json = JSONField(null=True, blank=True)
 
     # operaciones

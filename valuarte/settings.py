@@ -134,7 +134,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-GEOPOSITION_GOOGLE_MAPS_API_KEY = 'YOUR_API_KEY'
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBjWBugqqWF-lwi6opFnCrDtg6SVj6hlME'
 
 
 # Variables para el envio por gmail
