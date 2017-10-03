@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'dtracking',
     'base',
     'geoposition',
     'grappelli_dynamic_navbar',
@@ -42,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'dtracking',
     'home',
     'djangobower',
     'crispy_forms',

@@ -13,6 +13,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.admin import site
 import adminactions.actions as actions
+from import_export.admin import ImportExportModelAdmin
 actions.add_to_site(site)
 
 
@@ -31,7 +32,7 @@ class tipoGestion_admin(entidad_admin):
 
 
 
-class gestion_admin(entidad_admin):
+class gestion_admin(ImportExportModelAdmin):
     change_list_template = "dtracking/gestiones.html"
     change_form_template = "dtracking/gestion.html"
     date_hierarchy = "fecha"
