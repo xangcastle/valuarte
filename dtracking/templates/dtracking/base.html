@@ -51,6 +51,9 @@
           <li class="nav-item" {% if 'peritaje' in request.path %}class="active"{% endif %}>
             <a class="nav-link" href="{% url 'peritaje' %}">Peritaje</a>
           </li>
+          <li class="nav-item" {% if 'operaciones' in request.path %}class="active"{% endif %}>
+            <a class="nav-link" href="{% url 'operaciones' %}">Operaciones</a>
+          </li>
         </ul>
         <div class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="text" placeholder="Buscar" aria-label="Buscar" id="nav-search">
