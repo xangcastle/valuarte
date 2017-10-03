@@ -155,6 +155,7 @@ class TipoGestion(Entidad):
     class Meta:
         verbose_name = "tipo de avaluo"
         verbose_name_plural = "tipos de avaluos"
+        ordering = ['prefijo',]
 
 
 TIPOS = (
