@@ -17,13 +17,6 @@ from django.utils import timezone
 from colorfield.fields import ColorField
 
 
-def ifnull(value, option):
-    if not value:
-        return option
-    else:
-        return value
-
-
 def add_business_days(origin_date, add_days):
     '''
     Función que añade días hábiles a una fecha.
@@ -36,6 +29,17 @@ def add_business_days(origin_date, add_days):
         add_days -= 1
     return origin_date
 
+
+def diff_business_days(origin_date, end_date):
+    days = 1
+    while not origin_date >= end_date:
+        origin_date += timedelta(days=1)
+        weekday = origin_date.weekday()
+        if weekday >= 4:
+            continue
+        days += 1
+
+    return days
 
 def ifnull(var, val):
     if var is None:
@@ -424,9 +428,9 @@ class Gestion(models.Model):
     def dias_retrazo(self):
         dias = 0
         if self.fecha_recepcion and self.fecha_vence:
-            fv = datetime.combine(self.fecha_vence, datetime.time(datetime.now()))
+            fv = datetime.combine(self.get_fecha_vence(), datetime.time(datetime.now()))
             if datetime.now() > fv:
-                dias = (datetime.now() - fv).days
+                dias = diff_business_days(fv, datetime.now())
         return dias
 
     dias_retrazo.short_description = "dias de retrazo"
