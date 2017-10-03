@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from geoposition.fields import GeopositionField
 from jsonfield import JSONField
-import datetime
+import datetime as datetime_base
 from datetime import datetime, timedelta
 import json
 from django.utils.encoding import smart_str
@@ -31,14 +31,13 @@ def add_business_days(origin_date, add_days):
 
 
 def diff_business_days(origin_date, end_date):
-    days = 1
-    while not origin_date >= end_date:
-        origin_date += timedelta(days=1)
-        weekday = origin_date.weekday()
+    days = 0
+    while not origin_date > end_date:
+        weekday = origin_date.weekday()  # regresa un entero de 0 - 6
+        origin_date += timedelta(days=1)  # pasar al siguiente dia
         if weekday >= 4:
             continue
         days += 1
-
     return days
 
 def ifnull(var, val):
@@ -430,7 +429,7 @@ class Gestion(models.Model):
     def dias_retrazo(self):
         dias = 0
         if self.fecha_recepcion and self.fecha_vence:
-            fv = datetime.combine(self.get_fecha_vence(), datetime.time(datetime.now()))
+            fv = datetime.combine(self.get_fecha_vence(), datetime_base.time(23, 59))
             if datetime.now() > fv:
                 dias = diff_business_days(fv, datetime.now())
         return dias
