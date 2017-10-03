@@ -216,8 +216,8 @@ class finalidad_admin(entidad_admin):
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
 admin.site.register(Gestion_Fin, finalidad_admin)
-admin.site.register(Departamento, entidad_admin)
-admin.site.register(Municipio, entidad_admin)
+# admin.site.register(Departamento, entidad_admin)
+# admin.site.register(Municipio, entidad_admin)
 admin.site.register(Gestor, gestor_admin)
 admin.site.register(Armador)
 
