@@ -133,12 +133,28 @@
                     <div style="padding: 20px">
                         <div class="row">
                             <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="codigo_gestion">3527364</strong></div>
+                            <div class="col-sm-6 col-xs-12">
+                              <strong id="codigo_gestion">3527364</strong>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                              <a id="ficha" href="#" class="btn btn-primary btn-sm" url="{% url 'gestion_proforma' %}?gestion=" data-url=""
+                                 data-name="Generar Proforma">
+                                    Generar Proforma
+                              </a>
+                            </div>
+
 
                         </div>
                         <div class="row">
                             <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="cliente_gestion">José Williams Garcia</strong>
+                            <div class="col-sm-6 col-xs-12">
+                              <strong id="cliente_gestion">José Williams Garcia</strong>
+                            </div>
+                            <div class="col-sm-2 col-xs-12" style="text-align:left">
+                              <a id="proforma" href="#" class="btn btn-primary btn-sm" url="{% url 'generar_asignacion' %}?documento=" data-url=""
+                                 data-name="Generar Proforma">
+                              Generar Ficha
+                              </a>
                             </div>
                         </div>
                         <div class="row">
@@ -216,6 +232,12 @@
                             var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
                             tab.append(rw);
                         });
+                        var url = $("#ficha").attr('url')+result.id_gestion
+                        $("#ficha").attr('data-url',url);
+
+                        url = $("#proforma").attr('url')+result.id_gestion
+                       $("#proforma").attr('data-url',url);
+
                         $("#codigo_gestion").html(result.codigo_gestion);
                         $("#cliente_gestion").html(result.cliente_gestion);
                         $("#tipo_gestion").html(result.tipo_gestion);
