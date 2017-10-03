@@ -137,7 +137,7 @@
                               <strong id="codigo_gestion">3527364</strong>
                             </div>
                             <div class="col-sm-2 col-xs-12">
-                              <a id="ficha" href="#" class="btn btn-primary btn-sm" url="{% url 'gestion_proforma' %}?gestion=" data-url=""
+                              <a id="ficha" href="#" class="btn btn-primary btn-sm show_atachments" url="{% url 'gestion_proforma' %}?gestion=" data-url=""
                                  data-name="Generar Proforma">
                                     Generar Proforma
                               </a>
@@ -151,7 +151,7 @@
                               <strong id="cliente_gestion">José Williams Garcia</strong>
                             </div>
                             <div class="col-sm-2 col-xs-12" style="text-align:left">
-                              <a id="proforma" href="#" class="btn btn-primary btn-sm" url="{% url 'generar_asignacion' %}?documento=" data-url=""
+                              <a id="proforma" href="#" class="btn btn-primary btn-sm show_atachments" url="{% url 'generar_asignacion' %}?documento=" data-url=""
                                  data-name="Generar Proforma">
                               Generar Ficha
                               </a>
@@ -221,6 +221,13 @@
     <script src="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.full.js"></script>
     <script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
     <script>
+    var atachments_info = function(){
+       console.log(this);  
+        window.open(
+            $(this).data('url'),
+            $(this).data('name'),
+            "width=600mm, height=500mm,  status=no, menubar=no, location=no");
+    };
         function ver_gestion(gestion) {
             $.ajax({
                 url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
@@ -237,12 +244,17 @@
 
                         url = $("#proforma").attr('url')+result.id_gestion
                        $("#proforma").attr('data-url',url);
-
                         $("#codigo_gestion").html(result.codigo_gestion);
                         $("#cliente_gestion").html(result.cliente_gestion);
                         $("#tipo_gestion").html(result.tipo_gestion);
                         $("#modal-default").iziModal({zindex: 9999});
                         $("#modal-default").iziModal('open');
+
+
+
+                        $('.show_atachments').on('click', atachments_info);
+
+
                     } else {
                         alert(result.mensaje);
                     }
