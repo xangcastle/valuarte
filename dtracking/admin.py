@@ -26,9 +26,10 @@ class detalle_tabular(GrappelliSortableHiddenMixin, admin.TabularInline):
 
 
 class tipoGestion_admin(entidad_admin):
+    fields = (('name', 'prefijo'), ('tiempo_ejecucion', 'color'))
     change_form_template = "dtracking/tipo_gestion.html"
     inlines = [detalle_tabular, ]
-    list_display = ('prefijo', 'name', 'errores')
+    list_display = ('prefijo', 'name', 'tiempo_ejecucion', 'muestra_color', 'activo')
 
 
 
@@ -200,13 +201,23 @@ class import_admin(entidad_admin):
 class RegistroAdmin(admin.ModelAdmin):
     list_display = ('tag', 'usuario', 'fecha')
 
+
+class usos_avaluos(admin.TabularInline):
+    model = Gestion_Uso
+    extra = 0
+    fields = ('name', 'activo')
+
+
+class finalidad_admin(entidad_admin):
+    fields = (('name', 'activo'), )
+    inlines = [usos_avaluos, ]
+
+
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
-admin.site.register(Gestion_Fin)
-admin.site.register(Gestion_Uso)
+admin.site.register(Gestion_Fin, finalidad_admin)
 admin.site.register(Departamento, entidad_admin)
 admin.site.register(Municipio, entidad_admin)
-admin.site.register(Barrio, barrio_admin)
-admin.site.register(Zona, entidad_admin)
 admin.site.register(Gestor, gestor_admin)
-admin.site.register(Registro, RegistroAdmin)
+admin.site.register(Armador)
+

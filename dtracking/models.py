@@ -3,8 +3,7 @@ from __future__ import unicode_literals
 
 import sys
 from django.core.mail import EmailMessage
-from base.html_to_pdf import render_to_pdf
-from django.template.loader import render_to_string
+from django.utils.html import mark_safe
 from base.models import Entidad
 from django.contrib.auth.models import User
 from django.db import models
@@ -105,7 +104,15 @@ class Gestor(models.Model):
         return "%s %s" % (ifnull(self.user.first_name, self.user.username), ifnull(self.user.last_name, ""))
 
     class Meta:
-        verbose_name_plural = "Evaluadores"
+        verbose_name = "perito"
+        verbose_name_plural = "Peritos"
+
+
+class Armador(models.Model):
+    user = models.OneToOneField(User)
+
+    class Meta:
+        verbose_name_plural = "armadores"
 
 
 class Departamento(Entidad):
@@ -135,7 +142,7 @@ class ZonaBarrio(models.Model):
 
 class TipoGestion(Entidad):
     prefijo = models.CharField(max_length=6, null=True, blank=False)
-    tiempo_ejecucion = models.IntegerField(null=True, blank=True,
+    tiempo_ejecucion = models.IntegerField(null=True, blank=True, verbose_name="tiempo de ejecucion en minutos",
                                            help_text="Tiempo requerido en minutos para el levantamiento de datos de este tipo de avaluo")
     color = ColorField(default="ffffff")
 
@@ -158,6 +165,10 @@ class TipoGestion(Entidad):
                 errors += 'El campo %s es de tipo %s, pero no contiene ningun elemento para seleccionar. ' % (
                     d.titulo, d.tipo)
         return errors
+
+    def muestra_color(self):
+        return mark_safe('<div style="height: 25px; width: 25px; background-color:%s">' % self.color)
+    muestra_color.short_description = "color"
 
     class Meta:
         verbose_name = "tipo de avaluo"
@@ -310,7 +321,7 @@ class Gestion(models.Model):
     # operaciones
     fecha_recepcion = models.DateField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
-    armador = models.ForeignKey(User, null=True, blank=True, related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
+    armador = models.ForeignKey('Operaciones', null=True, blank=True, related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
     revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)
 
@@ -855,6 +866,19 @@ class PeritoManager(models.Manager):
 class Perito(User):
     objects = models.Manager()
     objects = PeritoManager()
+
+    class Meta:
+        proxy = True
+
+
+class ArmadorManager(models.Manager):
+    def get_queryset(self):
+        return super(ArmadorManager, self).get_queryset().filter(id__in=Armador.objects.all().values_list('user', flat=True))
+
+
+class Operaciones(User):
+    objects = models.Manager()
+    objects = ArmadorManager()
 
     class Meta:
         proxy = True
