@@ -414,8 +414,6 @@ class Gestion(models.Model):
         return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            log = True
         if not self.fecha:
             self.fecha = datetime.now()
         if not self.barra:
