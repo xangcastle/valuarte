@@ -33,7 +33,7 @@
               .datagrid table thead th:first-child { border: none; }
               .datagrid table tbody td
                {
-                  color: #00557F;
+                  color: white;
                   border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;
                }
               .datagrid table tbody .alt td { background: #E1EEf4; color: #00557F; }
@@ -79,7 +79,7 @@
             <tfoot></tfoot>
             <tbody>
                 {% for a in avaluos %}
-                    <tr class="alt" style="background-color: {{ a.tipo_gestion.color }}">
+                    <tr style="background-color: {{ a.tipo_gestion.color }}">
                       <td>{{a.fecha}}</td>
                       <td>{{ a.banco_ejecutivo }}</td>
                       <td>{{ a.banco }}</td>
@@ -87,7 +87,7 @@
                       <td>{{ a.tipo_gestion.prefijo }}</td>
                       <td>{{ a.status_gestion }}</td>
                       <td>{{a.fecha_recepcion}}</td>
-                      <td>{{a.fecha_recepcion}}</td>
+                      <td>{{a.fecha_vence}}</td>
                       <td>{{a.dias_retrazo}}</td>
                     </tr>
                 {% endfor %}

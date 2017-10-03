@@ -18,6 +18,13 @@ from django.utils import timezone
 from colorfield.fields import ColorField
 
 
+def ifnull(value, option):
+    if not value:
+        return option
+    else:
+        return value
+
+
 def add_business_days(origin_date, add_days):
     '''
     Función que añade días hábiles a una fecha.
@@ -466,14 +473,20 @@ class Gestion(models.Model):
     def media(self):
         return Archivo.objects.filter(gestion=self)
 
+    def get_departamento(self):
+        if self.departamento:
+            return self.departamento.name
+        else:
+            return ""
+
     def to_json(self):
         o = {}
         o['id'] = self.id
         o['destinatario'] = self.destinatario
         o['direccion'] = self.direccion
         o['telefono'] = self.telefono
-        o['departamento'] = self.departamento.name
-        o['municipio'] = self.municipio.name
+        o['departamento'] = self.get_departamento()
+        #o['municipio'] = self.municipio.name
         # o['barrio'] = self.barrio.name
         o['barra'] = self.barra
         if self.zona:
@@ -481,6 +494,15 @@ class Gestion(models.Model):
         else:
             o['zona'] = ""
         o['tipo_gestion'] = self.tipo_gestion.id
+        o['barra'] = self.barra
+        o['titulo'] = self.destinatario
+        o['descripcion'] = self.direccion
+        o['inicio'] = str(ifnull(self.fecha_recepcion, ''))
+        o['fin'] = str(ifnull(self.fecha_vence, ''))
+        o['color'] = self.tipo_gestion.color
+        o['user'] = ifnull(self.armador, '')
+        o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
+
         if self.position:
             o['latitude'] = str(self.position.latitude)
             o['longitude'] = str(self.position.longitude)

@@ -389,7 +389,7 @@
             $.ajax({
                 type: "GET",
                 data: data,
-                url: "{% url 'obtenercitas' %}",
+                url: "{% url 'obtenercitasperitaje' %}",
                 success: function (response) {
                     $.each(response.programadas, function (i, v) {
                         events.push({

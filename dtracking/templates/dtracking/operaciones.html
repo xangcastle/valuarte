@@ -1,0 +1,490 @@
+{% extends 'dtracking/base.html' %}
+{% load admin_urls static %}
+{% block Styles %}
+    <link rel="stylesheet" href="/static/dtracking/bootstrap-datepicker/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href='{% static 'izimodal/css/iziModal.min.css' %}' type="text/css">
+    <style>
+        #external-events {
+            float: left;
+            width: 90%;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            background: #eee;
+            text-align: left;
+        }
+
+        #external-events h4 {
+            font-size: 16px;
+            margin-top: 0;
+            padding-top: 1em;
+        }
+
+        #external-events .fc-event {
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        #external-events p {
+            margin: 1.5em 0;
+            font-size: 11px;
+            color: #666;
+        }
+
+        #external-events p input {
+            margin: 0;
+            vertical-align: middle;
+        }
+
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        span.direccion {
+            font-size: 0.8em;
+        }
+
+        #new-event {
+            float: right;
+            margin-top: -35px;
+        }
+    </style>
+{% endblock %}
+{% block Content %}
+{#    <div class="row">#}
+        {% comment %}<div class="col-xs-12 col-sm-3">
+            <div id='external-events'>
+                <h4>Avaluos sin Asignar!</h4>
+
+                <div id="external-events-listing">
+                </div>
+            </div>
+            <div id='external-events'>
+                <div class="form-group">
+                    <label for="peritos">Peritos</label>
+                    <select class="form-control" id="peritos" aria-describedby="PeritosHelp"
+                            onchange="refreshCalender()">
+                        <option value="0">Todos</option>
+                        {% for perito in peritos %}
+                            <option value="{{ perito.user.id }}">{{ perito.user }}</option>
+                        {% endfor %}
+                    </select>
+                    <small id="PeritosHelp" class="form-text text-muted">Filtre aqui por perito asignado.</small>
+                </div>
+
+            </div>
+            <div id='external-events'>
+                <div>
+                    <h4>Leyenda</h4>
+                    <div style="background-color: #991957; color: white;">Vencidas <span
+                            style="float: right">{{ total_vencidas }}</span></div>
+                    <br>
+                    <div style="background-color: #4d0a54; color: white;">Para Hoy <span
+                            style="float: right">{{ total_hoy }}</span></div>
+                    <br>
+                    <div style="background-color: #46991a; color: white;">Vigentes <span
+                            style="float: right">{{ total_vigentes }}</span></div>
+                    <br>
+                </div>
+            </div>
+            <div id='external-events'>
+                <div>
+                    <h4>Reportes</h4>
+                    <div class="btn btn-info">Reporte 1 </div>
+                    <br>
+                </div>
+            </div>
+        </div>{% endcomment %}
+{#        <div class="col-xs-12 col-sm-9">#}
+            <div id="calender"></div>
+            {% comment %}<div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h7 class="modal-title"><span id="eventTitle"></span></h7>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="modal-default"
+                 data-izimodal-fullscreen="true"
+                 data-izimodal-title="Estado de su gestion"
+                 data-izimodal-subtitle="Aquí puede informarse del proceso de su avaluo"
+                 data-izimodal-icon="icon-home"
+                 aria-hidden="false"
+                 aria-labelledby="modal-default"
+                 role="dialog" class="iziModal"
+                 data-izimodal-group="grupo1"
+                 data-izimodal-loop="true"
+
+                 style="border-bottom: 3px solid rgb(136, 160, 185);
+                 overflow: hidden; z-index: 999;
+                 border-radius: 3px; max-width: 700px;
+                 display: None; height: 459px;">
+                <div class="iziModal-content">
+                    <div style="padding: 20px">
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
+                            <div class="col-sm-8 col-xs-12"><strong id="codigo_gestion">3527364</strong></div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
+                            <div class="col-sm-8 col-xs-12"><strong id="cliente_gestion">José Williams Garcia</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Tipo de Avaluo:</h4></div>
+                            <div class="col-sm-8 col-xs-12"><strong id="tipo_gestion">Avaluo de Automovil</strong></div>
+                        </div>
+                        <table class="table table-responsive table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Ejecutivo</th>
+                                <th>Anexo</th>
+                            </tr>
+                            </thead>
+                            <tbody id="logs">
+                            <tr>
+                                <td>24/01/2017</td>
+                                <td>RECEPCIONADO</td>
+                                <td>Paola</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>25/01/2017</td>
+                                <td>ASIGNADO A EVALUADOR</td>
+                                <td>Paola</td>
+                                <td>Tecnico evaluador Cesar Ramirez, fecha programada 29/01/2017</td>
+                            </tr>
+                            <tr>
+                                <td>29/01/2017</td>
+                                <td>LEVANTAMIENTO REALIZADO</td>
+                                <td>CRamirez</td>
+                                <td>
+                                    <a href="#">Foto 1</a><br>
+                                    <a href="#">Foto 2</a><br>
+                                    <a href="#">Foto 3</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>03/02/2017</td>
+                                <td>EN REVISION FINAL DE INFORME</td>
+                                <td>Paola</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>04/02/2017</td>
+                                <td>TERMINADO</td>
+                                <td>Paola</td>
+                                <td><a href="#">Descargar Informe</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>{% endcomment %}
+{#        </div>#}
+{#    </div>#}
+
+{% endblock %}
+{% block Scripts %}
+
+    <script src="/static/dtracking/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.full.js"></script>
+    <script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
+    <script>
+        function ver_gestion(gestion) {
+            $.ajax({
+                url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
+                method: "get",
+                success: function (result) {
+                    if (result.code == 200) {
+                        var tab = $('#logs').empty();
+                        $.each(result.logs, function (i, o) {
+                            var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
+                            tab.append(rw);
+                        });
+                        $("#codigo_gestion").html(result.codigo_gestion);
+                        $("#cliente_gestion").html(result.cliente_gestion);
+                        $("#tipo_gestion").html(result.tipo_gestion);
+                        $("#modal-default").iziModal({zindex: 9999});
+                        $("#modal-default").iziModal('open');
+                    } else {
+                        alert(result.mensaje);
+                    }
+
+                }
+            });
+
+            $(".style-switch-wrapper").removeClass("active");
+        };
+        function makeEventsDraggable() {
+            $(".fc-draggable").draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: false  //  original position after the drag
+            });
+            $('#external-events').find('.fc-event').each(function () {
+
+                // store data so the calendar knows to render an event upon drop
+                $(this).data('event', {
+                    title: $.trim($(this).text()), // use the element's text as the event title
+                    stick: true // maintain when user navigates (see docs on the renderEvent method)
+                });
+
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+
+            });
+
+            $('#external-events-listing').droppable({
+                drop: function (event, ui) {
+                    if (dragged) {
+                        var event = dragged[1];
+                        dragged[0].fullCalendar('removeEvents', event._id);
+                        var el = $("<div class='fc-event'>").appendTo(this).text(event.title);
+                        el.draggable({
+                            zIndex: 999,
+                            revert: true,
+                            revertDuration: 0
+                        });
+                        el.data('event', {title: event.title, id: event.id, stick: true});
+                        dragged = null;
+                        makeEventsDraggable();
+                    }
+                }
+            });
+        }
+        var showEvent = function (id) {
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-valor-user-notify-ficha_inspeccion-realizada-fecha_recepcion&app_label=dtracking&model=gestion&id=" + id;
+            modal = $("#myModal");
+            body = modal.find(".modal-body").empty();
+            $.ajax("/admin/ajax/get_html_form/?" + params, {
+                method: "GET",
+                success: function (response) {
+                    body.html(response);
+                    modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
+                    $("#id_fecha_asignacion").datetimepicker({
+                        format: 'd/m/Y H:m',
+                        datepicket: false,
+                        timepicker: true,
+                        minView: 1,
+                        maxView: 1,
+                    });
+                    $("#id_fecha_recepcion").datetimepicker({
+                        format: 'd/m/Y H:m',
+                        datepicket: false,
+                        timepicker: true,
+                        minView: 1,
+                        maxView: 1,
+                    });
+                    var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
+                    $("#id_fecha_asignacion").datetimepicker('update', fecha);
+                    $("#id_fecha_recepcion").datetimepicker('update', fecha);
+                    $(".form_entrada").attr('enctype',"multipart/form-data");
+                    $('#id_fin_gestion').on('change', cargar_usos_gestion);
+                }
+            });
+        }
+        var createRow = function (v) {
+            var row = '<dic class="fc-event" data-idevent="' + v.id + '">' +
+                '<input class="eventid" type="hidden" value="' + v.id + '">' +
+                '<span>Codigo: ' + v.barra + '</span><br>' +
+                '<span>Cliente: ' + v.destinatario + '</span><br>' +
+                '<span>Telefono: ' + v.telefono + '</span><br>' +
+                '<span>Direccion: </span>' +
+                '<span class="direccion">' + v.direccion + '</span><br></div>';
+            return row;
+        }
+        function refreshCalender() {
+            var events = [];
+            var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
+            $.ajax({
+                type: "GET",
+                data: data,
+                url: "{% url 'obtenercitasoperaciones' %}",
+                success: function (response) {
+                    $.each(response.programadas, function (i, v) {
+                        events.push({
+                            eventID: v.id,
+                            title: v.titulo,
+                            description: v.descripcion,
+                            start: moment(v.fin),
+                            end: moment(v.fin),
+                            color: v.color,
+                            textColor: 'white',
+                            allDay: false,
+                            barra: v.barra,
+                            user: v.user,
+                            dias: v.dias,
+                        });
+                    });
+                    $('#external-events-listing').empty();
+                    $.each(response.pendientes, function (i, v) {
+                        $('#external-events-listing').append(createRow(v));
+                    });
+                    makeEventsDraggable();
+
+                    GenerateCalender(events);
+                },
+                error: function (error) {
+                    alert(JSON.stringify(error.d));
+                    console.log(error);
+                }
+            })//ajax
+        }
+        function GenerateCalender(events) {
+
+            $('#calender').fullCalendar('destroy');
+            var calendar = $('#calender').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay,listMonth'
+                },
+                lang: 'es',
+                events: events,
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar
+                dragRevertDuration: 0,
+                timeFormat: 'h(:mm)a',
+                drop: function (date, jsEvent, ui, resourceId) {
+                    makeEventsDraggable();
+                    var id = $(this).children(".eventid").val();
+                    setTimeout(function () {
+                        showEvent(id);
+                    }, 2000);
+                },
+                evenDropStop: function () {
+                    refreshCalender();
+                },
+                eventRender: function (event, element, view) {
+                    if (event.changing) {
+                        event.changing = false;
+                        ProgramEvent(event.eventID, event.start, null, null);
+                    }
+                    return $(
+                        '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px">' +
+                        event.barra + '<br> ' +
+                        '<div>' + event.title + '</div>' +
+                        '<small>' + event.description + '</small><br> ' +
+                        '<strong>' + event.dias + '</strong>' +
+                        '</div>');
+                },
+                eventDragStop: function (event, jsEvent, ui, view) {
+
+                    makeEventsDraggable();
+                },
+                eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+                    makeEventsDraggable();
+                },
+                viewRender: function () {
+                    makeEventsDraggable();
+                },
+                eventDragStart: function (event, jsEvent, ui, view) {
+                    event.changing = true;
+                    dragged = [calendar, event];
+                },
+                eventClick: function (calEvent, jsEvent, view) {
+                    showEvent(calEvent.eventID);
+                }
+            });
+            $('#calender').fullCalendar('option', 'timezone', 'UTC');
+        }
+        var completeEvent = function () {
+            $(this).autocomplete({
+                minLength: 2,
+                source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
+                select: function (i, o) {
+                    console.log(o);
+                    ver_gestion(o.item.obj.barra);
+                }
+            });
+        }
+        $(document).on("submit", ".form_entrada", function (e) {
+            e.preventDefault();
+            var formu = $(this);
+            var url = formu.attr('action');
+            var formData = new FormData($(formu)[0]);
+            var element = this;
+            $.ajax({
+                type: "POST",
+                url : url,
+                cache: false,
+                contentType: false,
+                processData: false,
+                data : formData,
+                success: function (e) {
+                    if (typeof(e.error) != "undefined" && e.error != "")
+                        new PNotify({
+                            title: 'Error!',
+                            text: e.error,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    else {
+                        new PNotify({
+                            title: 'Acción Exitosa !',
+                            text: e.result,
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+
+                        refreshCalender();
+                        $("#myModal").modal('hide');
+                    }
+                    if (typeof(e.function) != "undefined") {
+                        var name = e.function;
+                        var param = "";
+                        if (typeof(e.param) != "undefined")
+                            param = e.param;
+                        window[name](e, element, param);
+                    }
+
+                }, error: function (data) {
+                    new PNotify({
+                        title: 'Error!',
+                        text: data.responseText,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            jQuery.datetimepicker.setLocale('es');
+            refreshCalender();
+            $()
+
+            $('#new-event').click(newEvent);
+
+            $("body").on('click', '.fc-event', editEvent);
+
+            $("body").on('click', '.cotizar', cotizar);
+
+            $('#nav-search').on('keyup', completeEvent);
+
+            makeEventsDraggable();
+            $("#nav-search").click(function () {
+                $(this).select();
+            });
+
+        })//end ready
+
+    </script>
+{% endblock %}

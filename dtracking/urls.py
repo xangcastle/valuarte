@@ -43,27 +43,25 @@ urlpatterns = [
         name='get_usos_gestion'),
     url(r'^get_avaluos_posicion/', get_avaluo_mes_posiciones,
         name='get_avaluos_posicion'),
-
     url(r'^gestion_adjuntos/', gestion_adjuntos.as_view(),
         name='gestion_adjuntos'),
     url(r'^gestion_borrar_adjunto/', gestion_borrar_adjunto,
         name='gestion_borrar_adjunto'),
-
     url(r'^gestion_proforma/', generar_proforma,
         name='gestion_proforma'),
-
     url(r'^generar_asignacion/', generar_asignacion,
         name='generar_asignacion'),
-
-    url(r'^programaciones/', programaciones.as_view(),
-        name='programaciones'),
-    url(r'^obtenercitas/', obtener_citas_grestiones,
-        name='obtenercitas'),
+    url(r'^peritaje/', peritaje.as_view(),
+        name='peritaje'),
+    url(r'^obtenercitasperitaje/', obtener_citas_peritaje,
+        name='obtenercitasperitaje'),
     url(r'^programar_gestion/', programar_gestion,
         name='programar_gestion'),
-
     url(r'^reporte/', reporte,
         name='reporte'),
-
+    url(r'^operaciones/', operaciones.as_view(),
+        name='operaciones'),
+    url(r'^obtenercitasoperaciones/', obtener_citas_operaciones,
+            name='obtenercitasoperaciones'),
 
 ]

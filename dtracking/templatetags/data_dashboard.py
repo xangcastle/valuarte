@@ -14,31 +14,32 @@ class data_Node(template.Node):
 
     def render(self, context):
         data = []
-        gestiones = Gestion.objects.filter(
-            fecha__month=datetime.now().month,
-            fecha__year=datetime.now().year)
+        # gestiones = Gestion.objects.filter(
+        #     fecha__month=datetime.now().month,
+        #     fecha__year=datetime.now().year)
+        gestiones = Gestion.objects.all()
+        tipos = TipoGestion.objects.all()
+
+        def get_total(gestions, tipo):
+            gs = gestions.filter(tipo_gestion=tipo)
+            if gs.count() > 0:
+                return gs.count()
+            else:
+                return 0
 
         def por_tipo(gestions):
-            tipos = TipoGestion.objects.all()
             data = []
             for t in tipos:
-                data.append({'tipo': t.prefijo, 'total': gestions.filter(tipo_gestion=t).count()})
+                data.append({'tipo': t.prefijo, 'total': get_total(gestions, t)})
             return data
 
         for s in ESTADOS_LOG_GESTION:
             p = gestiones.filter(status_gestion=s[0]).order_by('-fecha')
-            if p:
-                obj = {}
-                obj['status'] = s[0]
-                obj['total'] = p.count()
-                obj['tipos'] = por_tipo(p)
-                data.append(obj)
-            else:
-                obj = {}
-                obj['status'] = s[0]
-                obj['total'] = 0
-                obj['tipos'] = []
-                data.append(obj)
+            obj = {}
+            obj['status'] = s[0]
+            obj['total'] = p.count()
+            obj['tipos'] = por_tipo(p)
+            data.append(obj)
 
         context[self.varname] = data
         return ''

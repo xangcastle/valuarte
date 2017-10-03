@@ -364,27 +364,27 @@ def generar_asignacion(request):
     return HttpResponse(html)
 
 
-class programaciones(TemplateView):
-    template_name = "dtracking/programaciones.html"
+class peritaje(TemplateView):
+    template_name = "dtracking/peritaje.html"
 
     def get(self, request, *args, **kwargs):
-        context = super(programaciones, self).get_context_data(**kwargs)
-        context['pendientes'] = Gestion.objects.filter(status_gestion="RECEPCIONADO")
+        context = super(peritaje, self).get_context_data(**kwargs)
+        context['pendientes'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0])
         context['peritos'] = Gestor.objects.all()
-        asignadas = Gestion.objects.filter(status_gestion="ASIGNADO A EVALUADOR")
+        asignadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
         context['total_vigentes'] = asignadas.filter(fecha_asignacion__gt=datetime.now()).count()
         context['total_vencidas'] = asignadas.filter(fecha_asignacion__lt=datetime.now()).count()
         context['total_hoy'] = asignadas.filter(fecha_asignacion__year=datetime.now().year,
                                                 fecha_asignacion__month=datetime.now().month,
                                                 fecha_asignacion__day=datetime.now().day).count()
-        return super(programaciones, self).render_to_response(context)
+        return super(peritaje, self).render_to_response(context)
 
     def post(self, request, *args, **kwargs):
-        context = super(programaciones, self).get_context_data(**kwargs)
-        return super(programaciones, self).render_to_response(context)
+        context = super(peritaje, self).get_context_data(**kwargs)
+        return super(peritaje, self).render_to_response(context)
 
 
-def obtener_citas_grestiones(request):
+def obtener_citas(request, status=ESTADOS_LOG_GESTION[0][0]):
     gestiones = None
     busqueda = request.GET.get("busqueda", None)
     id_perito = request.GET.get("id_perito", None)
@@ -400,11 +400,18 @@ def obtener_citas_grestiones(request):
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
     data = [x.to_json_programacion() for x in gestiones]
-    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion="RECEPCIONADO")]
+    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status)]
+    programadas = [x.to_json() for x in Gestion.objects.filter(status_gestion=status)]
 
 
-    return HttpResponse(json.dumps({'programadas': data, 'pendientes':pendientes}) , content_type='application/json')
+    return HttpResponse(json.dumps({'programadas': programadas, 'pendientes':pendientes}) , content_type='application/json')
 
+
+def obtener_citas_peritaje(request):
+    return obtener_citas(request)
+
+def obtener_citas_operaciones(request):
+    return obtener_citas(request, ESTADOS_LOG_GESTION[2][0])
 
 def programar_gestion(request):
     obj_json = {}
@@ -449,4 +456,27 @@ def reporte(request):
         ESTADOS_LOG_GESTION[2][0]
                             ]).order_by('fecha_vence')
     return render(request, 'dtracking/reporte.html', {'avaluos': avaluos})
+
+
+class operaciones(TemplateView):
+    template_name = "dtracking/operaciones.html"
+
+    def get(self, request, *args, **kwargs):
+        context = super(operaciones, self).get_context_data(**kwargs)
+        context['pendientes'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0])
+        context['peritos'] = Gestor.objects.all()
+        asignadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0])
+        context['programadas'] = asignadas
+
+        context['total_vigentes'] = asignadas.filter(fecha_asignacion__gt=datetime.now()).count()
+        context['total_vencidas'] = asignadas.filter(fecha_asignacion__lt=datetime.now()).count()
+        context['total_hoy'] = asignadas.filter(fecha_asignacion__year=datetime.now().year,
+                                                fecha_asignacion__month=datetime.now().month,
+                                                fecha_asignacion__day=datetime.now().day).count()
+        return super(operaciones, self).render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(operaciones, self).get_context_data(**kwargs)
+        return super(operaciones, self).render_to_response(context)
+
 
