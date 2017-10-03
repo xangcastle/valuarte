@@ -26,10 +26,10 @@ class detalle_tabular(GrappelliSortableHiddenMixin, admin.TabularInline):
 
 
 class tipoGestion_admin(entidad_admin):
-    fields = (('name', 'prefijo'), ('tiempo_ejecucion', 'color'))
+    fields = (('name', 'prefijo'), ('tiempo_ejecucion', 'color'), 'dias')
     change_form_template = "dtracking/tipo_gestion.html"
     inlines = [detalle_tabular, ]
-    list_display = ('prefijo', 'name', 'tiempo_ejecucion', 'muestra_color', 'activo')
+    list_display = ('prefijo', 'name', 'tiempo_ejecucion', 'muestra_color', 'dias', 'activo')
 
 
 
