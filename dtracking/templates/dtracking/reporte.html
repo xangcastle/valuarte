@@ -80,14 +80,14 @@
             <tbody>
                 {% for a in avaluos %}
                     <tr style="background-color: {{ a.tipo_gestion.color }}">
-                      <td>{{a.fecha}}</td>
+                      <td>{{a.fecha|date:"d-m-y"}}</td>
                       <td>{{ a.banco_ejecutivo }}</td>
                       <td>{{ a.banco }}</td>
                       <td>{{ a.destinatario }}</td>
                       <td>{{ a.tipo_gestion.prefijo }}</td>
                       <td>{{ a.status_gestion }}</td>
-                      <td>{{a.fecha_recepcion}}</td>
-                      <td>{{a.fecha_vence}}</td>
+                      <td>{{a.fecha_recepcion|date:"d-m-y"}}</td>
+                      <td>{{a.fecha_vence|date:"d-m-y"}}</td>
                       <td>{{a.dias_retrazo}}</td>
                     </tr>
                 {% endfor %}
