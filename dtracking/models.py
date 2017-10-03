@@ -272,12 +272,12 @@ class Gestion(models.Model):
 
     # datos del cliente
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación")
+    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación", blank=True)
     contacto = models.CharField(max_length=125, null=True, blank=True, verbose_name="Contacto")
     contacto_telefono = models.CharField(max_length=125, null=True, blank=True, verbose_name="Teléfono del contacto")
     telefono = models.CharField(max_length=65, null=True, blank=True)
-    departamento = models.ForeignKey(Departamento, null=True)
-    municipio = models.ForeignKey(Municipio, null=True)
+    departamento = models.ForeignKey(Departamento, null=True, blank=True)
+    municipio = models.ForeignKey(Municipio, null=True, blank=True)
     barrio = models.ForeignKey(Barrio, null=True, blank=True)
     zona = models.ForeignKey(Zona, null=True, blank=True)
     direccion = models.TextField(max_length=255, null=True, verbose_name="Ubicacion del bien a avaluar")
