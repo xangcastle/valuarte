@@ -58,6 +58,7 @@ class gestion_admin(ImportExportModelAdmin):
             'fields': (
                 ('contacto', 'contacto_telefono', 'direccion_envio'),
                 ('banco', 'banco_ejecutivo', 'referencia'),
+                ('new_banco', 'new_ejecutivo'),
                 ('valor', 'categoria', 'dias'),
             )
         }),
@@ -213,11 +214,20 @@ class finalidad_admin(entidad_admin):
     inlines = [usos_avaluos, ]
 
 
+class ejecutivo_admin(admin.ModelAdmin):
+    list_display = ('nombre', 'telefono', 'email', 'banco')
+    list_filter = ('banco', )
+    search_fields = ('nombre', 'telefono', 'email', 'banco__name')
+
+
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
 admin.site.register(Gestion_Fin, finalidad_admin)
+admin.site.register(Gestion_Uso, entidad_admin)
 # admin.site.register(Departamento, entidad_admin)
 # admin.site.register(Municipio, entidad_admin)
 admin.site.register(Gestor, gestor_admin)
 admin.site.register(Armador)
+admin.site.register(Banco, entidad_admin)
+admin.site.register(Ejecutivo, ejecutivo_admin)
 

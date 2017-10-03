@@ -506,7 +506,7 @@
                             description: v.descripcion,
                             start: moment(v.fin),
                             color: v.color,
-                            textColor: 'white',
+                            textColor: 'black',
                             allDay: false,
                             dias: v.dias,
                             barra: v.barra,
@@ -529,13 +529,13 @@
                         eventRender: function (event, element, view) {
                             if (div == '#agenda-operaciones') {
                                 return $(
-                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px">' +
+                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                                     '<div>' + event.title + '</div>' +
                                     '<strong>' + event.dias + '</strong>' +
                                     '</div>');
                             } else {
                                 return $(
-                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px">' +
+                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                                     '<div>' + event.title + '</div>' +
                                     '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
                                     '</div>');

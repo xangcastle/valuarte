@@ -51,6 +51,7 @@
                             data: {'departamento': $(this).val()},
                             success: function (result) {
                                 $('#id_municipio').empty();
+                                $('#id_municipio').append('<option value=""> ---- </option>');
                                 $.each(result, function (i, o) {
                                     $('#id_municipio').append("<option value=" + o.id + ">" + o.name + "</option>");
                                 });
@@ -66,6 +67,7 @@
                             data: {'municipio': $(this).val()},
                             success: function (result) {
                                 $('#id_barrio').empty();
+                                $('#id_barrio').append('<option value=""> ---- </option>');
                                 $.each(result, function (i, o) {
                                     $('#id_barrio').append("<option value=" + o.id + ">" + o.name + "</option>");
                                 });
@@ -81,6 +83,7 @@
                             data: {'fin': $(this).val()},
                             success: function (result) {
                                 $('#id_uso_gestion').empty();
+                                $('#id_uso_gestion').append('<option value=""> ---- </option>');
                                 $.each(result, function (i, o) {
                                     $('#id_uso_gestion').append("<option value=" + o.id + ">" + o.name + "</option>");
                                 });
@@ -88,6 +91,23 @@
                         });
                 };
                 $('#id_fin_gestion').on('change', cargar_usos_gestion);
+
+
+                var cargar_ejecutivos = function () {
+                    $.ajax('/admin/ajax/get_collection/',
+                        {
+                            type: 'POST',
+                            data: {'app_label': 'dtracking', 'model': 'ejecutivo', 'filters': "{'banco': "+$(this).val()+"}"},
+                            success: function (result) {
+                                $('#id_new_ejecutivo').empty();
+                                $('#id_new_ejecutivo').append('<option value=""> ---- </option>');
+                                $.each(result, function (i, o) {
+                                    $('#id_new_ejecutivo').append("<option value=" + o.id + ">" + o.nombre + "</option>");
+                                });
+                            }
+                        });
+                };
+                $('#id_new_banco').on('change', cargar_ejecutivos);
 
                 var calcular_categoria = function () {
                     monto = $(this).val();

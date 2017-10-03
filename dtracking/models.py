@@ -310,8 +310,12 @@ class Gestion(models.Model):
     direccion_envio = models.CharField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
 
     # contacto del banco
-    banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True)
-    banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario")
+    banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True,
+                             help_text="temporal")
+    banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario",
+                             help_text="temporal")
+    new_banco = models.ForeignKey('Banco', null=True, blank=True)
+    new_ejecutivo = models.ForeignKey('Ejecutivo', null=True, blank=True)
 
     # peritaje
     notify = models.BooleanField(default=False, verbose_name="notificar")  # indica si se le notificara via email al perito asignado
@@ -890,3 +894,29 @@ class Operaciones(User):
 
     class Meta:
         proxy = True
+
+
+class Banco(Entidad):
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        verbose_name_plural = "bancos nacionales"
+
+
+class Ejecutivo(models.Model):
+    banco = models.ForeignKey(Banco)
+    nombre = models.CharField(max_length=250)
+    telefono = models.CharField(max_length=65, null=True, blank=True)
+    email = models.EmailField(max_length=265, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name_plural = "ejecutivos bancarios"
+
+    def to_json(self):
+        return {'nombre': self.nombre,
+                'telefono': self.telefono,
+                'email': self.email,
+                'banco': self.banco.to_json()}
