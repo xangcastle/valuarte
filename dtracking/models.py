@@ -329,6 +329,7 @@ class Gestion(models.Model):
     armador = models.ForeignKey('Operaciones', null=True, blank=True, related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
     revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)
+    dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado")
 
     def logs(self):
         return Log_Gestion.objects.filter(gestion=self)
@@ -376,7 +377,7 @@ class Gestion(models.Model):
 
     def get_fecha_vence(self):
         if self.fecha_recepcion:
-            return add_business_days(self.fecha_recepcion, self.tipo_gestion.dias)
+            return add_business_days(self.fecha_recepcion, self.tipo_gestion.dias + self.dias)
         else:
             return None
 
