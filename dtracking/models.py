@@ -131,6 +131,9 @@ class TipoGestion(Entidad):
     tiempo_ejecucion = models.IntegerField(null=True, blank=True,
                                            help_text="Tiempo requerido en minutos para el levantamiento de datos de este tipo de avaluo")
     color = ColorField(default="ffffff")
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.prefijo, self.name)
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
 
