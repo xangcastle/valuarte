@@ -146,9 +146,10 @@ class ZonaBarrio(models.Model):
 
 class TipoGestion(Entidad):
     prefijo = models.CharField(max_length=6, null=True, blank=False)
-    tiempo_ejecucion = models.IntegerField(null=True, blank=True, verbose_name="tiempo de ejecucion en minutos",
+    tiempo_ejecucion = models.IntegerField(null=True, blank=True, verbose_name="tiempo en minutos para el peritaje",
                                            help_text="Tiempo requerido en minutos para el levantamiento de datos de este tipo de avaluo")
     color = ColorField(default="ffffff")
+    dias = models.IntegerField(default=4, null=True, verbose_name="dias necesarios para el armado")
 
     def __unicode__(self):
         return "%s (%s)" % (self.prefijo, self.name)
@@ -375,7 +376,7 @@ class Gestion(models.Model):
 
     def get_fecha_vence(self):
         if self.fecha_recepcion:
-            return add_business_days(self.fecha_recepcion, 4)
+            return add_business_days(self.fecha_recepcion, self.tipo_gestion.dias)
         else:
             return None
 
