@@ -264,7 +264,7 @@ def get_log_gestion(request):
                     jlog = {"fecha": str(log.fecha), "estado": log.estado, "atiende": user,
                             "anexo": log.anexo()}
                     jlogs.append(jlog)
-
+                jresponse['id_gestion'] = gestion.id
                 jresponse['codigo_gestion'] = gestion.barra
                 jresponse['cliente_gestion'] = gestion.destinatario
                 jresponse['tipo_gestion'] = gestion.tipo_gestion.name
@@ -477,5 +477,3 @@ class operaciones(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(operaciones, self).get_context_data(**kwargs)
         return super(operaciones, self).render_to_response(context)
-
-

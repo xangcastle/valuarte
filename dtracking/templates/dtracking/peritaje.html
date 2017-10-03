@@ -49,6 +49,15 @@
             float: right;
             margin-top: -35px;
         }
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 15px;
+          }
     </style>
 {% endblock %}
 {% block Content %}
@@ -133,13 +142,27 @@
                 <div class="iziModal-content">
                     <div style="padding: 20px">
                         <div class="row">
+                          <div class="col-sm-12 col-xs-12">
+                              <a id="ficha" title="Generar Proforma" href="#" class="btn btn-primary btn-circle show_atachments" url="{% url 'gestion_proforma' %}?gestion=" data-url=""
+                                 data-name="Generar Proforma">
+                                 <i class="ion-pie-graph"></i>
+                              </a>
+                              <a id="proforma" title="Generar Ficha"  href="#" class="btn btn-primary btn-circle show_atachments" url="{% url 'generar_asignacion' %}?documento=" data-url=""
+                                 data-name="Generar Proforma">
+                                  <i class="ion-clipboard"></i>
+                              </a>
+                           </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="codigo_gestion">3527364</strong></div>
-
+                            <div class="col-sm-8 col-xs-12">
+                              <strong id="codigo_gestion">3527364</strong>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="cliente_gestion">José Williams Garcia</strong>
+                            <div class="col-sm-8 col-xs-12">
+                              <strong id="cliente_gestion">José Williams Garcia</strong>
                             </div>
                         </div>
                         <div class="row">
@@ -206,6 +229,13 @@
     <script src="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.full.js"></script>
     <script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
     <script>
+    var atachments_info = function(){
+       console.log(this);
+        window.open(
+            $(this).data('url'),
+            $(this).data('name'),
+            "width=600mm, height=500mm,  status=no, menubar=no, location=no");
+    };
         function ver_gestion(gestion) {
             $.ajax({
                 url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
@@ -217,11 +247,22 @@
                             var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
                             tab.append(rw);
                         });
+                        var url = $("#ficha").attr('url')+result.id_gestion
+                        $("#ficha").attr('data-url',url);
+
+                        url = $("#proforma").attr('url')+result.id_gestion
+                       $("#proforma").attr('data-url',url);
                         $("#codigo_gestion").html(result.codigo_gestion);
                         $("#cliente_gestion").html(result.cliente_gestion);
                         $("#tipo_gestion").html(result.tipo_gestion);
                         $("#modal-default").iziModal({zindex: 9999});
                         $("#modal-default").iziModal('open');
+
+
+
+                        $('.show_atachments').on('click', atachments_info);
+
+
                     } else {
                         alert(result.mensaje);
                     }
