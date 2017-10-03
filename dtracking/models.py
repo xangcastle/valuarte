@@ -496,6 +496,30 @@ class Gestion(models.Model):
         else:
             return ""
 
+    def render_calendar_fin(self):
+        if self.status_gestion == ESTADOS_LOG_GESTION[1][0]:
+            return self.fecha_asignacion + timedelta(minutes=self.tipo_gestion.tiempo_ejecucion)
+        elif self.status_gestion == ESTADOS_LOG_GESTION[2][0]:
+            return self.get_fecha_vence()
+        else:
+            return None
+
+    def render_calendar_inicio(self):
+        if self.status_gestion == ESTADOS_LOG_GESTION[1][0]:
+            return self.fecha_asignacion
+        elif self.status_gestion == ESTADOS_LOG_GESTION[2][0]:
+            return self.get_fecha_vence()
+        else:
+            return None
+
+    def render_user(self):
+        if self.armador:
+            return self.armador.username
+        elif not self.armador and self.user:
+            return self.user.username
+        else:
+            return None
+
     def to_json(self):
         o = {}
         o['id'] = self.id
@@ -514,10 +538,10 @@ class Gestion(models.Model):
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
         o['descripcion'] = self.direccion
-        o['inicio'] = str(ifnull(self.fecha_recepcion, ''))
-        o['fin'] = str(ifnull(self.fecha_vence, ''))
+        o['inicio'] = str(ifnull(self.render_calendar_inicio(), ''))
+        o['fin'] = str(ifnull(self.render_calendar_fin(), ''))
         o['color'] = self.tipo_gestion.color
-        o['user'] = ifnull(self.armador, '')
+        o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
 
         if self.position:
@@ -542,25 +566,6 @@ class Gestion(models.Model):
             return datetime.now()
         else:
             return self.fecha_asignacion
-
-    def to_json_programacion(self):
-        o = {}
-        o['id'] = self.id
-        o['barra'] = self.barra
-        o['titulo'] = self.destinatario
-        o['descripcion'] = self.direccion
-        o['inicio'] = str(self.get_fecha_asignacion())
-        o['fin'] = str(self.get_fecha_asignacion() + timedelta(minutes=self.tipo_gestion.tiempo_ejecucion))
-        o['color'] = "#46991a",
-        if self.user:
-            o['user'] = str(self.user)
-        else:
-            o['user'] = "No asignada"
-            o['color'] = "#4d0a54"
-
-        if self.fecha_asignacion and timezone.now() > self.fecha_asignacion:
-            o['color'] = "#991957"
-        return o
 
     def numero_gestor(self):
         return Gestor.objects.get(user=self.user).numero

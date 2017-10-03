@@ -407,7 +407,6 @@
                     });
                     $('#external-events-listing').empty();
                     $.each(response.pendientes, function (i, v) {
-                        console.log(v);
                         $('#external-events-listing').append(createRow(v));
                     });
                     makeEventsDraggable();

@@ -384,14 +384,14 @@ class peritaje(TemplateView):
         return super(peritaje, self).render_to_response(context)
 
 
-def obtener_citas(request, status=ESTADOS_LOG_GESTION[0][0]):
-    gestiones = None
+def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LOG_GESTION[1][0]):
+    gestiones = Gestion.objects.all()
     busqueda = request.GET.get("busqueda", None)
     id_perito = request.GET.get("id_perito", None)
 
     if busqueda:
         gestiones = Gestion.objects. \
-            filter(status_gestion__in=['ASIGNADO A EVALUADOR', ])
+            filter(status_gestion__in=[status1, ])
     else:
         gestiones = Gestion.objects.filter(
             status_gestion__in=['ASIGNADO A EVALUADOR', ])
@@ -399,9 +399,8 @@ def obtener_citas(request, status=ESTADOS_LOG_GESTION[0][0]):
     if id_perito and int(id_perito)>0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
-    data = [x.to_json_programacion() for x in gestiones]
-    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status)]
-    programadas = [x.to_json() for x in Gestion.objects.filter(status_gestion=status)]
+    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status1)]
+    programadas = [x.to_json() for x in Gestion.objects.filter(status_gestion=status2)]
 
 
     return HttpResponse(json.dumps({'programadas': programadas, 'pendientes':pendientes}) , content_type='application/json')
@@ -411,7 +410,7 @@ def obtener_citas_peritaje(request):
     return obtener_citas(request)
 
 def obtener_citas_operaciones(request):
-    return obtener_citas(request, ESTADOS_LOG_GESTION[2][0])
+    return obtener_citas(request, status1=ESTADOS_LOG_GESTION[2][0], status2=ESTADOS_LOG_GESTION[2][0])
 
 def programar_gestion(request):
     obj_json = {}
@@ -443,7 +442,7 @@ def programar_gestion(request):
     notify = request.POST.get('notify', None)
     if notify:
         gestion.notificar()
-    obj_json['gestion'] = gestion.to_json_programacion()
+    obj_json['gestion'] = gestion.to_json()
     obj_json['code'] = 200
     obj_json['result'] = "Gestion programada exitosamente"
     data = json.dumps(obj_json)

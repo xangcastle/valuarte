@@ -319,11 +319,12 @@
                 url: "{% url 'obtenercitasoperaciones' %}",
                 success: function (response) {
                     $.each(response.programadas, function (i, v) {
+                        console.log(v);
                         events.push({
                             eventID: v.id,
                             title: v.titulo,
                             description: v.descripcion,
-                            start: moment(v.fin),
+                            start: moment(v.inicio),
                             end: moment(v.fin),
                             color: v.color,
                             textColor: 'white',
@@ -469,13 +470,7 @@
         $(document).ready(function () {
             jQuery.datetimepicker.setLocale('es');
             refreshCalender();
-            $()
 
-            $('#new-event').click(newEvent);
-
-            $("body").on('click', '.fc-event', editEvent);
-
-            $("body").on('click', '.cotizar', cotizar);
 
             $('#nav-search').on('keyup', completeEvent);
 
