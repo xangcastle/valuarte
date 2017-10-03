@@ -3,7 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Reporte</title>
-    <style media="print">
+    <style media="all">
+             .datagrid table {
+                 border-collapse: collapse;
+                 text-align: left; width: 100%;
+                }
+              .datagrid {
+                font: normal 12px/150% Arial, Helvetica, sans-serif;
+                background: #fff;
+                overflow: hidden;
+                border: 1px solid #006699;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+                }
+                .datagrid table td, .datagrid table th
+                {
+                  padding: 3px 10px;
+                }
                 .datagrid table thead th
                 {
                   background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );
@@ -46,7 +63,6 @@
 </head>
 <body>
     <h1>Reporte de Avaluos</h1>
-<<<<<<< Updated upstream
     <div class="datagrid"><table>
         <table>
             <thead>
@@ -60,34 +76,7 @@
                 <th>Fecha Vencimiento</th>
                 <th>Dias de Retrazo</th>
             </thead>
-=======
-    <div  style="font: normal 12px/150% Arial, Helvetica, sans-serif;
-    background: #fff;
-    overflow: hidden;
-    border: 1px solid #006699;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;"><table>
-        <table style="font-family: sans-serif;
-        font-size: 12px;
-        display: table;
-        width: 80%;
-        margin: 20px;
-        border-collapse: collapse;
-        text-align: left; width: 100%;">
->>>>>>> Stashed changes
             <tfoot></tfoot>
-            <th style="padding: 3px 10px;"ead>
-                <th style="padding: 3px 10px;">Fecha Solicitud</th>
-                <th style="padding: 3px 10px;">Ejecutivo</th>
-                <th style="padding: 3px 10px;">Banco</th>
-                <th style="padding: 3px 10px;">Nombre del cliente</th>
-                <th style="padding: 3px 10px;">Proceso</th>
-                <th style="padding: 3px 10px;">Tipo de Avaluo</th>
-                <th style="padding: 3px 10px;">Estado</th>
-                <th style="padding: 3px 10px;">Inspeccion</th>
-                <th style="padding: 3px 10px;">Dias retrazo</th>
-            </thead>
             <tbody>
                 {% for a in avaluos %}
                     <tr style="background-color: {{ a.tipo_gestion.color }}">
