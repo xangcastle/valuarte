@@ -394,9 +394,9 @@ def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LO
             filter(status_gestion__in=[status1, ])
     else:
         gestiones = Gestion.objects.filter(
-            status_gestion__in=['ASIGNADO A EVALUADOR', ])
+            status_gestion__in=[status1, status2])
 
-    if id_perito and int(id_perito)>0:
+    if id_perito and int(id_perito) > 0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
     pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status1)]
