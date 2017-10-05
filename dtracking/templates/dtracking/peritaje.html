@@ -285,6 +285,19 @@
                     }
                 });
         };
+
+        var validar_fecha_recepcion = function ()
+        {
+            var file = document.getElementById('id_ficha_inspeccion') ;
+            if($('#id_realizada').is(':checked') || file.files.length> 0 )
+            {
+              $("#id_fecha_recepcion").addClass('requerido','');
+            }
+            else
+            {
+              $("#id_fecha_recepcion").removeClass('requerido','');
+            }
+        }
         var cargar_usos_gestion = function () {
                     $.ajax('/dtracking/get_usos_gestion/',
                         {
@@ -373,9 +386,12 @@
                     $("#id_fecha_recepcion").datetimepicker('update', fecha);
                     $(".form_entrada").attr('enctype',"multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
+                    $('#id_realizada').on('change', validar_fecha_recepcion);
+                    $('#id_ficha_inspeccion').on('change', validar_fecha_recepcion);
                 }
             });
         }
+
         var newEvent = function () {
             var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones&app_label=dtracking&model=gestion";
             modal = $("#myModal");
@@ -425,6 +441,24 @@
             console.log(row);
             return row;
         }
+        function validar_campos_vacios(form)
+            {
+              var error = false ;
+              $(form).find('.requerido').each(function(){
+                    if (this.value.length == 0) {
+
+                       error = true;
+                       if(this.type =="file")
+                          this.parentElement.style ="color:red"
+                      $(this).css("border-color", "#D8000C");
+                    } else {
+                      $(this).css("border-color", "#666");
+                      if(this.type =="file")
+                         this.parentElement.style ="color:white"
+                    }
+                });
+              return error;
+            }
         function refreshCalender() {
             var events = [];
             var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
@@ -555,6 +589,8 @@
             var url = formu.attr('action');
             var formData = new FormData($(formu)[0]);
             var element = this;
+            if(validar_campos_vacios(formu))
+               return false;
             $.ajax({
                 type: "POST",
                 url : url,
