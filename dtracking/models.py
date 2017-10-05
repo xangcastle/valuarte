@@ -421,7 +421,7 @@ class Gestion(models.Model):
                 and self.armador and self.revizada:
             actual = ESTADOS_LOG_GESTION[3][0]
         if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion \
-                and self.armador and self.informe_final:
+                and self.armador and self.revizada and self.informe_final:
             actual = ESTADOS_LOG_GESTION[4][0]
 
         return actual
