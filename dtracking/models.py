@@ -415,12 +415,13 @@ class Gestion(models.Model):
             actual = ESTADOS_LOG_GESTION[0][0]
         if self.user and self.fecha_asignacion:
             actual = ESTADOS_LOG_GESTION[1][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion):
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion:
             actual = ESTADOS_LOG_GESTION[2][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.armador:
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion \
+                and self.armador and self.revizada:
             actual = ESTADOS_LOG_GESTION[3][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.armador \
-                and self.informe_final:
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion \
+                and self.armador and self.informe_final:
             actual = ESTADOS_LOG_GESTION[4][0]
 
         return actual
