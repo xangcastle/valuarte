@@ -410,7 +410,7 @@ def obtener_citas_peritaje(request):
     return obtener_citas(request)
 
 def obtener_citas_operaciones(request):
-    return obtener_citas(request, status1=ESTADOS_LOG_GESTION[2][0], status2=ESTADOS_LOG_GESTION[2][0])
+    return obtener_citas(request, status1=ESTADOS_LOG_GESTION[2][0], status2=ESTADOS_LOG_GESTION[3][0])
 
 def programar_gestion(request):
     obj_json = {}
