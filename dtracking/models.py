@@ -113,6 +113,17 @@ class Gestor(models.Model):
 
 class Armador(models.Model):
     user = models.OneToOneField(User)
+    especialidades = models.ManyToManyField('TipoGestion', blank=True)
+    activo = models.BooleanField(default=True)
+
+    def nombres(self):
+        return self.user.first_name
+
+    def apellidos(self):
+        return self.user.last_name
+
+    def __unicode__(self):
+        return self.user.username
 
     class Meta:
         verbose_name_plural = "armadores"

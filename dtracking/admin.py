@@ -220,6 +220,12 @@ class ejecutivo_admin(admin.ModelAdmin):
     search_fields = ('nombre', 'telefono', 'email', 'banco__name')
 
 
+class armador_admin(admin.ModelAdmin):
+    list_filter = ('especialidades', )
+    list_display = ('user', 'nombres', 'apellidos','activo')
+    search_fields = ('user__username', 'user__first_name', 'user__last_name')
+
+
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
 admin.site.register(Gestion_Fin, finalidad_admin)
@@ -227,7 +233,7 @@ admin.site.register(Gestion_Uso, entidad_admin)
 # admin.site.register(Departamento, entidad_admin)
 # admin.site.register(Municipio, entidad_admin)
 admin.site.register(Gestor, gestor_admin)
-admin.site.register(Armador)
+admin.site.register(Armador, armador_admin)
 admin.site.register(Banco, entidad_admin)
 admin.site.register(Ejecutivo, ejecutivo_admin)
 
