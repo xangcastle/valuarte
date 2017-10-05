@@ -520,12 +520,11 @@
             });
             $('#calender').fullCalendar('option', 'timezone', 'UTC');
         }
-        function ProgramEvent(id, inicio, id_usuario) {
+        function ProgramEvent(id, inicio) {
             var event;
             var data = {
                 "id": id,
                 "fecha_asignacion": new Date(inicio).toISOString(),
-                "user": id_usuario,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             };
             return $.ajax({

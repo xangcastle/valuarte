@@ -422,21 +422,23 @@ def programar_gestion(request):
     except:
         try:
             gestion.fecha_asignacion = timezone.make_aware(
-                datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%d/%m/%Y %H:%M'),
+                datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%Y/%m/%d %H:%M'),
                 timezone.get_default_timezone())
         except:
             gestion.fecha_asignacion = timezone.make_aware(
-                datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%Y/%m/%d %H:%M'),
+                datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%d/%m/%Y %H:%M'),
                 timezone.get_default_timezone())
-    barra = request.POST.get('barra', None)
-    gestion.status_gestion = "ASIGNADO A EVALUADOR"
     id_usuario = request.POST.get('user', None)
     if id_usuario:
         gestion.user = User.objects.get(pk=int(id_usuario))
-    if barra:
-        gestion.barra = barra
 
     realizada = request.POST.get('realizada', None)
+    try:
+        gestion.fecha_recepcion = timezone.make_aware(
+            datetime.strptime(request.POST.get('fecha_recepcion', None)[0:16], '%Y/%m/%d %H:%M'),
+            timezone.get_default_timezone())
+    except:
+        pass
     if realizada:
         gestion.realizada = True
     try:
