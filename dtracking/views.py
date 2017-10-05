@@ -389,18 +389,18 @@ def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LO
     busqueda = request.GET.get("busqueda", None)
     id_perito = request.GET.get("id_perito", None)
 
-    if busqueda:
-        gestiones = Gestion.objects. \
-            filter(status_gestion__in=[status1, ])
-    else:
-        gestiones = Gestion.objects.filter(
-            status_gestion__in=[status1, status2])
-
+    # if busqueda:
+    #     gestiones = Gestion.objects. \
+    #         filter(status_gestion__in=[status1, ])
+    # else:
+    #     gestiones = Gestion.objects.filter(
+    #         status_gestion__in=[status1, status2])
+    #
     if id_perito and int(id_perito) > 0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
-    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status1)]
-    programadas = [x.to_json() for x in Gestion.objects.filter(status_gestion=status2)]
+    pendientes = [x.to_json() for x in gestiones.filter(status_gestion=status1)]
+    programadas = [x.to_json() for x in gestiones.filter(status_gestion=status2)]
 
 
     return HttpResponse(json.dumps({'programadas': programadas, 'pendientes':pendientes}) , content_type='application/json')

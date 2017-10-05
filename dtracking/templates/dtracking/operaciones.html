@@ -312,12 +312,13 @@
         }
         function refreshCalender() {
             var events = [];
-            var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
+            var data = {'id_perito': $('#peritos').val()};
             $.ajax({
                 type: "GET",
                 data: data,
                 url: "{% url 'obtenercitasoperaciones' %}",
                 success: function (response) {
+                    console.log(response);
                     $.each(response.programadas, function (i, v) {
                         events.push({
                             eventID: v.id,
@@ -333,6 +334,23 @@
                             dias: v.dias,
                         });
                     });
+                    console.log(events);
+                    $.each(response.pendientes, function (i, v) {
+                        events.push({
+                            eventID: v.id,
+                            title: v.titulo,
+                            description: v.descripcion,
+                            start: moment(v.inicio),
+                            end: moment(v.fin),
+                            color: v.color,
+                            textColor: 'white',
+                            allDay: false,
+                            barra: v.barra,
+                            user: v.user,
+                            dias: v.dias,
+                        });
+                    });
+                    console.log(events);
                     $('#external-events-listing').empty();
                     $.each(response.pendientes, function (i, v) {
                         $('#external-events-listing').append(createRow(v));
@@ -345,7 +363,8 @@
                     alert(JSON.stringify(error.d));
                     console.log(error);
                 }
-            })//ajax
+            });
+
         }
         function GenerateCalender(events) {
 
