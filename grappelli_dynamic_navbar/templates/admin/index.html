@@ -570,21 +570,54 @@
                 data: data,
                 url: url,
                 success: function (response) {
-                    $.each(response.programadas, function (i, v) {
-                        events.push({
-                            eventID: v.id,
-                            title: v.titulo,
-                            description: v.descripcion,
-                            start: moment(v.inicio),
-                            end: moment(v.fin),
-                            color: v.color,
-                            textColor: 'black',
-                            allDay: false,
-                            dias: v.dias,
-                            barra: v.barra,
-                            user: v.user,
+                    if(div == "#agenda-operaciones"){
+                        $.each(response.programadas, function (i, v) {
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'black',
+                                allDay: false,
+                                dias: v.dias,
+                                barra: v.barra,
+                                user: v.user,
+                            });
                         });
-                    });
+                        $.each(response.pendientes, function (i, v) {
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'black',
+                                allDay: false,
+                                dias: v.dias,
+                                barra: v.barra,
+                                user: v.user,
+                            });
+                        });
+                    } else{
+                        $.each(response.programadas, function (i, v) {
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'black',
+                                allDay: false,
+                                dias: v.dias,
+                                barra: v.barra,
+                                user: v.user,
+                            });
+                        });
+                    }
                     $(div).fullCalendar('destroy');
                     $(div).fullCalendar({
                         header: {
