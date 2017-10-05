@@ -270,7 +270,7 @@
             });
         }
         var showEvent = function (id) {
-            var params = "action=/dtracking/programar_gestion/&fields=ficha_inspeccion-armador-revizada&app_label=dtracking&model=gestion&id=" + id;
+            var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-armador-revizada&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
