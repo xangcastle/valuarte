@@ -2,15 +2,13 @@
 {% load static %}
 
 {% block extrastyle %}
-    <link rel="stylesheet" href="{% static '/bootstrap/dist/css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static '/pnotify/dist/pnotify.css' %}"/>
-    <link rel="stylesheet" href="{% static '/jquery-ui/themes/base/jquery-ui.css' %}">
-    <link rel="stylesheet" href="{% static '/font-awesome/css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static '/Ionicons/css/ionicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}"/>
-    <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}" media="print">
-    <link rel="stylesheet" href="{% static 'izimodal/css/iziModal.min.css' %}" type="text/css">
-      <link rel="stylesheet" href="{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.css' %}">
+<link rel="stylesheet" href="{% static 'pnotify/dist/pnotify.css' %}"/>
+<link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'Ionicons/css/ionicons.min.css' %}">
+<link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}"/>
+<link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}" media="print">
+<link rel="stylesheet" href="{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -427,7 +425,7 @@
             });
         });
         $(document).ready(function () {
-
+            $('#modal-default').iziModal();
             refreshCalender();
 
 
