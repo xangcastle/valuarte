@@ -1,15 +1,12 @@
 /*
-* iziModal | v1.5.0
+* iziModal | v1.5.1
 * http://izimodal.marcelodolce.com
 * by Marcelo Dolce.
 */
-
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
         define(['jquery'], factory);
     } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
         module.exports = function( root, jQuery ) {
             if ( jQuery === undefined ) {
                 if ( typeof window !== 'undefined' ) {
@@ -23,7 +20,6 @@
             return jQuery;
         };
     } else {
-        // Browser globals
         factory(jQuery);
     }
 }(function ($) {
@@ -55,9 +51,26 @@
 			}
 		}
 
+		function isIE(version) {
+			if(version === 9){
+				return navigator.appVersion.indexOf("MSIE 9.") !== -1;
+			} else {
+				userAgent = navigator.userAgent;
+				return userAgent.indexOf("MSIE ") > -1 || userAgent.indexOf("Trident/") > -1;
+			}
+		}
+
+		function clearValue(value){
+			var separators = /%|px|em|cm|vh|vw/;
+			return parseInt(String(value).split(separators)[0]);
+		}
+
 		var animationEvent = whichAnimationEvent(),
-			isMobile = (/Mobi/.test(navigator.userAgent)) ? true : false,
-			autoOpenModal = 0;
+			isMobile = (/Mobi/.test(navigator.userAgent)) ? true : false;
+
+		window.$iziModal = {};
+		window.$iziModal.autoOpen = 0;
+		window.$iziModal.history = false;
 
 		var iziModal = function (element, options) {
 			this.init(element, options);
@@ -72,8 +85,8 @@
 				var that = this;
 				this.$element = $(element);
 
-				if(this.$element.attr('id') !== undefined && this.$element.attr('id') !== ''){
-					this.id = this.$element.attr('id');	
+				if(this.$element[0].id !== undefined && this.$element[0].id !== ''){
+					this.id = this.$element[0].id;	
 				} else {
 					this.id = PLUGIN_NAME+Math.floor((Math.random() * 10000000) + 1);
 					this.$element.attr('id', this.id);
@@ -135,20 +148,6 @@
 					this.$element.appendTo(options.appendTo);            	
 	            }
 
-				this.$header = $('<div class="'+PLUGIN_NAME+'-header"><h2 class="'+PLUGIN_NAME+'-header-title">' + options.title + '</h2><p class="'+PLUGIN_NAME+'-header-subtitle">' + options.subtitle + '</p><div class="'+PLUGIN_NAME+'-header-buttons"></div></div>');
-
-				if (options.closeButton === true) {
-					this.$header.find('.'+PLUGIN_NAME+'-header-buttons').append('<a href="javascript:void(0)" class="'+PLUGIN_NAME+'-button '+PLUGIN_NAME+'-button-close" data-'+PLUGIN_NAME+'-close></a>');
-				}
-	            
-	            if (options.fullscreen === true) {
-	            	this.$header.find('.'+PLUGIN_NAME+'-header-buttons').append('<a href="javascript:void(0)" class="'+PLUGIN_NAME+'-button '+PLUGIN_NAME+'-button-fullscreen" data-'+PLUGIN_NAME+'-fullscreen></a>');
-	            }
-
-				if (options.timeoutProgressbar === true && !isNaN(parseInt(options.timeout)) && options.timeout !== false && options.timeout !== 0) {
-					this.$header.prepend('<div class="'+PLUGIN_NAME+'-progressbar"><div style="background-color:'+options.timeoutProgressbarColor+'"></div></div>');
-	            }
-
 	            if (options.iframe === true) {
 	                this.$element.html('<div class="'+PLUGIN_NAME+'-wrap"><div class="'+PLUGIN_NAME+'-content"><iframe class="'+PLUGIN_NAME+'-iframe"></iframe>' + this.content + "</div></div>");
 	                
@@ -158,31 +157,12 @@
 	            } else {
 	            	this.$element.html('<div class="'+PLUGIN_NAME+'-wrap"><div class="'+PLUGIN_NAME+'-content">' + this.content + '</div></div>');
 	            }
+
+				if (this.options.background !== null) {
+					this.$element.css('background', this.options.background);
+				}
+
 	            this.$wrap = this.$element.find('.'+PLUGIN_NAME+'-wrap');
-
-	            if (options.subtitle === '') {
-	        		this.$header.addClass(PLUGIN_NAME+'-noSubtitle');
-	            }
-
-	            if (options.title !== "" || options.subtitle !== "") {
-
-	                if (options.headerColor !== null) {
-	                    this.$element.css('border-bottom', '3px solid ' + options.headerColor + '');
-	                    this.$header.css('background', this.options.headerColor);
-	                }
-					if (options.icon !== null || options.iconText !== null){
-
-	                    this.$header.prepend('<i class="'+PLUGIN_NAME+'-header-icon"></i>');
-
-		                if (options.icon !== null) {
-		                    this.$header.find('.'+PLUGIN_NAME+'-header-icon').addClass(options.icon).css('color', options.iconColor);
-						}
-		                if (options.iconText !== null){
-		                	this.$header.find('.'+PLUGIN_NAME+'-header-icon').html(options.iconText);
-		                }
-					}
-	                this.$element.css('overflow', 'hidden').prepend(this.$header);
-	            }
 
 				if(options.zindex !== null && !isNaN(parseInt(options.zindex)) ){
 				 	this.$element.css('z-index', options.zindex);
@@ -215,45 +195,57 @@
 				    this.$element.addClass('isFullscreen');
 				}
 
-	            (function applyVerticalPos(){
+				this.createHeader();
+				this.recalcWidth();
+				this.recalcVerticalPos();
 
-					var separators = /%|px|em|cm/,
-						wClear = String(options.width).split(separators),
-						w = String(options.width),
-						medida = "px";
-						wClear = String(wClear).split(",")[0];
+				if (that.options.afterRender && ( typeof(that.options.afterRender) === "function" || typeof(that.options.afterRender) === "object" ) ) {
+			        that.options.afterRender(that);
+			    }
 
-					if(isNaN(options.width)){
-						if( String(options.width).indexOf("%") != -1){
-							medida = "%";
-						} else {
-							medida = w.slice("-2");
+			},
+
+			createHeader: function(){
+
+				this.$header = $('<div class="'+PLUGIN_NAME+'-header"><h2 class="'+PLUGIN_NAME+'-header-title">' + this.options.title + '</h2><p class="'+PLUGIN_NAME+'-header-subtitle">' + this.options.subtitle + '</p><div class="'+PLUGIN_NAME+'-header-buttons"></div></div>');
+
+				if (this.options.closeButton === true) {
+					this.$header.find('.'+PLUGIN_NAME+'-header-buttons').append('<a href="javascript:void(0)" class="'+PLUGIN_NAME+'-button '+PLUGIN_NAME+'-button-close" data-'+PLUGIN_NAME+'-close></a>');
+				}
+	            
+	            if (this.options.fullscreen === true) {
+	            	this.$header.find('.'+PLUGIN_NAME+'-header-buttons').append('<a href="javascript:void(0)" class="'+PLUGIN_NAME+'-button '+PLUGIN_NAME+'-button-fullscreen" data-'+PLUGIN_NAME+'-fullscreen></a>');
+	            }
+
+				if (this.options.timeoutProgressbar === true && !isNaN(parseInt(this.options.timeout)) && this.options.timeout !== false && this.options.timeout !== 0) {
+					this.$header.prepend('<div class="'+PLUGIN_NAME+'-progressbar"><div style="background-color:'+this.options.timeoutProgressbarColor+'"></div></div>');
+	            }
+
+	            if (this.options.subtitle === '') {
+	        		this.$header.addClass(PLUGIN_NAME+'-noSubtitle');
+	            }
+
+	            if (this.options.title !== "") {
+
+	                if (this.options.headerColor !== null) {
+	                	if(this.options.borderBottom === true){
+	                    	this.$element.css('border-bottom', '3px solid ' + this.options.headerColor + '');	                		
+	                	}
+	                    this.$header.css('background', this.options.headerColor);
+	                }
+					if (this.options.icon !== null || this.options.iconText !== null){
+
+	                    this.$header.prepend('<i class="'+PLUGIN_NAME+'-header-icon"></i>');
+
+		                if (this.options.icon !== null) {
+		                    this.$header.find('.'+PLUGIN_NAME+'-header-icon').addClass(this.options.icon).css('color', this.options.iconColor);
 						}
+		                if (this.options.iconText !== null){
+		                	this.$header.find('.'+PLUGIN_NAME+'-header-icon').html(this.options.iconText);
+		                }
 					}
-		            that.$element.css('max-width', parseInt(wClear) + medida);
-
-		            // Adjusting vertical positioning
-					if(options.top !== null){
-		            	that.$element.css('margin-top', options.top);
-		            	if(options.top == 0){
-		            		that.$element.css({
-		            			borderTopRightRadius: 0,
-		            			borderTopLeftRadius: 0
-		            		});
-		            	}
-					}
-					if (options.bottom !== null){
-		            	that.$element.css('margin-bottom', options.bottom);
-		            	if(options.bottom == 0){
-		            		that.$element.css({
-		            			borderBottomRightRadius: 0,
-		            			borderBottomLeftRadius: 0
-		            		});
-		            	}
-					}
-
-				})();
-
+	                this.$element.css('overflow', 'hidden').prepend(this.$header);
+	            }
 			},
 
 			setGroup: function(groupName){
@@ -272,9 +264,9 @@
 	            	var count = 0;
 	            	$.each( $('.'+PLUGIN_NAME+'[data-'+PLUGIN_NAME+'-group='+group+']') , function(index, val) {
 
-						that.group.ids.push($(this).attr('id'));
+						that.group.ids.push($(this)[0].id);
 
-						if(that.id == $(this).attr('id')){
+						if(that.id == $(this)[0].id){
 							that.group.index = count;
 						}
 	        			count++;
@@ -290,12 +282,33 @@
 				if(this.state == STATES.CLOSED){
 					this.open();
 				}
-
 			},
 
 			open: function (param) {
 
 				var that = this;
+
+				$.each( $('.'+PLUGIN_NAME) , function(index, modal) {
+					if( $(modal).data().iziModal !== undefined ){
+						var state = $(modal).iziModal('getState');
+						if(state == 'opened' || state == 'opening'){
+							$(modal).iziModal('close');
+						}
+					}
+				});
+
+	            (function urlHash(){
+					if(that.options.history){
+		            	var oldTitle = document.title;
+			            document.title = oldTitle + " - " + that.options.title;
+						document.location.hash = that.id;
+						document.title = oldTitle;
+						//history.pushState({}, that.options.title, "#"+that.id);
+						window.$iziModal.history = true;
+					} else {
+						window.$iziModal.history = false;
+					}
+	            })();
 
 				function opened(){
 				    
@@ -304,7 +317,7 @@
 					that.state = STATES.OPENED;
 			    	that.$element.trigger(STATES.OPENED);
 
-					if (that.options.onOpened && typeof(that.options.onOpened) === "function") {
+					if (that.options.onOpened && ( typeof(that.options.onOpened) === "function" || typeof(that.options.onOpened) === "object" ) ) {
 				        that.options.onOpened(that);
 				    }
 				}
@@ -407,21 +420,25 @@
 				    	if(that.group.ids.length > 1 ){
 
 				    		that.$navigate.appendTo('body');
-				    		that.$navigate.addClass(that.options.transitionInOverlay);
+				    		that.$navigate.addClass('fadeIn');
 
 				    		if(that.options.navigateCaption === true){
 				    			that.$navigate.find('.'+PLUGIN_NAME+'-navigate-caption').show();
 				    		}
 
 				    		var modalWidth = that.$element.outerWidth();
-
-					    	if(that.options.navigateArrows === true || that.options.navigateArrows === 'closeToModal'){
-						    	that.$navigate.find('.'+PLUGIN_NAME+'-navigate-prev').css('margin-left', -((modalWidth/2)+84));
-						    	that.$navigate.find('.'+PLUGIN_NAME+'-navigate-next').css('margin-right', -((modalWidth/2)+84));
-					    	} else {
-				    			that.$navigate.find('.'+PLUGIN_NAME+'-navigate-prev').css('left', 0);
-				    			that.$navigate.find('.'+PLUGIN_NAME+'-navigate-next').css('right', 0);
-					    	}
+				    		if(that.options.navigateArrows !== false){
+						    	if (that.options.navigateArrows === 'closeScreenEdge'){
+					    			that.$navigate.find('.'+PLUGIN_NAME+'-navigate-prev').css('left', 0).show();
+					    			that.$navigate.find('.'+PLUGIN_NAME+'-navigate-next').css('right', 0).show();
+						    	} else {
+							    	that.$navigate.find('.'+PLUGIN_NAME+'-navigate-prev').css('margin-left', -((modalWidth/2)+84)).show();
+							    	that.$navigate.find('.'+PLUGIN_NAME+'-navigate-next').css('margin-right', -((modalWidth/2)+84)).show();					    		
+						    	}
+				    		} else {
+				    			that.$navigate.find('.'+PLUGIN_NAME+'-navigate-prev').hide();
+				    			that.$navigate.find('.'+PLUGIN_NAME+'-navigate-next').hide();
+				    		}
 				    		
 				    		var loop;
 							if(that.group.index === 0){
@@ -441,9 +458,12 @@
 				    	}
 
 						if(that.options.overlay === true) {
-							that.$overlay.appendTo('body');
-						} else if($(that.options.overlay).length > 0) {
-							that.$overlay.appendTo($(that.options.overlay));
+
+							if(that.options.appendToOverlay === false){
+								that.$overlay.appendTo('body');
+							} else {
+								that.$overlay.appendTo( that.options.appendToOverlay );								
+							}
 						}
 
 						if (that.options.transitionInOverlay) {
@@ -458,19 +478,20 @@
 							}
 						}
 
-						if (transitionIn !== '') {
+						if (transitionIn !== '' && animationEvent !== undefined) {
 
 							that.$element.addClass("transitionIn "+transitionIn).show();
 							that.$wrap.one(animationEvent, function () {
 
 							    that.$element.removeClass(transitionIn + " transitionIn");
 							    that.$overlay.removeClass(that.options.transitionInOverlay);
-							    that.$navigate.removeClass(that.options.transitionInOverlay);
+							    that.$navigate.removeClass('fadeIn');
 
 								opened();
 							});
 
 						} else {
+
 							that.$element.show();
 							opened();
 						}
@@ -540,18 +561,8 @@
 					
 					(function updateTimer(){
 				    	that.recalcLayout();
-					    that.timer = setTimeout(updateTimer, 100);
+					    that.timer = setTimeout(updateTimer, 300);
 					})();
-
-		            (function urlHash(){
-						if(that.options.history){
-			            	var oldTitle = document.title;
-				            document.title = oldTitle + " - " + that.options.title;
-							document.location.hash = that.id;
-							document.title = oldTitle;
-							//history.pushState({}, that.options.title, "#"+that.id);
-						}
-		            })();
 
 		            // Close when the Escape key is pressed
 		            $document.on('keydown.'+PLUGIN_NAME, function (e) {
@@ -559,6 +570,7 @@
 		                    that.close();
 		                }
 		            });
+
 			    }
 
 			},
@@ -570,6 +582,7 @@
 				function closed(){
 	                
 	                // console.info('[ '+PLUGIN_NAME+' | '+that.id+' ] Closed.');
+
 	                that.state = STATES.CLOSED;
 	                that.$element.trigger(STATES.CLOSED);
 
@@ -592,7 +605,7 @@
 					    that.$element.find('.'+PLUGIN_NAME+'-content').html( that.content );
 					}
 
-					if( $('.'+PLUGIN_NAME+':visible').attr('id') === undefined){
+					if( $('.'+PLUGIN_NAME+':visible').length === 0 ){
 						$('html').removeClass(PLUGIN_NAME+'-isAttached');
 					}
 				}
@@ -622,7 +635,14 @@
 						} 
 					}
 
-					if (transitionOut !== '') {
+					if( (transitionOut === false || transitionOut === '' ) || animationEvent === undefined){
+
+		                this.$element.hide();
+		                this.$overlay.remove();
+	                	this.$navigate.remove();
+		                closed();
+
+					} else {
 
 		                this.$element.attr('class', [
 							this.classes,
@@ -634,7 +654,10 @@
 						].join(' '));
 						
 						this.$overlay.attr('class', PLUGIN_NAME + "-overlay " + this.options.transitionOutOverlay);
-						this.$navigate.attr('class', PLUGIN_NAME + "-navigate " + this.options.transitionOutOverlay);
+
+						if(that.options.navigateArrows !== false){
+							this.$navigate.attr('class', PLUGIN_NAME + "-navigate fadeOut");
+						}
 
 		                this.$element.one(animationEvent, function () {
 		                    
@@ -642,16 +665,12 @@
 		                        that.$element.removeClass(transitionOut + " transitionOut").hide();
 		                    }
 	                        that.$overlay.removeClass(that.options.transitionOutOverlay).remove();
-							that.$navigate.removeClass(that.options.transitionOutOverlay).remove();
+							that.$navigate.removeClass('fadeOut').remove();
 							closed();
 		                });
-		            }
-		            else {
-		                this.$element.hide();
-		                this.$overlay.remove();
-	                	this.$navigate.remove();
-		                closed();
-		            }
+
+					}
+
 	            }
 			},
 
@@ -818,18 +837,61 @@
 				return this.group;
 			},
 
+			setWidth: function(width){
+
+				this.options.width = width;
+
+				this.recalcWidth();
+
+				var modalWidth = this.$element.outerWidth();
+	    		if(this.options.navigateArrows === true || this.options.navigateArrows == 'closeToModal'){
+			    	this.$navigate.find('.'+PLUGIN_NAME+'-navigate-prev').css('margin-left', -((modalWidth/2)+84)).show();
+			    	this.$navigate.find('.'+PLUGIN_NAME+'-navigate-next').css('margin-right', -((modalWidth/2)+84)).show();					    		
+	    		}
+
+			},
+
+			setTop: function(top){
+
+				this.options.top = top;
+
+				this.recalcVerticalPos(false);
+			},
+
+			setBottom: function(bottom){
+
+				this.options.bottom = bottom;
+
+				this.recalcVerticalPos(false);
+
+			},
+
+			setHeader: function(status){
+
+				if(status){
+					this.$element.find('.'+PLUGIN_NAME+'-header').show();
+				} else {
+					this.headerHeight = 0;
+					this.$element.find('.'+PLUGIN_NAME+'-header').hide();
+				}
+			},
+
 			setTitle: function(title){
+
+				this.options.title = title;
+
+				if(this.headerHeight === 0){
+					this.createHeader();
+				}
 
 				if( this.$header.find('.'+PLUGIN_NAME+'-header-title').length === 0 ){
 					this.$header.append('<h2 class="'+PLUGIN_NAME+'-header-title"></h2>');
 				}
 
 				this.$header.find('.'+PLUGIN_NAME+'-header-title').html(title);
-				this.options.title = title;
 			},
 
 			setSubtitle: function(subtitle){
-
 
 				if(subtitle === ''){
 					
@@ -865,10 +927,21 @@
 			},
 
 			setHeaderColor: function(headerColor){
-
-	            this.$element.css('border-bottom', '3px solid ' + headerColor + '');
+				if(this.options.borderBottom === true){
+	            	this.$element.css('border-bottom', '3px solid ' + headerColor + '');
+	        	}
 	            this.$header.css('background', headerColor);
 	            this.options.headerColor = headerColor;
+			},
+
+			setBackground: function(background){
+				if(background === false){
+					this.options.background = null;
+					this.$element.css('background', '');
+				} else{
+	            	this.$element.css('background', background);
+	            	this.options.background = background;					
+				}
 			},
 
 			setZindex: function(zIndex){
@@ -881,6 +954,33 @@
 		        }
 			},
 
+			setFullscreen: function(value){
+
+				if(value){
+				    this.isFullscreen = true;
+				    this.$element.addClass('isFullscreen');
+				} else {
+					this.isFullscreen = false;
+				    this.$element.removeClass('isFullscreen');
+				}
+
+			},
+
+			setContent: function(content){
+
+				if( typeof content == "object" ){
+					var replace = content.default || false;
+					if(replace === true){
+						this.content = content.content;
+					}
+					content = content.content;
+				}
+	            if (this.options.iframe === false) {
+            		this.$element.find('.'+PLUGIN_NAME+'-content').html(content);
+	            }
+
+			},
+
 			setTransitionIn: function(transition){
 				
 				this.options.transitionIn = transition;
@@ -891,11 +991,21 @@
 				this.options.transitionOut = transition;
 			},
 
+			resetContent: function(){
+
+				this.$element.find('.'+PLUGIN_NAME+'-content').html(this.content);
+
+			},
+
 			startLoading: function(){
 
 				if( !this.$element.find('.'+PLUGIN_NAME+'-loader').length ){
-					this.$element.append('<div class="'+PLUGIN_NAME+'-loader '+this.options.transitionInOverlay+'"></div>');
+					this.$element.append('<div class="'+PLUGIN_NAME+'-loader fadeIn"></div>');
 				}
+				this.$element.find('.'+PLUGIN_NAME+'-loader').css({
+					top: this.headerHeight,
+        			borderRadius: this.options.radius
+				});
 			},
 
 			stopLoading: function(){
@@ -904,7 +1014,7 @@
 
 				if( !$loader.length ){
 					this.$element.prepend('<div class="'+PLUGIN_NAME+'-loader fadeIn"></div>');
-					$loader = this.$element.find('.'+PLUGIN_NAME+'-loader');
+					$loader = this.$element.find('.'+PLUGIN_NAME+'-loader').css('border-radius', this.options.radius);
 				}
 				$loader.removeClass('fadeIn').addClass('fadeOut');
 				setTimeout(function(){
@@ -912,21 +1022,104 @@
 				},600);
 			},
 
+			recalcWidth: function(){
+
+				var that = this;
+
+	            this.$element.css('max-width', this.options.width);
+
+	            if(isIE()){
+	            	var modalWidth = that.options.width;
+
+	            	if(modalWidth.toString().split("%").length > 1){
+						modalWidth = that.$element.outerWidth();
+	            	}
+	            	that.$element.css({
+	            		left: '50%',
+	            		marginLeft: -(modalWidth/2)
+	            	});
+	            }
+			},
+
+			recalcVerticalPos: function(first){
+
+				if(this.options.top !== null && this.options.top !== false){
+	            	this.$element.css('margin-top', this.options.top);
+	            	if(this.options.top === 0){
+	            		this.$element.css({
+	            			borderTopRightRadius: 0,
+	            			borderTopLeftRadius: 0
+	            		});
+	            	}
+				} else {
+					if(first === false){
+						this.$element.css({
+							marginTop: '',
+	            			borderRadius: this.options.radius
+	            		});
+					}
+				}
+				if (this.options.bottom !== null && this.options.bottom !== false){
+	            	this.$element.css('margin-bottom', this.options.bottom);
+	            	if(this.options.bottom === 0){
+	            		this.$element.css({
+	            			borderBottomRightRadius: 0,
+	            			borderBottomLeftRadius: 0
+	            		});
+	            	}
+				} else {
+					if(first === false){
+						this.$element.css({
+							marginBottom: '',
+	            			borderRadius: this.options.radius
+	            		});
+					}
+				}
+
+			},
+
 			recalcLayout: function(){
 
 				var that = this,
 	        		windowHeight = $window.height(),
 	                modalHeight = this.$element.outerHeight(),
+	                modalWidth = this.$element.outerWidth(),
 	                contentHeight = this.$element.find('.'+PLUGIN_NAME+'-content')[0].scrollHeight,
                 	outerHeight = contentHeight + this.headerHeight,
                 	wrapperHeight = this.$element.innerHeight() - this.headerHeight,
 	                modalMargin = parseInt(-((this.$element.innerHeight() + 1) / 2)) + 'px',
-                	scrollTop = this.$wrap.scrollTop();
+                	scrollTop = this.$wrap.scrollTop(),
+                	borderSize = 0;
 
-	            if(this.$element.find('.'+PLUGIN_NAME+'-header').length){
-	            	this.headerHeight = parseInt(this.$element.find('.'+PLUGIN_NAME+'-header').innerHeight()) + 2 /*border bottom of modal*/;
+				if(isIE()){
+					if( modalWidth >= $window.width() || this.isFullscreen === true ){
+						this.$element.css({
+							left: '0',
+							marginLeft: ''
+						});
+					} else {
+		            	this.$element.css({
+		            		left: '50%',
+		            		marginLeft: -(modalWidth/2)
+		            	});
+					}
+				}
+
+				if(this.options.borderBottom === true && this.options.title !== ""){
+					borderSize = 3;
+				}
+
+	            if(this.$element.find('.'+PLUGIN_NAME+'-header').length && this.$element.find('.'+PLUGIN_NAME+'-header').is(':visible') ){
+	            	this.headerHeight = parseInt(this.$element.find('.'+PLUGIN_NAME+'-header').innerHeight());
 	            	this.$element.css('overflow', 'hidden');
+	            } else {
+	            	this.headerHeight = 0;
+	            	this.$element.css('overflow', '');
 	            }
+
+				if(this.$element.find('.'+PLUGIN_NAME+'-loader').length){
+					this.$element.find('.'+PLUGIN_NAME+'-loader').css('top', this.headerHeight);
+				}
 
 				if(modalHeight !== this.modalHeight){
 					this.modalHeight = modalHeight;
@@ -941,8 +1134,8 @@
 					if (this.options.iframe === true) {
 
 						// If the height of the window is smaller than the modal with iframe
-						if(windowHeight < (this.options.iframeHeight + this.headerHeight) || this.isFullscreen === true){
-							this.$element.find('.'+PLUGIN_NAME+'-iframe').css( 'height', windowHeight - this.headerHeight);
+						if(windowHeight < (this.options.iframeHeight + this.headerHeight+borderSize) || this.isFullscreen === true){
+							this.$element.find('.'+PLUGIN_NAME+'-iframe').css( 'height', windowHeight - (this.headerHeight+borderSize));
 						} else {
 							this.$element.find('.'+PLUGIN_NAME+'-iframe').css( 'height', this.options.iframeHeight);
 						}
@@ -961,10 +1154,10 @@
 	        		}
 					this.recalcButtons();
 
-	                // If the modal is larger than the height of the window..
 					if(this.isFullscreen === false){
-	                	windowHeight = windowHeight - (this.options.top || 0) - (this.options.bottom || 0);
+ 	                	windowHeight = windowHeight - (clearValue(this.options.top) || 0) - (clearValue(this.options.bottom) || 0);
 					}
+	                // If the modal is larger than the height of the window..
 	                if (outerHeight > windowHeight) {
 						if(this.options.top > 0 && this.options.bottom === null && contentHeight < $window.height()){
 					    	this.$element.addClass('isAttachedBottom');
@@ -976,7 +1169,7 @@
 						this.$element.css( 'height', windowHeight );
 
 	                } else {
-	                	this.$element.css('height', contentHeight + that.headerHeight);
+	                	this.$element.css('height', contentHeight + (this.headerHeight+borderSize));
 			    		this.$element.removeClass('isAttachedTop isAttachedBottom');
 			    		$('html').removeClass(PLUGIN_NAME+'-isAttached');
 	                }
@@ -984,7 +1177,7 @@
 	                (function applyScroll(){
 	                	if(contentHeight > wrapperHeight && outerHeight > windowHeight){
 	                		that.$element.addClass('hasScroll');
-	                		that.$wrap.css('height', modalHeight - that.headerHeight);
+	                		that.$wrap.css('height', modalHeight - (that.headerHeight+borderSize));
 	                	} else {
 	                		that.$element.removeClass('hasScroll');
 	                		that.$wrap.css('height', 'auto');
@@ -1014,108 +1207,138 @@
 		};
 
 
-
-		$window.off('hashchange.'+PLUGIN_NAME+' load.'+PLUGIN_NAME).on('hashchange.'+PLUGIN_NAME+' load.'+PLUGIN_NAME, function(e) {
+		$window.off('load.'+PLUGIN_NAME).on('load.'+PLUGIN_NAME, function(e) {
 
 			var modalHash = document.location.hash;
 
-			if(autoOpenModal === 0){
+			if(window.$iziModal.autoOpen === 0 && !$('.'+PLUGIN_NAME).is(":visible")){
 
-				if(modalHash !== ""){
-					
+				try {
+					var data = $(modalHash).data();
+					if(typeof data !== 'undefined'){
+						if(data.iziModal.options.autoOpen !== false){
+							$(modalHash).iziModal("open");
+						}
+					}
+				} catch(exc) { /* console.warn(exc); */ }
+			}
+
+		});
+
+		$window.off('hashchange.'+PLUGIN_NAME).on('hashchange.'+PLUGIN_NAME, function(e) {
+
+			var modalHash = document.location.hash;
+			var data = $(modalHash).data();
+
+			if(modalHash !== ""){
+				try {
+					if(typeof data !== 'undefined' && $(modalHash).iziModal('getState') !== 'opening'){
+
+						setTimeout(function(){
+							$(modalHash).iziModal("open");
+						},200);
+					}
+				} catch(exc) { /* console.warn(exc); */ }
+
+			} else {
+
+				if(window.$iziModal.history){
 					$.each( $('.'+PLUGIN_NAME) , function(index, modal) {
-						 var state = $(modal).iziModal('getState');
-						 if(state == 'opened' || state == 'opening'){
-						 	
-						 	if( "#" + $(modal).attr('id') !== modalHash){
-						 		$(modal).iziModal('close');
-						 	}
-						 }
-					});
-
-					try {
-						var data = $(modalHash).data();
-						if(typeof data !== 'undefined'){
-							if(e.type === 'load'){
-								if(data.iziModal.options.autoOpen !== false){
-									$(modalHash).iziModal("open");
-								}
-							} else {
-								setTimeout(function(){
-									$(modalHash).iziModal("open");
-								},200);
+						if( $(modal).data().iziModal !== undefined ){
+							var state = $(modal).iziModal('getState');
+							if(state == 'opened' || state == 'opening'){
+								$(modal).iziModal('close');
 							}
 						}
-					} catch(log) {
-						console.info(log);
-					}
-
-				} else {
-
-					$.each( $('.'+PLUGIN_NAME) , function(index, modal) {
-						 var state = $(modal).iziModal('getState');
-						 if(state == 'opened' || state == 'opening'){
-						 	$(modal).iziModal('close');
-						 }
 					});
-
 				}
-			} else {
-				autoOpenModal = 0;
 			}
+
+
 		});
 
 		$document.off('click', '[data-'+PLUGIN_NAME+'-open]').on('click', '[data-'+PLUGIN_NAME+'-open]', function(e) {
 			e.preventDefault();
 
-			var modal = $('.'+PLUGIN_NAME+':visible').attr('id');
+			var modal = $('.'+PLUGIN_NAME+':visible');
 			var openModal = $(e.currentTarget).attr('data-'+PLUGIN_NAME+'-open');
 			var transitionIn = $(e.currentTarget).attr('data-'+PLUGIN_NAME+'-transitionIn');
 			var transitionOut = $(e.currentTarget).attr('data-'+PLUGIN_NAME+'-transitionOut');
 
 			if(transitionOut !== undefined){
-				$("#"+modal).iziModal('close', {
+				modal.iziModal('close', {
 					transition: transitionOut
 				});
 			} else {
-				$("#"+modal).iziModal('close');
+				modal.iziModal('close');
 			}
 
 			setTimeout(function(){
 				if(transitionIn !== undefined){
-					$("#"+openModal).iziModal('open', {
+					$(openModal).iziModal('open', {
 						transition: transitionIn
 					});
 				} else {
-					$("#"+openModal).iziModal('open');
+					$(openModal).iziModal('open');
 				}
 			}, 200);
 		});
 
 		$document.off('keyup.'+PLUGIN_NAME).on('keyup.'+PLUGIN_NAME, function(event) {
 
-			var modal = $('.'+PLUGIN_NAME+':visible').attr('id'),
-				group = $("#"+modal).iziModal('getGroup'),
-				e = event || window.event,
-				target = e.target || e.srcElement,
-				modals = {};
+			if( $('.'+PLUGIN_NAME+':visible').length ){
+				var modal = $('.'+PLUGIN_NAME+':visible')[0].id,
+					group = $("#"+modal).iziModal('getGroup'),
+					e = event || window.event,
+					target = e.target || e.srcElement,
+					modals = {};
 
-			if(modal !== undefined && group.name !== undefined && !e.ctrlKey && !e.metaKey && !e.altKey && target.tagName.toUpperCase() !== 'INPUT' && target.tagName.toUpperCase() != 'TEXTAREA'){ //&& $(e.target).is('body')
+				if(modal !== undefined && group.name !== undefined && !e.ctrlKey && !e.metaKey && !e.altKey && target.tagName.toUpperCase() !== 'INPUT' && target.tagName.toUpperCase() != 'TEXTAREA'){ //&& $(e.target).is('body')
 
-				if(e.keyCode === 37) { // left
+					if(e.keyCode === 37) { // left
 
-					$("#"+modal).iziModal('prev', e);
-				}
-				else if(e.keyCode === 39 ) { // right
+						$("#"+modal).iziModal('prev', e);
+					}
+					else if(e.keyCode === 39 ) { // right
 
-					$("#"+modal).iziModal('next', e);
+						$("#"+modal).iziModal('next', e);
 
+					}
 				}
 			}
 		});
 
 		$.fn[PLUGIN_NAME] = function(option, args) {
 
+
+			if( !$(this).length && typeof option == "object"){
+
+				var newEL = {
+					$el: document.createElement("div"),
+					id: this.selector.split('#'),
+					class: this.selector.split('.')
+				};
+					
+				if(newEL.id.length > 1){
+					try{
+						newEL.$el = document.createElement(id[0]);
+					} catch(exc){ }
+
+					newEL.$el.id = this.selector.split('#')[1].trim();
+
+				} else if(newEL.class.length > 1){
+					try{
+						newEL.$el = document.createElement(newEL.class[0]);
+					} catch(exc){ }
+
+					for (var x=1; x<newEL.class.length; x++) {
+						newEL.$el.classList.add(newEL.class[x].trim());
+					}
+				}
+				document.body.appendChild(newEL.$el);
+
+				this.push($(this.selector));
+			}
 			var objs = this;
 
 			for (var i=0; i<objs.length; i++) {
@@ -1142,11 +1365,9 @@
 
 					} else if(options.autoOpen === true ) {
 						
-						setTimeout(function(){
-							data.open();
-						}, 0);
+						data.open();
 					}
-					autoOpenModal++;
+					window.$iziModal.autoOpen++;
 				}
 			}
 
@@ -1157,8 +1378,8 @@
 		    title: '',
 		    subtitle: '',
 		    headerColor: '#88A0B9',
+		    background: null,
 		    theme: '',  // light
-		    appendTo: '.body', // or false
 		    icon: null,
 		    iconText: null,
 		    iconColor: '',
@@ -1166,6 +1387,7 @@
 		    width: 600,
 		    top: null,
 		    bottom: null,
+		    borderBottom: true,
 		    padding: 0,
 		    radius: 3,
 		    zindex: 999,
@@ -1177,7 +1399,7 @@
 		    loop: false,
 		    navigateCaption: true,
 		    navigateArrows: true, // Boolean, 'closeToModal', 'closeScreenEdge'
-		    history: true,
+		    history: false,
 		    restoreDefaultContent: false,
 		    autoOpen: 0, // Boolean, Number
 		    bodyOverflow: false,
@@ -1185,6 +1407,8 @@
 		    openFullscreen: false,
 		    closeOnEscape: true,
 		    closeButton: true,
+		    appendTo: 'body', // or false
+		    appendToOverlay: 'body', // or false
 		    overlay: true,
 		    overlayClose: true,
 		    overlayColor: 'rgba(0, 0, 0, 0.4)',
@@ -1201,7 +1425,8 @@
 	        onOpening: function(){},
 	        onOpened: function(){},
 	        onClosing: function(){},
-	        onClosed: function(){}
+	        onClosed: function(){},
+	        afterRender: function(){}
 		};
 
 	$.fn[PLUGIN_NAME].Constructor = iziModal;

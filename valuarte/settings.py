@@ -89,7 +89,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'ABC123#$',
         'HOST': 'localhost',
-        #'HOST': 'www.valuarte.com.ni',
+        # 'HOST': 'www.valuarte.com.ni',
         'PORT': '5432',
     },
 }
@@ -136,7 +136,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBjWBugqqWF-lwi6opFnCrDtg6SVj6hlME'
 
-
 # Variables para el envio por gmail
 
 
@@ -147,7 +146,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = 'ABcq12!@'
 EMAIL_PORT = 587
 
-
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -157,11 +155,21 @@ STATICFILES_FINDERS = (
 
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components/')
 
-BOWER_PATH = 'C:/Users/Jose Williams Garcia/AppData/Roaming/npm/node_modules/bower/bin/bower'
+BOWER_PATH = '/usr/local/bin/bower'
 
-BOWER_INSTALLED_APPS = (
-    'izimodal',
-)
+BOWER_INSTALLED_APPS = [
+    'Ionicons#2.0.1',
+    'bootstrap#4.0.0-beta',
+    'd3#3.1.1',
+    'fullcalendar#3.5.1',
+    'izimodal#1.5.1',
+    'jquery#2.2.4',
+    'jquery-ui#1.12.1',
+    'leaflet#1.2.0',
+    'moment#2.18.1',
+    'popper.js#1.12.5'
+]
+
 WKHTMLTOPDF_CMD_OPTIONS = {
     'quiet': True,
 }

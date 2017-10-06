@@ -1,5 +1,5 @@
 /*
-* iziModal | v1.5.0
+* iziModal | v1.5.1
 * http://izimodal.marcelodolce.com
 * by Marcelo Dolce.
 */
@@ -14,6 +14,7 @@
     background: #FFF;
     box-shadow: 0 0 8px rgba(0,0,0,.3);
     transition: margin-top 0.3s ease, height 0.3s ease;
+    transform: translateZ(0);
 }
 .iziModal *{
     -webkit-font-smoothing: antialiased;
@@ -84,10 +85,11 @@
     display: block;
     margin: 0;
     padding: 0;
-    font-family: Arial;
+    font-family: 'Lato', Arial;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: left;
 }
 .iziModal .iziModal-header-buttons {
     position: absolute;
@@ -103,6 +105,7 @@
     outline: none;
     height: 34px;
     width: 34px;
+    border: 0;
     padding: 0;
     margin: 0;
     opacity: 0.3;
@@ -171,6 +174,11 @@
     .iziModal-rtl .iziModal-button{
         float: left;
     }
+    .iziModal-rtl .iziModal-header-title, .iziModal-rtl .iziModal-header-subtitle{
+        text-align: right;
+        font-family: Tahoma, 'Lato', Arial;
+        font-weight: 500;
+    }
     .iziModal-rtl .iziModal-header.iziModal-noSubtitle {
         padding: 10px 15px 12px 40px;
     }    
@@ -230,8 +238,9 @@
     overflow-scrolling: touch;
 }
 .iziModal .iziModal-iframe{
+    border: 0;
+    margin: 0 0 -6px 0;
     width: 100%;
-    margin-bottom: -4px;
     transition: height 0.3s ease;
 }
 .iziModal-overlay{
@@ -258,7 +267,7 @@
     color: white;
     line-height: 16px;
     font-size: 9px;
-    font-family: arial;
+    font-family: 'Lato', Arial;
     letter-spacing: 0.1em;
     text-indent: 0;
     text-align: center;

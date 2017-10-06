@@ -1,6 +1,209 @@
 {% extends "admin/base.html" %}
 
-{% load grappelli_dynamic_navbar %}
+{% load grappelli_dynamic_navbar static %}
+
+{% block admin_title %}
+    <h1 id="grp-admin-title"><strong>Valuarte</strong> <span><div id="search" class="">
+        <style>
+            input[type=text].grp-search-field-navbar {
+                margin-right: -5px;
+                padding-left: 25px;
+                padding-right: 30px;
+                -moz-border-radius: 20px;
+                -webkit-border-radius: 20px;
+                border-radius: 20px;
+                min-width: 271px;
+            }
+
+            form#grp-changelist-search-form {
+                margin: 0 0 0 40px;
+                border: 1px solid #fff;
+                -moz-border-radius: 20px;
+                -webkit-border-radius: 20px;
+                border-radius: 20px;
+            }
+        </style>
+        <!-- Search Form -->
+        <form id="grp-changelist-search-form" action="" method="get" novalidate="">
+            <input type="text" name="consulta" id="id_consulta" class="grp-search-field-navbar" value="">
+            <button type="submit" value="" class="grp-search-button"></button>
+        </form>
+    </div></span></h1>
+    <div id="modal-default"
+         data-izimodal-fullscreen="true"
+         data-izimodal-title="Estado de su gestion"
+         data-izimodal-subtitle="Aquí puede informarse del proceso de su avaluo"
+         data-izimodal-icon="icon-home"
+         aria-hidden="false"
+         aria-labelledby="modal-default"
+         role="dialog" class="iziModal"
+         data-izimodal-group="grupo1"
+         data-izimodal-loop="true"
+
+         style="border-bottom: 3px solid rgb(136, 160, 185);
+                 overflow: hidden; z-index: 999;
+                 border-radius: 3px; max-width: 700px;
+                 display: None; height: 459px;">
+        <div class="iziModal-content">
+            <div style="padding: 20px">
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12">
+                        <a id="ficha" title="Generar Proforma" href="#"
+                           class="btn btn-primary btn-circle show_atachments"
+                           url="{% url 'gestion_proforma' %}?gestion=" data-url=""
+                           data-name="Generar Proforma">
+                            <i class="ion-pie-graph"></i>
+                        </a>
+                        <a id="proforma" title="Generar Ficha" href="#"
+                           class="btn btn-primary btn-circle show_atachments"
+                           url="{% url 'generar_asignacion' %}?documento=" data-url=""
+                           data-name="Generar Proforma">
+                            <i class="ion-clipboard"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
+                    <div class="col-sm-8 col-xs-12">
+                        <strong id="codigo_gestion">3527364</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
+                    <div class="col-sm-8 col-xs-12">
+                        <strong id="cliente_gestion">José Williams Garcia</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Tipo de Avaluo:</h4></div>
+                    <div class="col-sm-8 col-xs-12"><strong id="tipo_gestion">Avaluo de Automovil</strong></div>
+                </div>
+                <table class="table table-responsive table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Ejecutivo</th>
+                        <th>Anexo</th>
+                    </tr>
+                    </thead>
+                    <tbody id="logs">
+                    <tr>
+                        <td>24/01/2017</td>
+                        <td>RECEPCIONADO</td>
+                        <td>Paola</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>25/01/2017</td>
+                        <td>ASIGNADO A EVALUADOR</td>
+                        <td>Paola</td>
+                        <td>Tecnico evaluador Cesar Ramirez, fecha programada 29/01/2017</td>
+                    </tr>
+                    <tr>
+                        <td>29/01/2017</td>
+                        <td>LEVANTAMIENTO REALIZADO</td>
+                        <td>CRamirez</td>
+                        <td>
+                            <a href="#">Foto 1</a><br>
+                            <a href="#">Foto 2</a><br>
+                            <a href="#">Foto 3</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03/02/2017</td>
+                        <td>EN REVISION FINAL DE INFORME</td>
+                        <td>Paola</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>04/02/2017</td>
+                        <td>TERMINADO</td>
+                        <td>Paola</td>
+                        <td><a href="#">Descargar Informe</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <link rel="stylesheet" href="{% static '/izimodal/css/iziModal.min.css' %}" type="text/css">
+    <script type="text/javascript" src='{% static '/jquery/dist/jquery.min.js' %}'></script>
+    <script type="text/javascript" src='{% static '/jquery-ui/jquery-ui.min.js' %}'></script>
+    <script type="text/javascript" src='{% static '/izimodal/js/iziModal.min.js' %}'></script>
+
+    <script>
+            $(document).ready(function () {
+                var atachments_info = function () {
+                    console.log(this);
+                    window.open(
+                        $(this).data('url'),
+                        $(this).data('name'),
+                        "width=600mm, height=500mm,  status=no, menubar=no, location=no");
+                };
+                function funka() {
+                    alert("funka");
+                }
+
+                function ver_gestion(gestion) {
+                    $.ajax({
+                        url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
+                        method: "get",
+                        success: function (result) {
+                            if (result.code == 200) {
+                                var tab = $('#logs').empty();
+                                $.each(result.logs, function (i, o) {
+                                    var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
+                                    tab.append(rw);
+                                });
+                                var url = $("#ficha").attr('url') + result.id_gestion
+                                $("#ficha").attr('data-url', url);
+
+                                url = $("#proforma").attr('url') + result.id_gestion
+                                $("#proforma").attr('data-url', url);
+                                $("#codigo_gestion").html(result.codigo_gestion);
+                                $("#cliente_gestion").html(result.cliente_gestion);
+                                $("#tipo_gestion").html(result.tipo_gestion);
+                                $("#modal-default").iziModal({zindex: 9999});
+                                $("#modal-default").iziModal('open');
+
+                                $('.show_atachments').on('click', atachments_info);
+
+
+                            } else {
+                                alert(result.mensaje);
+                            }
+
+                        }
+                    });
+
+                    $(".style-switch-wrapper").removeClass("active");
+                };
+                var completeEvent = function () {
+                    $(this).autocomplete({
+                        minLength: 2,
+                        source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
+                        select: function (i, o) {
+                            ver_gestion(o.item.obj.barra);
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                }
+
+                $('#id_consulta').on('keyup', completeEvent);
+
+
+            });
+
+
+    </script>
+
+
+
+{% endblock %}
 
 {% block userlinks %}
     {% grappelli_dynamic_navbar %}

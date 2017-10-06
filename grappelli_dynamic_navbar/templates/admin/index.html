@@ -1,8 +1,21 @@
 {% extends "admin/app_index.html" %}
 
-{% load i18n data_dashboard tipos_gestion %}
+{% load i18n data_dashboard tipos_gestion static %}
 
+{% block blockbots %}
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ block.super }}
+{% endblock %}
 
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static '/bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/fullcalendar/dist/fullcalendar.css' %}"/>
+    <link rel="stylesheet" href="{% static '/fullcalendar/dist/fullcalendar.css' %}" media="print">
+    <link rel="stylesheet" href="{% static '/leaflet/dist/leaflet.css' %}"/>
+    <link rel="stylesheet" href="{% static '/Ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static '/admin/index.css' %}">
+{% endblock %}
 
 
 {% block content_title %}
@@ -11,42 +24,14 @@
     {% endif %}
 {% endblock content_title %}
 
-
-{% block extrahead %}
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-
-
-
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-            crossorigin="anonymous"></script>
-
-
-
-
-
-
-    <link rel="stylesheet" href="/static/dtracking/bower_components/fullcalendar/dist/fullcalendar.min.css">
-    <link rel="stylesheet" href="/static/dtracking/bower_components/fullcalendar/dist/fullcalendar.print.min.css"
-          media="print">
-
-   <link rel="stylesheet" href="/static/Ionicons/css/ionicons.min.css">
-    <link rel="stylesheet" href="/static/AdminLTE.min.css">
-{% endblock %}
-
 {% block content %}
+
+    <script type="text/javascript" src="{% static '/leaflet/dist/leaflet.js' %}"></script>
+    <script type="text/javascript" src="{% static '/moment/min/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/fullcalendar/dist/fullcalendar.js' %}"></script>
+    <script type="text/javascript" src="{% static '/fullcalendar/dist/locale/es.js' %}"></script>
+    <script type="text/javascript" src="{% static '/popper.js/dist/umd/popper.js' %}"></script>
+    <script type="text/javascript" src="{% static '/d3/d3.js' %}"></script>
     <style>
         #mapid {
             float: left;
@@ -63,7 +48,7 @@
         }
 
         #pie {
-            float: right;
+            float: left;
         }
 
         .legend {
@@ -93,7 +78,7 @@
         }
 
         rect:hover {
-            fill: blue;
+            fill: #9e9da0;
         }
 
         .axis {
@@ -129,29 +114,29 @@
     {% get_totales as t %}
     <div class="row">
         <div class="col-md-3 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-red"><i class="ion ion-android-warning"></i></span>
+            <div class="info-box">
+                <span class="info-box-icon bg-gray"><i class="ion ion-android-warning"></i></span>
 
-            <div class="info-box-content">
-              <span class="info-box-text">Vencidas</span>
-              <span class="info-box-number">{{ t.vencidas }}</span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Vencidas</span>
+                    <span class="info-box-number">{{ t.vencidas }}</span>
+                </div>
+                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
         </div>
         <!-- /.col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-yellow"><i class="ion ion-android-stopwatch"></i></span>
+            <div class="info-box">
+                <span class="info-box-icon bg-gray"><i class="ion ion-android-stopwatch"></i></span>
 
-            <div class="info-box-content">
-              <span class="info-box-text">Para Hoy</span>
-              <span class="info-box-number">{{ t.para_hoy }}</span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Para Hoy</span>
+                    <span class="info-box-number">{{ t.para_hoy }}</span>
+                </div>
+                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
         </div>
         <!-- /.col -->
 
@@ -159,118 +144,163 @@
         <div class="clearfix visible-sm-block"></div>
 
         <div class="col-md-3 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-green"><i class="ion ion-android-sunny"></i></span>
+            <div class="info-box">
+                <span class="info-box-icon bg-gray"><i class="ion ion-android-sunny"></i></span>
 
-            <div class="info-box-content">
-              <span class="info-box-text">En Tiempo</span>
-              <span class="info-box-number">{{ t.en_tiempo }}</span>
+                <div class="info-box-content">
+                    <span class="info-box-text">En Tiempo</span>
+                    <span class="info-box-number">{{ t.en_tiempo }}</span>
+                </div>
+                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
         </div>
         <!-- /.col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-blue"><i class="ion ion-cash"></i></span>
+            <div class="info-box">
+                <span class="info-box-icon bg-gray"><i class="ion ion-cash"></i></span>
 
-            <div class="info-box-content">
-              <span class="info-box-text">Ventas</span>
-              <span class="info-box-number">$ {{ t.ventas }}</span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Ventas</span>
+                    <span class="info-box-number">$ {{ t.ventas }}</span>
+                </div>
+                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
         </div>
         <!-- /.col -->
-      </div>
+    </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div class="container container-fluid" style="padding: 25px;background-color: rgba(170, 247, 212, 0.29);">
+            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
                 <h3><a href="{% url 'peritaje' %}">Agenda de Peritaje</a></h3>
                 <div id="agenda-peritaje"></div>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div class="container container-fluid" style="padding: 25px;background-color: rgba(203, 247, 170, 0.29);">
+            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
                 <h3><a href="{% url 'operaciones' %}">Agenda de Operaciones</a></h3>
                 <div id="agenda-operaciones"></div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div id="mapid"></div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-lg-6">
-            <div id="dashboard">
-                <div id="superior">
-                    <div id="tabla"></div>
-                    <div id="pie"></div>
+        <div id="dashboard" class="">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
+                        <div id="barras"></div>
+                    </div>
                 </div>
-                <div id="inferior">
-                    <div id="barras"></div>
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
+                        <div id="tabla"></div>
+                        <div id="pie"></div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
+    <script type="text/javascript">
+        function GenerateCalendar(url, div) {
+            var events = [];
+            var data = {};
+            $.ajax({
+                type: "GET",
+                data: data,
+                url: url,
+                success: function (response) {
+                    if (div == "#agenda-operaciones") {
+                        $.each(response.programadas, function (i, v) {
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'black',
+                                allDay: false,
+                                dias: v.dias,
+                                barra: v.barra,
+                                user: v.user,
+                            });
+                        });
+                        $.each(response.pendientes, function (i, v) {
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'black',
+                                allDay: false,
+                                dias: v.dias,
+                                barra: v.barra,
+                                user: v.user,
+                            });
+                        });
 
-        var mymap = L.map('mapid').setView([12.09, -86.16], 10);
-
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-            maxZoom: 18,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            id: 'mapbox.streets'
-        }).addTo(mymap);
-
-        (function ($) {
-            $(document).ready(function () {
-                var d = new Date();
-                var data = {
-                    anio: d.getFullYear(),
-                    mes: (d.getMonth() + 1),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                };
-                $.ajax({
-                    url: "{% url "get_avaluos_posicion" %}",
-                    method: "POST",
-                    data: data,
-                    success: function (result) {
-                        $.each(result, function (key, value) {
-                            L.marker([value.latitude, value.longitude])
-                                .addTo(mymap)
-                                .bindPopup('<strong>Codigo: <strong>' + value.barra +
-                                    '<br><strong>Destinatario: <strong>' + value.destinatario +
-                                    '<br><strong>Direccion: <strong>' + value.direccion +
-                                    '<br><strong>Telefono: <strong>' + value.telefono +
-                                    '<br><strong>Estado: <strong>' + value.estado);
+                    } else {
+                        $.each(response.programadas, function (i, v) {
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'black',
+                                allDay: false,
+                                dias: v.dias,
+                                barra: v.barra,
+                                user: v.user,
+                            });
                         });
                     }
-                });
-            });
-        })(grp.jQuery);
-
-
-         L.circle([12.09, -86.17], {
-             color: 'red',
-             fillColor: '#f03',
-             fillOpacity: 0.5,
-             radius: 2000
-         }).addTo(mymap);
-
-         L.polygon([
-             [12.409, -86.08],
-             [12.503, -86.06],
-             [12.61, -86.047]
-         ]).addTo(mymap);
-
-
+                    $(div).fullCalendar('destroy');
+                    $(div).fullCalendar({
+                        header: {
+                            left: 'prev,next',
+                            center: 'title',
+                            right: 'month,listMonth'
+                        },
+                        defaultView: 'listMonth',
+                        lang: 'es',
+                        events: events,
+                        editable: false,
+                        droppable: true, // this allows things to be dropped onto the calendar
+                        dragRevertDuration: 0,
+                        timeFormat: 'h(:mm)a',
+                        eventRender: function (event, element, view) {
+                            if (div == '#agenda-operaciones') {
+                                return $(
+                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
+                                    '<div>' + event.title + '</div>' +
+                                    '<strong>' + event.dias + '</strong>' +
+                                    '</div>');
+                            } else {
+                                return $(
+                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
+                                    '<div>' + event.title + '</div>' +
+                                    '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
+                                    '</div>');
+                            }
+                        },
+                    });
+                    $(div).fullCalendar('option', 'timezone', 'UTC');
+                },
+                error: function (error) {
+                    alert(JSON.stringify(error.d));
+                    console.log(error);
+                }
+            })
+        }
+        GenerateCalendar('/dtracking/obtenercitasperitaje/', '#agenda-peritaje');
+        GenerateCalendar('/dtracking/obtenercitasoperaciones/', '#agenda-operaciones');
     </script>
-
     <script type="text/javascript">
         {% get_data as data %}
         {% get_tipos_gestion as tipos %}
@@ -302,20 +332,22 @@
             };
         });
         function dashboard(data) {
-            var barColor = '#a3b6ba';
 
             function segColor(c) {
                 return {
-                    "RECEPCIONADO": "#ba0207",
-                    "ASIGNADO A EVALUADOR": "#e09617", "LEVANTAMIENTO REALIZADO": "#abab20",
-                    "EN REVISION FINAL DE INFORME": "#41ab5d", "TERMINADO": "#2167ab",
+                    "RECEPCIONADO": "#191919",
+                    "ASIGNADO A EVALUADOR": "#353537",
+                    "LEVANTAMIENTO REALIZADO": "#676369",
+                    "EN REVISION FINAL DE INFORME": "#9a9b9b",
+                    "TERMINADO": "#c4c5cd",
                 }[c.status];
             }
 
             function histoGram(fD, id) {
+                var ancho = $('#agenda-peritaje').css('width').replace("px", '');
                 var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
-                hGDim.w = 600 - hGDim.l - hGDim.r,
-                    hGDim.h = 250 - hGDim.t - hGDim.b;
+                hGDim.w = ancho - hGDim.l - hGDim.r,
+                    hGDim.h = 400 - hGDim.t - hGDim.b;
 
                 //create svg for histogram.
                 var hGsvg = d3.select(id).append("svg")
@@ -408,9 +440,9 @@
                             return hGDim.h - y(d.total);
                         })
                         .attr("fill", function (d) {
-                            if(color!=undefined){
+                            if (color != undefined) {
                                 return color;
-                            } else{
+                            } else {
                                 return d.color;
                             }
                         });
@@ -556,108 +588,61 @@
         }
         dashboard(data);
     </script>
-    <script src="/static/dtracking/bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/dtracking/fullcalendar/moment.min.js"></script>
-    <script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone.min.js"></script>
-    <script type="text/javascript" src="/static/dtracking/fullcalendar/fullcalendar.min.js"></script>
-    <script type="text/javascript" src="/static/dtracking/fullcalendar/es.js"></script>
+    {% comment %}
     <script type="text/javascript">
-        function GenerateCalendar(url, div) {
-            var events = [];
-            var data = {};
-            $.ajax({
-                type: "GET",
-                data: data,
-                url: url,
-                success: function (response) {
-                    if(div == "#agenda-operaciones"){
-                        $.each(response.programadas, function (i, v) {
-                            events.push({
-                                eventID: v.id,
-                                title: v.titulo,
-                                description: v.descripcion,
-                                start: moment(v.inicio),
-                                end: moment(v.fin),
-                                color: v.color,
-                                textColor: 'black',
-                                allDay: false,
-                                dias: v.dias,
-                                barra: v.barra,
-                                user: v.user,
-                            });
-                        });
-                        $.each(response.pendientes, function (i, v) {
-                            events.push({
-                                eventID: v.id,
-                                title: v.titulo,
-                                description: v.descripcion,
-                                start: moment(v.inicio),
-                                end: moment(v.fin),
-                                color: v.color,
-                                textColor: 'black',
-                                allDay: false,
-                                dias: v.dias,
-                                barra: v.barra,
-                                user: v.user,
-                            });
-                        });
 
-                    } else{
-                        $.each(response.programadas, function (i, v) {
-                            events.push({
-                                eventID: v.id,
-                                title: v.titulo,
-                                description: v.descripcion,
-                                start: moment(v.inicio),
-                                end: moment(v.fin),
-                                color: v.color,
-                                textColor: 'black',
-                                allDay: false,
-                                dias: v.dias,
-                                barra: v.barra,
-                                user: v.user,
-                            });
+        var mymap = L.map('mapid').setView([12.09, -86.16], 10);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+        }).addTo(mymap);
+
+        (function ($) {
+            $(document).ready(function () {
+                var d = new Date();
+                var data = {
+                    anio: d.getFullYear(),
+                    mes: (d.getMonth() + 1),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                };
+                $.ajax({
+                    url: "{% url "get_avaluos_posicion" %}",
+                    method: "POST",
+                    data: data,
+                    success: function (result) {
+                        $.each(result, function (key, value) {
+                            L.marker([value.latitude, value.longitude])
+                                .addTo(mymap)
+                                .bindPopup('<strong>Codigo: <strong>' + value.barra +
+                                    '<br><strong>Destinatario: <strong>' + value.destinatario +
+                                    '<br><strong>Direccion: <strong>' + value.direccion +
+                                    '<br><strong>Telefono: <strong>' + value.telefono +
+                                    '<br><strong>Estado: <strong>' + value.estado);
                         });
                     }
-                    $(div).fullCalendar('destroy');
-                    $(div).fullCalendar({
-                        header: {
-                            left: 'prev,next',
-                            center: 'title',
-                            right: 'month,listMonth'
-                        },
-                        defaultView: 'listMonth',
-                        lang: 'es',
-                        events: events,
-                        editable: false,
-                        droppable: true, // this allows things to be dropped onto the calendar
-                        dragRevertDuration: 0,
-                        timeFormat: 'h(:mm)a',
-                        eventRender: function (event, element, view) {
-                            if (div == '#agenda-operaciones') {
-                                return $(
-                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.title + '</div>' +
-                                    '<strong>' + event.dias + '</strong>' +
-                                    '</div>');
-                            } else {
-                                return $(
-                                    '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.title + '</div>' +
-                                    '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
-                                    '</div>');
-                            }
-                        },
-                    });
-                    $(div).fullCalendar('option', 'timezone', 'UTC');
-                },
-                error: function (error) {
-                    alert(JSON.stringify(error.d));
-                    console.log(error);
-                }
-            })
-        }
-        GenerateCalendar('/dtracking/obtenercitasperitaje/', '#agenda-peritaje');
-        GenerateCalendar('/dtracking/obtenercitasoperaciones/', '#agenda-operaciones');
+                });
+            });
+        })(grp.jQuery);
+
+
+        L.circle([12.09, -86.17], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 2000
+        }).addTo(mymap);
+
+        L.polygon([
+            [12.409, -86.08],
+            [12.503, -86.06],
+            [12.61, -86.047]
+        ]).addTo(mymap);
+
+
     </script>
+    {% endcomment %}
 {% endblock content %}
