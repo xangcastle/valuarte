@@ -112,64 +112,69 @@
         }
     </style>
     {% get_totales as t %}
+
+
+
     <div class="row">
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-gray"><i class="ion ion-android-add-circle"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Recepcionadas</span>
+                    <span class="info-box-number">{{ t.recepcionadas }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-gray"><i class="ion ion-android-warning"></i></span>
-
                 <div class="info-box-content">
                     <span class="info-box-text">Vencidas</span>
                     <span class="info-box-number">{{ t.vencidas }}</span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
         </div>
-        <!-- /.col -->
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="col-md-2 col-sm-6 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-gray"><i class="ion ion-android-stopwatch"></i></span>
-
                 <div class="info-box-content">
                     <span class="info-box-text">Para Hoy</span>
                     <span class="info-box-number">{{ t.para_hoy }}</span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
         </div>
-        <!-- /.col -->
-
-        <!-- fix for small devices only -->
         <div class="clearfix visible-sm-block"></div>
-
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="col-md-2 col-sm-6 col-xs-12">
             <div class="info-box">
-                <span class="info-box-icon bg-gray"><i class="ion ion-android-sunny"></i></span>
-
+                <span class="info-box-icon bg-gray"><i class="ion ion-android-color-palette"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">En Tiempo</span>
                     <span class="info-box-number">{{ t.en_tiempo }}</span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
         </div>
-        <!-- /.col -->
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-gray"><i class="ion ion-android-color-palette"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">En Firma</span>
+                    <span class="info-box-number">{{ t.en_firma }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-gray"><i class="ion ion-cash"></i></span>
-
                 <div class="info-box-content">
                     <span class="info-box-text">Proyección</span>
                     <span class="info-box-number">$ {{ t.ventas }}</span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
         </div>
-        <!-- /.col -->
     </div>
+
+
+
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
             <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
@@ -335,11 +340,11 @@
 
             function segColor(c) {
                 return {
-                    "RECEPCIONADO": "#191919",
-                    "ASIGNADO A EVALUADOR": "#353537",
-                    "LEVANTAMIENTO REALIZADO": "#676369",
-                    "EN REVISION FINAL DE INFORME": "#9a9b9b",
-                    "TERMINADO": "#c4c5cd",
+                    "RECEPCIONADO": "#969696",
+                    "ASIGNADO A EVALUADOR": "#540004",
+                    "LEVANTAMIENTO REALIZADO": "#54004f",
+                    "EN REVISION FINAL DE INFORME": "#000454",
+                    "TERMINADO": "#0c5403",
                 }[c.status];
             }
 

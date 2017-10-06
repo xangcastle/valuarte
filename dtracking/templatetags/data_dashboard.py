@@ -79,8 +79,10 @@ class Totals(template.Node):
         for_today = gs.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
         fecha_vence__day=today.day)
         for_today_list = for_today.values_list('id', flat=True)
+        recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0]).count()
         vencidas = []
         entiempo = []
+        en_firma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0]).count()
         for g in gs:
             if g.id not in for_today_list:
                 if g.dias_retrazo() > 0:
@@ -88,10 +90,12 @@ class Totals(template.Node):
                 else:
                     entiempo.append(g)
         data = dict()
+        data['recepcionadas'] = recepcionadas
         data['vencidas'] = len(vencidas)
         data['para_hoy'] = for_today.count()
         data['en_tiempo'] = len(entiempo)
         data['ventas'] = gs.filter(valor__isnull=False).aggregate(Sum('valor'))['valor__sum']
+        data['en_firma'] = en_firma
 
         context[self.varname] = data
         return ''
