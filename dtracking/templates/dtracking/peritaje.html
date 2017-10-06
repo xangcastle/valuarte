@@ -1,112 +1,100 @@
-{% extends 'dtracking/base.html' %}
+{% extends 'admin/base_site.html' %}
+
 {% load admin_urls static %}
-{% block Styles %}
-    <link rel="stylesheet" href="/static/dtracking/bootstrap-datepicker/css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.min.css">
-    <link rel="stylesheet" href='{% static 'izimodal/css/iziModal.min.css' %}' type="text/css">
-    <style>
-        #external-events {
-            float: left;
-            width: 90%;
-            padding: 0 10px;
-            border: 1px solid #ccc;
-            background: #eee;
-            text-align: left;
-        }
 
-        #external-events h4 {
-            font-size: 16px;
-            margin-top: 0;
-            padding-top: 1em;
-        }
 
-        #external-events .fc-event {
-            margin: 10px 0;
-            cursor: pointer;
-        }
-
-        #external-events p {
-            margin: 1.5em 0;
-            font-size: 11px;
-            color: #666;
-        }
-
-        #external-events p input {
-            margin: 0;
-            vertical-align: middle;
-        }
-
-        .hidden {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        span.direccion {
-            font-size: 0.8em;
-        }
-
-        #new-event {
-            float: right;
-            margin-top: -35px;
-        }
-        .btn-circle {
-            width: 30px;
-            height: 30px;
-            text-align: center;
-            padding: 6px 0;
-            font-size: 12px;
-            line-height: 1.428571429;
-            border-radius: 15px;
-          }
-    </style>
-{% endblock %}
-{% block Content %}
-    <div class="row">
-        <div class="col-xs-12 col-sm-3">
-            <div id='external-events'>
-                <h4>Avaluos sin Asignar!</h4>
-                <button id="new-event" class="btn btn-sm btn-warning" data-url="/admin/dtracking/gestion/add/?_popup=1">
-                    Nuevo
-                </button>
-                <div id="external-events-listing">
-                </div>
-            </div>
-            <div id='external-events'>
-                <div class="form-group">
-                    <label for="peritos">Peritos</label>
-                    <select class="form-control" id="peritos" aria-describedby="PeritosHelp"
-                            onchange="refreshCalender()">
-                        <option value="0">Todos</option>
-                        {% for perito in peritos %}
-                            <option value="{{ perito.user.id }}">{{ perito.user }}</option>
-                        {% endfor %}
-                    </select>
-                    <small id="PeritosHelp" class="form-text text-muted">Filtre aqui por perito asignado.</small>
-                </div>
-
-            </div>
-            <div id='external-events'>
-                <div>
-                    <h4>Leyenda</h4>
-                    <div style="background-color: #991957; color: white;">Vencidas <span
-                            style="float: right">{{ total_vencidas }}</span></div>
-                    <br>
-                    <div style="background-color: #4d0a54; color: white;">Para Hoy <span
-                            style="float: right">{{ total_hoy }}</span></div>
-                    <br>
-                    <div style="background-color: #46991a; color: white;">Vigentes <span
-                            style="float: right">{{ total_vigentes }}</span></div>
-                    <br>
-                </div>
-            </div>
-            <div id='external-events'>
-                <div>
-                    <h4>Reportes</h4>
-                    <div class="btn btn-info">Reporte 1 </div>
-                    <br>
+{% block content %}
+    <div id="grp-content-container">
+        <div class="g-d-c">
+            <div class="g-d-6 g-d-l">
+                <div class="grp-module" id="grp-recent-actions-module">
+                    <h2>Marcadores</h2>
+                    <div class="grp-module">
+                        <h3>Por Estado</h3>
+                        <ul class="grp-listing-small">
+                            <div style="background-color: #991957; color: white;">Vencidas <span
+                                    style="float: right">{{ total_vencidas }}</span></div>
+                            <br>
+                            <div style="background-color: #4d0a54; color: white;">Para Hoy <span
+                                    style="float: right">{{ total_hoy }}</span></div>
+                            <br>
+                            <div style="background-color: #46991a; color: white;">Vigentes <span
+                                    style="float: right">{{ total_vigentes }}</span></div>
+                            <br>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="g-d-c">
+            <div class="g-d-6 g-d-l">
+                <div class="grp-module" id="grp-recent-actions-module">
+                    <ul>
+                       <li><h2>Avaluos sin Asignar</h2></li>
+                        <li class="grp-float-right"><input type="submit" id="new-event" class="grp-button grp-default" value="Nuevo"></input></li>
+                    </ul>
+
+                    <div class="grp-module">
+                        <h3>No Asignados</h3>
+                        <ul class="grp-listing-small" id="external-events-listing">
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="g-d-c">
+            <div class="g-d-6 g-d-l">
+                <div class="grp-module" id="grp-recent-actions-module">
+                    <h2>Leyenda</h2>
+                    <div class="grp-module">
+                        <h3>No Asignados</h3>
+                        <ul class="grp-listing-small">
+
+                            <li id="external-events-listing" class="grp-row grp-change-link">
+
+                                <a href="/admin/importaciones/importacion/64/change/">Sillas con Leadex</a>
+
+                                <span class="grp-font-color-quiet">Importacion</span>
+                            </li>
+
+                            <a href="/admin/importaciones/importacion/71/change/">Materiales Para Cortinas</a>
+
+                            <span class="grp-font-color-quiet">Importacion</span>
+                            </li>
+
+
+                            <div id='external-events'>
+                                <div class="form-group">
+                                    <label for="peritos">Peritos</label>
+                                    <select class="form-control" id="peritos" aria-describedby="PeritosHelp"
+                                            onchange="refreshCalender()">
+                                        <option value="0">Todos</option>
+                                        {% for perito in peritos %}
+                                            <option value="{{ perito.user.id }}">{{ perito.user }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small id="PeritosHelp" class="form-text text-muted">Filtre aqui por perito
+                                        asignado.
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="row">
         <div class="col-xs-12 col-sm-9">
             <div id="calender"></div>
             <div id="myModal" class="modal fade" role="dialog">
@@ -123,119 +111,23 @@
                     </div>
                 </div>
             </div>
-
-            <div id="modal-default"
-                 data-izimodal-fullscreen="true"
-                 data-izimodal-title="Estado de su gestion"
-                 data-izimodal-subtitle="Aquí puede informarse del proceso de su avaluo"
-                 data-izimodal-icon="icon-home"
-                 aria-hidden="false"
-                 aria-labelledby="modal-default"
-                 role="dialog" class="iziModal"
-                 data-izimodal-group="grupo1"
-                 data-izimodal-loop="true"
-
-                 style="border-bottom: 3px solid rgb(136, 160, 185);
-                 overflow: hidden; z-index: 999;
-                 border-radius: 3px; max-width: 700px;
-                 display: None; height: 459px;">
-                <div class="iziModal-content">
-                    <div style="padding: 20px">
-                        <div class="row">
-                          <div class="col-sm-12 col-xs-12">
-                              <a id="ficha" title="Generar Proforma" href="#" class="btn btn-primary btn-circle show_atachments" url="{% url 'gestion_proforma' %}?gestion=" data-url=""
-                                 data-name="Generar Proforma">
-                                 <i class="ion-pie-graph"></i>
-                              </a>
-                              <a id="proforma" title="Generar Ficha"  href="#" class="btn btn-primary btn-circle show_atachments" url="{% url 'generar_asignacion' %}?documento=" data-url=""
-                                 data-name="Generar Proforma">
-                                  <i class="ion-clipboard"></i>
-                              </a>
-                           </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
-                            <div class="col-sm-8 col-xs-12">
-                              <strong id="codigo_gestion">3527364</strong>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
-                            <div class="col-sm-8 col-xs-12">
-                              <strong id="cliente_gestion">José Williams Garcia</strong>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Tipo de Avaluo:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="tipo_gestion">Avaluo de Automovil</strong></div>
-                        </div>
-                        <table class="table table-responsive table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Estado</th>
-                                <th>Ejecutivo</th>
-                                <th>Anexo</th>
-                            </tr>
-                            </thead>
-                            <tbody id="logs">
-                            <tr>
-                                <td>24/01/2017</td>
-                                <td>RECEPCIONADO</td>
-                                <td>Paola</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>25/01/2017</td>
-                                <td>ASIGNADO A EVALUADOR</td>
-                                <td>Paola</td>
-                                <td>Tecnico evaluador Cesar Ramirez, fecha programada 29/01/2017</td>
-                            </tr>
-                            <tr>
-                                <td>29/01/2017</td>
-                                <td>LEVANTAMIENTO REALIZADO</td>
-                                <td>CRamirez</td>
-                                <td>
-                                    <a href="#">Foto 1</a><br>
-                                    <a href="#">Foto 2</a><br>
-                                    <a href="#">Foto 3</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>03/02/2017</td>
-                                <td>EN REVISION FINAL DE INFORME</td>
-                                <td>Paola</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>04/02/2017</td>
-                                <td>TERMINADO</td>
-                                <td>Paola</td>
-                                <td><a href="#">Descargar Informe</a></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-            </div>
         </div>
     </div>
 
-{% endblock %}
-{% block Scripts %}
 
-    <script src="/static/dtracking/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="/static/dtracking/bower_components/bootstrap-timepicker/jquery.datetimepicker.full.js"></script>
+
+
+    <script type="text/javascript" src="{% static '/moment/min/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/fullcalendar/dist/fullcalendar.js' %}"></script>
+    <script type="text/javascript" src="{% static '/fullcalendar/dist/locale/es.js' %}"></script>
     <script type="text/javascript" src='{% static 'izimodal/js/iziModal.min.js' %}'></script>
     <script>
-    var atachments_info = function(){
-       console.log(this);
-        window.open(
-            $(this).data('url'),
-            $(this).data('name'),
-            "width=600mm, height=500mm,  status=no, menubar=no, location=no");
-    };
+        var atachments_info = function () {
+            window.open(
+                $(this).data('url'),
+                $(this).data('name'),
+                "width=600mm, height=500mm,  status=no, menubar=no, location=no");
+        };
         function ver_gestion(gestion) {
             $.ajax({
                 url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
@@ -247,17 +139,16 @@
                             var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
                             tab.append(rw);
                         });
-                        var url = $("#ficha").attr('url')+result.id_gestion
-                        $("#ficha").attr('data-url',url);
+                        var url = $("#ficha").attr('url') + result.id_gestion
+                        $("#ficha").attr('data-url', url);
 
-                        url = $("#proforma").attr('url')+result.id_gestion
-                       $("#proforma").attr('data-url',url);
+                        url = $("#proforma").attr('url') + result.id_gestion
+                        $("#proforma").attr('data-url', url);
                         $("#codigo_gestion").html(result.codigo_gestion);
                         $("#cliente_gestion").html(result.cliente_gestion);
                         $("#tipo_gestion").html(result.tipo_gestion);
                         $("#modal-default").iziModal({zindex: 9999});
                         $("#modal-default").iziModal('open');
-
 
 
                         $('.show_atachments').on('click', atachments_info);
@@ -285,32 +176,19 @@
                     }
                 });
         };
-
-        var validar_fecha_recepcion = function ()
-        {
-            var file = document.getElementById('id_ficha_inspeccion') ;
-            if($('#id_realizada').is(':checked') || file.files.length> 0 )
-            {
-              $("#id_fecha_recepcion").addClass('requerido','');
-            }
-            else
-            {
-              $("#id_fecha_recepcion").removeClass('requerido','');
-            }
-        }
         var cargar_usos_gestion = function () {
-                    $.ajax('/dtracking/get_usos_gestion/',
-                        {
-                            type: 'POST',
-                            data: {'fin': $(this).val()},
-                            success: function (result) {
-                                $('#id_uso_gestion').empty();
-                                $.each(result, function (i, o) {
-                                    $('#id_uso_gestion').append("<option value=" + o.id + ">" + o.name + "</option>");
-                                });
-                            }
+            $.ajax('/dtracking/get_usos_gestion/',
+                {
+                    type: 'POST',
+                    data: {'fin': $(this).val()},
+                    success: function (result) {
+                        $('#id_uso_gestion').empty();
+                        $.each(result, function (i, o) {
+                            $('#id_uso_gestion').append("<option value=" + o.id + ">" + o.name + "</option>");
                         });
-                }
+                    }
+                });
+        }
         var cotizar = function () {
             window.open(
                 $(this).data('url'),
@@ -384,14 +262,11 @@
                     var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
                     $("#id_fecha_asignacion").datetimepicker('update', fecha);
                     $("#id_fecha_recepcion").datetimepicker('update', fecha);
-                    $(".form_entrada").attr('enctype',"multipart/form-data");
+                    $(".form_entrada").attr('enctype', "multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
-                    $('#id_realizada').on('change', validar_fecha_recepcion);
-                    $('#id_ficha_inspeccion').on('change', validar_fecha_recepcion);
                 }
             });
         }
-
         var newEvent = function () {
             var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones&app_label=dtracking&model=gestion";
             modal = $("#myModal");
@@ -430,35 +305,17 @@
             });
         }
         var createRow = function (v) {
-            var row = '<span class="btn btn-sm btn-success cotizar" data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion=' + v.id + '" style="position: relative;float: right;z-index: 999;"> Cotizar</span>' +
-                '<dic class="fc-event" data-idevent="' + v.id + '">' +
+            var row = '<li class="grp-row grp-change-link fc-event" data-idevent="' + v.id + '">' +
                 '<input class="eventid" type="hidden" value="' + v.id + '">' +
-                '<span>Codigo: ' + v.barra + '</span><br>' +
-                '<span>Cliente: ' + v.destinatario + '</span><br>' +
-                '<span>Telefono: ' + v.telefono + '</span><br>' +
-                '<span>Direccion: </span>' +
-                '<span class="direccion">' + v.direccion + '</span><br></div>';
-            console.log(row);
+                '<a href="">' + v.barra + '</a>' +
+                '<span class="grp-font-color-quiet">' + v.destinatario + '</span>' +
+                '<span class="grp-font-color-quiet">' + v.telefono + '</span>' +
+                '<span class="grp-font-color-quiet">' + v.direccion + '</span>' +
+                '<span class="btn btn-sm btn-success cotizar" ' +
+                'data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion=' + v.id +
+                '" style="position: relative;float: right;z-index: 999;"> Cotizar</span></li>';
             return row;
         }
-        function validar_campos_vacios(form)
-            {
-              var error = false ;
-              $(form).find('.requerido').each(function(){
-                    if (this.value.length == 0) {
-
-                       error = true;
-                       if(this.type =="file")
-                          this.parentElement.style ="color:red"
-                      $(this).css("border-color", "#D8000C");
-                    } else {
-                      $(this).css("border-color", "#666");
-                      if(this.type =="file")
-                         this.parentElement.style ="color:white"
-                    }
-                });
-              return error;
-            }
         function refreshCalender() {
             var events = [];
             var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
@@ -578,7 +435,6 @@
                 minLength: 2,
                 source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
                 select: function (i, o) {
-                    console.log(o);
                     ver_gestion(o.item.obj.barra);
                 }
             });
@@ -589,15 +445,13 @@
             var url = formu.attr('action');
             var formData = new FormData($(formu)[0]);
             var element = this;
-            if(validar_campos_vacios(formu))
-               return false;
             $.ajax({
                 type: "POST",
-                url : url,
+                url: url,
                 cache: false,
                 contentType: false,
                 processData: false,
-                data : formData,
+                data: formData,
                 success: function (e) {
                     if (typeof(e.error) != "undefined" && e.error != "")
                         new PNotify({
@@ -637,7 +491,6 @@
         });
 
         $(document).ready(function () {
-            jQuery.datetimepicker.setLocale('es');
             refreshCalender();
             $()
 
@@ -654,7 +507,8 @@
                 $(this).select();
             });
 
-        })//end ready
+        });
 
     </script>
+
 {% endblock %}
