@@ -44,7 +44,7 @@ class gestion_admin(ImportExportModelAdmin):
     'municipio__name', 'barrio__name', 'zona__name')
 
     fieldsets = (
-        ('informacion del cliente', {
+        ('Informacion del cliente', {
             'classes': ('grp-collapse grp-open',),
             'fields': (('fecha', 'barra', 'status_gestion'),
                        ('tipo_gestion', 'fin_gestion', 'uso_gestion'),
@@ -53,7 +53,7 @@ class gestion_admin(ImportExportModelAdmin):
                        'direccion', 'observaciones',
                        )
         }),
-        ('informacion adicional', {
+        ('Informacion adicional', {
             'classes': ('grp-collapse grp-open',),
             'fields': (
                 ('contacto', 'contacto_telefono', 'direccion_envio'),
@@ -63,7 +63,7 @@ class gestion_admin(ImportExportModelAdmin):
             )
         }),
 
-        ('peritaje y operaciones', {
+        ('Peritaje y Operaciones', {
             'classes': ('grp-collapse grp-open',),
             'fields': (
                 ('user', 'fecha_asignacion', 'realizada'),
