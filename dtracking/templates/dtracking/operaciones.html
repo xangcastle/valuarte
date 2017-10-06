@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}"/>
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}" media="print">
     <link rel="stylesheet" href="{% static 'izimodal/css/iziModal.min.css' %}" type="text/css">
+      <link rel="stylesheet" href="{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -197,6 +198,19 @@
                 }
             });
         }
+        var cargar_usos_gestion = function () {
+            $.ajax('/dtracking/get_usos_gestion/',
+                {
+                    type: 'POST',
+                    data: {'fin': $(this).val()},
+                    success: function (result) {
+                        $('#id_uso_gestion').empty();
+                        $.each(result, function (i, o) {
+                            $('#id_uso_gestion').append("<option value=" + o.id + ">" + o.name + "</option>");
+                        });
+                    }
+                });
+        }
         var showEvent = function (id) {
             var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-armador-revizada&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
@@ -206,14 +220,14 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
-                    $("#id_fecha_asignacion").datetimepicker({
+                    $("#id_fecha_asignacion").datetimepickerByGiro({
                         format: 'd/m/Y H:m',
                         datepicket: false,
                         timepicker: true,
                         minView: 1,
                         maxView: 1,
                     });
-                    $("#id_fecha_recepcion").datetimepicker({
+                    $("#id_fecha_recepcion").datetimepickerByGiro({
                         format: 'd/m/Y H:m',
                         datepicket: false,
                         timepicker: true,
@@ -221,8 +235,8 @@
                         maxView: 1,
                     });
                     var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
-                    $("#id_fecha_asignacion").datetimepicker('update', fecha);
-                    $("#id_fecha_recepcion").datetimepicker('update', fecha);
+                    $("#id_fecha_asignacion").datetimepickerByGiro('update', fecha);
+                    $("#id_fecha_recepcion").datetimepickerByGiro('update', fecha);
                     $(".form_entrada").attr('enctype',"multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }
