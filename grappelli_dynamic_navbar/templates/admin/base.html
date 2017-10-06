@@ -26,7 +26,7 @@
         <!-- Search Form -->
         <form id="grp-changelist-search-form" action="" method="get" novalidate="">
             <input type="text" name="consulta" id="id_consulta" class="grp-search-field-navbar" value="">
-            <button type="submit" value="" class="grp-search-button"></button>
+            <button type="button" value="" class="grp-search-button" id="search_btn" style="margin-left: -25px;"></button>
         </form>
     </div></span></h1>
     <div id="modal-default"
@@ -161,6 +161,19 @@
 
                 $('#id_consulta').on('keyup', completeEvent);
 
+
+
+                $('#search_btn').click(function(e) {
+                      var e = jQuery.Event("keydown");
+                       e.which = 50; // # Some key code value
+                       $("#id_consulta").trigger(e);
+
+                      var  l = jQuery.Event("keyup");
+                        l.which = 50; // # Some key code value
+                        $("#id_consulta").trigger(l);
+                        $('#id_consulta').trigger("focus");
+                        $('#id_consulta').trigger("change");
+                  });
 
             });
 
