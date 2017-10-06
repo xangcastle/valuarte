@@ -433,13 +433,11 @@ def programar_gestion(request):
         gestion.user = User.objects.get(pk=int(id_usuario))
 
     realizada = request.POST.get('realizada', None)
-    try:
-        gestion.fecha_recepcion = timezone.make_aware(
-            datetime.strptime(request.POST.get('fecha_recepcion', None)[0:16], '%Y/%m/%d %H:%M'),
-            timezone.get_default_timezone())
-    except:
-        pass
-    if realizada:
+
+    gestion.fecha_recepcion = timezone.make_aware(
+        datetime.strptime(request.POST.get('fecha_recepcion', None)[0:16], '%d/%m/%Y %H:%M'),
+        timezone.get_default_timezone())
+    if realizada == 'on':
         gestion.realizada = True
     try:
         gestion.ficha_inspeccion = request.FILES['ficha_inspeccion']
