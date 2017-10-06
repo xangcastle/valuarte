@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}"/>
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}" media="print">
     <link rel="stylesheet" href="{% static 'izimodal/css/iziModal.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.css' %}" type="text/css">
     <style>
         .container-fluid {
             margin-top: 20px;
@@ -187,16 +188,13 @@
         </div>
     </div>
 
-
-
-
     <script type="text/javascript" src="{% static '/popper.js/dist/umd/popper.js' %}"></script>
     <script type="text/javascript" src="{% static '/bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static '/moment/min/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static '/fullcalendar/dist/fullcalendar.js' %}"></script>
     <script type="text/javascript" src="{% static '/fullcalendar/dist/locale/es.js' %}"></script>
     <script type="text/javascript" src="{% static '/pnotify/dist/pnotify.js' %}"></script>
-    <script type="text/javascript" src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
+    <script type="text/javascript" src="{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}"></script>
 
     <script>
         var atachments_info = function () {
@@ -322,14 +320,14 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
-                    $("#id_fecha_asignacion").datetimepicker({
+                    $("#id_fecha_asignacion").datetimepickerByGiro({
                         format: 'd/m/Y H:m',
                         datepicket: false,
                         timepicker: true,
                         minView: 1,
                         maxView: 1,
                     });
-                    $("#id_fecha_recepcion").datetimepicker({
+                    $("#id_fecha_recepcion").datetimepickerByGiro({
                         format: 'd/m/Y H:m',
                         datepicket: false,
                         timepicker: true,
@@ -337,8 +335,8 @@
                         maxView: 1,
                     });
                     var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
-                    $("#id_fecha_asignacion").datetimepicker('update', fecha);
-                    $("#id_fecha_recepcion").datetimepicker('update', fecha);
+                    $("#id_fecha_asignacion").datetimepickerByGiro('update', fecha);
+                    $("#id_fecha_recepcion").datetimepickerByGiro('update', fecha);
                     $(".form_entrada").attr('enctype', "multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }
@@ -368,15 +366,16 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
-                    $("#id_fecha").datetimepicker({
+                    $("#id_fecha").datetimepickerByGiro({
                         format: 'd/m/Y',
                         timepicker: false,
                         minView: 1,
                         maxView: 0,
                     });
+
                     $('#id_departamento').on('change', cargar_municipios);
                     var fecha = moment($("#id_fecha").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
-                    $("#id_fecha").datetimepicker('update', fecha);
+                    $("#id_fecha").datetimepickerByGiro('update', fecha);
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }
             });
