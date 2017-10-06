@@ -198,7 +198,6 @@
 
 
                 $('#search_btn').click(function(e) {
-                      //$('#id_consulta').focus();
                       var e = jQuery.Event("keydown");
                        e.which = 50; // # Some key code value
                        $("#id_consulta").trigger(e);
@@ -208,8 +207,6 @@
                         $("#id_consulta").trigger(l);
                         $('#id_consulta').trigger("focus");
                         $('#id_consulta').trigger("change");
-
-                      //$('#ui-id-1').show();
                   });
 
             });
