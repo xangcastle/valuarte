@@ -3,73 +3,42 @@
 {% load admin_urls static %}
 
 {% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.css' %}"/>
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}"/>
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}" media="print">
 {% endblock %}
 
 {% block content %}
     <div id="grp-content-container">
-        <div class="g-d-c">
-            <div class="g-d-6 g-d-l">
-                <div class="grp-module" id="grp-recent-actions-module">
-                    <h2>Marcadores</h2>
-                    <div class="grp-module">
-                        <h3>Por Estado</h3>
-                        <ul class="grp-listing-small">
-                            <div style="background-color: #991957; color: white;">Vencidas <span
-                                    style="float: right">{{ total_vencidas }}</span></div>
-                            <br>
-                            <div style="background-color: #4d0a54; color: white;">Para Hoy <span
-                                    style="float: right">{{ total_hoy }}</span></div>
-                            <br>
-                            <div style="background-color: #46991a; color: white;">Vigentes <span
-                                    style="float: right">{{ total_vigentes }}</span></div>
-                            <br>
-                        </ul>
+    <div class="row">
+        <div class="col-md-3">
+            <div>
+                <div >
+                    <div class="grp-module" id="grp-recent-actions-module">
+                        <h2>Marcadores</h2>
+                        <div class="grp-module">
+                            <h3>Por Estado</h3>
+                            <ul class="grp-listing-small">
+                                <div style="background-color: #6a696b; color: white;">Vencidas <span
+                                        style="float: right">{{ total_vencidas }}</span></div>
+                                <br>
+                                <div style="background-color: #6a696b; color: white;">Para Hoy <span
+                                        style="float: right">{{ total_hoy }}</span></div>
+                                <br>
+                                <div style="background-color: #6a696b; color: white;">Vigentes <span
+                                        style="float: right">{{ total_vigentes }}</span></div>
+                                <br>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="g-d-c">
-            <div class="g-d-6 g-d-l">
-                <div class="grp-module" id="grp-recent-actions-module">
-                    <ul>
-                       <li><h2>Avaluos sin Asignar</h2></li>
-                        <li class="grp-float-right"><input type="submit" id="new-event" class="grp-button grp-default" value="Nuevo"></input></li>
-                    </ul>
-
-                    <div class="grp-module">
-                        <h3>No Asignados</h3>
-                        <ul class="grp-listing-small" id="external-events-listing">
-
-                        </ul>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="g-d-c">
-            <div class="g-d-6 g-d-l">
-                <div class="grp-module" id="grp-recent-actions-module">
-                    <h2>Leyenda</h2>
-                    <div class="grp-module">
-                        <h3>No Asignados</h3>
-                        <ul class="grp-listing-small">
-
-                            <li id="external-events-listing" class="grp-row grp-change-link">
-
-                                <a href="/admin/importaciones/importacion/64/change/">Sillas con Leadex</a>
-
-                                <span class="grp-font-color-quiet">Importacion</span>
-                            </li>
-
-                            <a href="/admin/importaciones/importacion/71/change/">Materiales Para Cortinas</a>
-
-                            <span class="grp-font-color-quiet">Importacion</span>
-                            </li>
-
-
-                            <div id='external-events'>
+            <div>
+                <div>
+                    <div class="grp-module" id="grp-recent-actions-module">
+                        <h2>Peritos</h2>
+                        <div class="grp-module">
+                            <ul class="grp-listing-small">
                                 <div class="form-group">
                                     <label for="peritos">Peritos</label>
                                     <select class="form-control" id="peritos" aria-describedby="PeritosHelp"
@@ -83,34 +52,36 @@
                                         asignado.
                                     </small>
                                 </div>
-
-                            </div>
-
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div >
+                    <div class="grp-module" id="grp-recent-actions-module">
+                        <ul>
+                            <li><h2>Avaluos sin Asignar</h2></li>
+                            <li class="grp-float-right">
+                                <input type="submit" id="new-event" class="grp-button grp-default" value="Nuevo">
+                            </li>
                         </ul>
-
+                        <div class="grp-module">
+                            <h3>No Asignados</h3>
+                            <ul class="grp-listing-small" id="external-events-listing"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-    </div>
-
-
-
-    <div class="row">
-        <div class="col-xs-12 col-sm-9">
-            <div id="calender"></div>
-            <div id="myModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-
-                            <h7 class="modal-title"><span id="eventTitle"></span></h7>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-
+        <div class="col-md-9">
+            <div >
+                <div >
+                    <div class="grp-module" id="grp-recent-actions-module">
+                        <h2>Agenda de Operaciones</h2>
+                        <div class="grp-module">
+                            <h3>En Proceso</h3>
+                            <div id="calender"></div>
                         </div>
                     </div>
                 </div>
@@ -120,11 +91,27 @@
 
 
 
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h7 class="modal-title"><span id="eventTitle"></span></h7>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="text/javascript" src="{% static '/moment/min/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static '/fullcalendar/dist/fullcalendar.js' %}"></script>
     <script type="text/javascript" src="{% static '/fullcalendar/dist/locale/es.js' %}"></script>
-    <script type="text/javascript" src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
+    <script type="text/javascript"
+            src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
     <script>
         var atachments_info = function () {
             window.open(

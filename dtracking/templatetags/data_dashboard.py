@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..models import *
+from django.db.models import Sum
 from datetime import datetime
 from django import template
 
@@ -90,7 +91,7 @@ class Totals(template.Node):
         data['vencidas'] = len(vencidas)
         data['para_hoy'] = for_today.count()
         data['en_tiempo'] = len(entiempo)
-        data['ventas'] = 0
+        data['ventas'] = gs.filter(valor__isnull=False).aggregate(Sum('valor'))['valor__sum']
 
         context[self.varname] = data
         return ''
