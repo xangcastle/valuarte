@@ -158,17 +158,21 @@ BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components/')
 BOWER_PATH = '/usr/local/bin/bower'
 
 BOWER_INSTALLED_APPS = [
-    'Ionicons#2.0.1',
-    'bootstrap#4.0.0-beta',
-    'd3#3.1.1',
-    'fullcalendar#3.5.1',
-    'izimodal#1.5.1',
-    'jquery#2.2.4',
-    'jquery-ui#1.12.1',
-    'leaflet#1.2.0',
-    'moment#2.18.1',
-    'popper.js#1.12.5'
+     'Ionicons#2.0.1',
+     'bootstrap#4.0.0-beta',
+     'd3#3.1.1',
+     'font-awesome#4.7.0',
+     'fullcalendar#3.5.1',
+     'izimodal#1.5.1',
+     'jquery#2.2.4',
+     'jquery-datetime-picker-bygiro#5ee6dfc88f9a4bdb7cc17513b4e78db415c3c658',
+     'jquery-ui#1.12.1',
+     'leaflet#1.2.0',
+     'moment#2.18.1',
+     'pnotify#3.2.1',
+     'popper.js#1.12.5'
 ]
+
 
 WKHTMLTOPDF_CMD_OPTIONS = {
     'quiet': True,
