@@ -39,16 +39,16 @@
             height: 500px;
         }
 
-        #dashboard {
-            float: right;
+        #barras {
+            float: top;
         }
 
         #tabla {
-            float: left;
+            float: bottom;
         }
 
         #pie {
-            float: left;
+            margin: 1em 10%;
         }
 
         .legend {
@@ -59,9 +59,9 @@
         }
 
         .legend td {
-            padding: 4px 5px;
-            vertical-align: bottom;
-            font-size: 20px;
+            padding: 3px 4px;
+            vertical-align: middle;
+            font-size: 8px;
         }
 
         .legendFreq, .legendPerc {
@@ -114,117 +114,137 @@
     {% get_totales as t %}
 
     <div class="row">
-        <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-gray">
-                <div class="inner">
-                    <h3>{{ t.recepcionadas }}</h3>
-                    <p>Recepcionadas</p>
+        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+
+            <div class="row">
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>{{ t.recepcionadas }}</h3>
+                            <p>Avaluos Solicitados</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-add-circle"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-android-add-circle"></i>
+                <div class="clearfix visible-sm-block"></div>
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>{{ t.agendadas }}</h3>
+                            <p>Inspecciones Agendada</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion-android-car"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
                 </div>
-                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                <div class="clearfix visible-sm-block"></div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>{{ t.en_tiempo }}</h3>
+                            <p>En Armado</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion-person-stalker"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>{{ t.vencidas }}</h3>
+                            <p>Informes Atrasados</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-warning"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>{{ t.para_hoy }}</h3>
+                            <p>Para Hoy</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-stopwatch"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>{{ t.en_firma }}</h3>
+                            <p>En Firma</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-create"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+                {% comment %}<div class="col-lg-4 col-xs-6">
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>${{ t.ventas }}</h3>
+                            <p>Proyección</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-cash"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>{% endcomment %}
+
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                    <div id="barras"></div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <div id="pie"></div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <div id="tabla"></div>
+                </div>
             </div>
         </div>
-        <div class="clearfix visible-sm-block"></div>
-
-        <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-gray">
-                <div class="inner">
-                    <h3>{{ t.agendadas }}</h3>
-                    <p>Inspecciones Pendientes</p>
-                </div>
-                <div class="icon">
-                    <i class="ion-android-car"></i>
-                </div>
-                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="clearfix visible-sm-block"></div>
-    </div>
-
-    <div class="row">
-
-        <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-gray">
-                <div class="inner">
-                    <h3>{{ t.en_tiempo }}</h3>
-                    <p>En Armado</p>
-                </div>
-                <div class="icon">
-                    <i class="ion-person-stalker"></i>
-                </div>
-                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="clearfix visible-sm-block"></div>
-
-        <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-gray">
-                <div class="inner">
-                    <h3>{{ t.vencidas }}</h3>
-                    <p>Retrasadas</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-android-warning"></i>
-                </div>
-                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="clearfix visible-sm-block"></div>
-
-        <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-gray">
-                <div class="inner">
-                    <h3>{{ t.para_hoy }}</h3>
-                    <p>Para Hoy</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-android-stopwatch"></i>
-                </div>
-                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="clearfix visible-sm-block"></div>
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-gray">
-                <div class="inner">
-                    <h3>{{ t.en_firma }}</h3>
-                    <p>En Firma</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-android-create"></i>
-                </div>
-                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="clearfix visible-sm-block"></div>
-
-        <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-gray">
-                <div class="inner">
-                    <h3>${{ t.ventas }}</h3>
-                    <p>Proyección</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-cash"></i>
-                </div>
-                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="clearfix visible-sm-block"></div>
-
     </div>
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
             <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
-                <h3><a href="{% url 'peritaje' %}">Agenda de Peritaje</a></h3>
+                <h3><a href="{% url 'peritaje' %}">Agenda de Logistica</a></h3>
                 <div id="agenda-peritaje"></div>
             </div>
         </div>
@@ -235,28 +255,6 @@
             </div>
         </div>
     </div>
-
-
-    <div class="row">
-        <div id="dashboard" class="">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                    <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
-                        <div id="barras"></div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                    <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
-                        <div id="tabla"></div>
-                        <div id="pie"></div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 
 
     <script type="text/javascript">
@@ -404,7 +402,7 @@
                 var ancho = $('#agenda-peritaje').css('width').replace("px", '');
                 var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
                 hGDim.w = ancho - hGDim.l - hGDim.r,
-                    hGDim.h = 400 - hGDim.t - hGDim.b;
+                    hGDim.h = 200 - hGDim.t - hGDim.b;
 
                 //create svg for histogram.
                 var hGsvg = d3.select(id).append("svg")
@@ -590,8 +588,8 @@
                 var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
 
                 // create the first column for each segment.
-                tr.append("td").append("svg").attr("width", '25').attr("height", '25').append("rect")
-                    .attr("width", '25').attr("height", '25')
+                tr.append("td").append("svg").attr("width", '15').attr("height", '15').append("rect")
+                    .attr("width", '15').attr("height", '15')
                     .attr("fill", function (d) {
                         return segColor(d);
                     });
