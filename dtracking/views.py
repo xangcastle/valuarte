@@ -17,6 +17,7 @@ from django.core.mail import EmailMessage
 from datetime import timedelta
 from datetime import datetime
 from email.utils import parsedate_tz
+from django.utils import timezone
 
 
 class barrios_huerfanos(TemplateView):

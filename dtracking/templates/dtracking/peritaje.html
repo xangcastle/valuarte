@@ -91,7 +91,7 @@
 {% endblock %}
 
 {% block content %}
-    <div>
+
     <div class="row">
         <div class="col-md-3 col-xs-3 col-sm-3">
             <div>
@@ -504,16 +504,20 @@
                     ProgramEvent(id, date, null, null);
                     setTimeout(function () {
                         showEvent(id);
-                    }, 2000);
+                    }, 1000);
                 },
-                evenDropStop: function () {
-                    refreshCalender();
+                eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
+                    var d = new Date(event.start)
+                    ProgramEvent(event.eventID, event.start, null, null);
+                    event.start += delta;
+                    new PNotify({
+                            title: 'Reprogramación !',
+                            text: 'Visita reprogramada para ' + d.toLocaleDateString('UTC') + '. Perito de campo ' + event.user,
+                            type: 'warning',
+                            styling: 'bootstrap3'
+                        });
                 },
                 eventRender: function (event, element, view) {
-                    if (event.changing) {
-                        event.changing = false;
-                        ProgramEvent(event.eventID, event.start, null, null);
-                    }
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                         event.barra + '<br> ' +
@@ -521,20 +525,6 @@
                         '<small>' + event.description + '</small><br> ' +
                         '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
                         '</div>');
-                },
-                eventDragStop: function (event, jsEvent, ui, view) {
-
-                    makeEventsDraggable();
-                },
-                eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                    makeEventsDraggable();
-                },
-                viewRender: function () {
-                    makeEventsDraggable();
-                },
-                eventDragStart: function (event, jsEvent, ui, view) {
-                    event.changing = true;
-                    dragged = [calendar, event];
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     showEvent(calEvent.eventID);
