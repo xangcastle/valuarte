@@ -80,6 +80,7 @@ class Totals(template.Node):
         fecha_vence__day=today.day)
         for_today_list = for_today.values_list('id', flat=True)
         recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0]).count()
+        agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0]).count()
         vencidas = []
         entiempo = []
         en_firma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0]).count()
@@ -90,6 +91,7 @@ class Totals(template.Node):
                 else:
                     entiempo.append(g)
         data = dict()
+        data['agendadas'] = agendadas
         data['recepcionadas'] = recepcionadas
         data['vencidas'] = len(vencidas)
         data['para_hoy'] = for_today.count()

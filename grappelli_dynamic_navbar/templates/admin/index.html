@@ -113,65 +113,130 @@
     </style>
     {% get_totales as t %}
 
-
-
     <div class="row">
-        <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-gray"><i class="ion ion-android-add-circle"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Recepcionadas</span>
-                    <span class="info-box-number">{{ t.recepcionadas }}</span>
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-gray">
+                <div class="inner">
+                    <h3>{{ t.recepcionadas }}</h3>
+                    <p>Recepcionadas</p>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-gray"><i class="ion ion-android-warning"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Vencidas</span>
-                    <span class="info-box-number">{{ t.vencidas }}</span>
+                <div class="icon">
+                    <i class="ion ion-android-add-circle"></i>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-gray"><i class="ion ion-android-stopwatch"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Para Hoy</span>
-                    <span class="info-box-number">{{ t.para_hoy }}</span>
-                </div>
+                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="clearfix visible-sm-block"></div>
-        <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-gray"><i class="ion ion-android-color-palette"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">En Tiempo</span>
-                    <span class="info-box-number">{{ t.en_tiempo }}</span>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-gray">
+                <div class="inner">
+                    <h3>{{ t.agendadas }}</h3>
+                    <p>Inspecciones Pendientes</p>
                 </div>
+                <div class="icon">
+                    <i class="ion-android-car"></i>
+                </div>
+                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
-        <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-gray"><i class="ion ion-android-create"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">En Firma</span>
-                    <span class="info-box-number">{{ t.en_firma }}</span>
+        <div class="clearfix visible-sm-block"></div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-gray">
+                <div class="inner">
+                    <h3>{{ t.en_tiempo }}</h3>
+                    <p>En Armado</p>
                 </div>
+                <div class="icon">
+                    <i class="ion-person-stalker"></i>
+                </div>
+                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
-        <div class="col-md-2 col-sm-6 col-xs-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-gray"><i class="ion ion-cash"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Proyección</span>
-                    <span class="info-box-number">$ {{ t.ventas }}</span>
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-gray">
+                <div class="inner">
+                    <h3>{{ t.vencidas }}</h3>
+                    <p>Retrasadas</p>
                 </div>
+                <div class="icon">
+                    <i class="ion ion-android-warning"></i>
+                </div>
+                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-gray">
+                <div class="inner">
+                    <h3>{{ t.para_hoy }}</h3>
+                    <p>Para Hoy</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-stopwatch"></i>
+                </div>
+                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-gray">
+                <div class="inner">
+                    <h3>{{ t.en_firma }}</h3>
+                    <p>En Firma</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-create"></i>
+                </div>
+                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-gray">
+                <div class="inner">
+                    <h3>${{ t.ventas }}</h3>
+                    <p>Proyección</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-cash"></i>
+                </div>
+                <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
+                <h3><a href="{% url 'peritaje' %}">Agenda de Peritaje</a></h3>
+                <div id="agenda-peritaje"></div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
+                <h3><a href="{% url 'operaciones' %}">Agenda de Operaciones</a></h3>
+                <div id="agenda-operaciones"></div>
             </div>
         </div>
     </div>
+
+
     <div class="row">
         <div id="dashboard" class="">
             <div class="row">
@@ -193,20 +258,7 @@
 
 
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
-                <h3><a href="{% url 'peritaje' %}">Agenda de Peritaje</a></h3>
-                <div id="agenda-peritaje"></div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
-                <h3><a href="{% url 'operaciones' %}">Agenda de Operaciones</a></h3>
-                <div id="agenda-operaciones"></div>
-            </div>
-        </div>
-    </div>
+
     <script type="text/javascript">
         function GenerateCalendar(url, div) {
             var events = [];
