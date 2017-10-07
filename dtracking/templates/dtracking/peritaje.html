@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="{% static 'Ionicons/css/ionicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}"/>
     <link rel="stylesheet" href="{% static 'fullcalendar/dist/fullcalendar.css' %}" media="print">
-    <link rel="stylesheet" href="{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.css' %}"
+          type="text/css">
     <style>
         .container-fluid {
             margin-top: 20px;
@@ -192,7 +193,8 @@
     <script type="text/javascript" src="{% static '/fullcalendar/dist/fullcalendar.js' %}"></script>
     <script type="text/javascript" src="{% static '/fullcalendar/dist/locale/es.js' %}"></script>
     <script type="text/javascript" src="{% static '/pnotify/dist/pnotify.js' %}"></script>
-    <script type="text/javascript" src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
+    <script type="text/javascript"
+            src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
 
     <script>
         var atachments_info = function () {
@@ -309,8 +311,9 @@
                 }
             });
         }
-        var showEvent = function (id) {
-            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-valor-user-realizada-ficha_inspeccion-fecha_recepcion-armador-notify&app_label=dtracking&model=gestion&id=" + id;
+        var showEvent = function (id, fecha) {
+            fecha || ( fecha = undefined );
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-valor-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -321,42 +324,43 @@
                     $("#div_id_ficha_inspeccion").css("display", "none");
                     $("#div_id_fecha_recepcion").css("display", "none");
                     $("#div_id_armador").css("display", "none");
-
                     $("#id_realizada").on('change', function () {
-                        if($(this).is(':checked')){
+                        if ($(this).is(':checked')) {
                             $("#div_id_ficha_inspeccion").css("display", "block");
                             $("#div_id_fecha_recepcion").css("display", "block");
                             $("#div_id_armador").css("display", "block");
-                        }else{
+                        } else {
                             $("#div_id_ficha_inspeccion").css("display", "none");
                             $("#div_id_fecha_recepcion").css("display", "none");
                             $("#div_id_armador").css("display", "none");
                         }
 
-                    })
-
-                    $("#id_fecha_asignacion").datetimepickerByGiro({
-                        style: 'popup', // / inline / popup
-                        autoclose: true, // autoclose the popup on date / date range selected
-                        uiTarget: false, // the UI target to contain the datetime value
-                        firstDay: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
-                        minView: 'times', // times / days / months / years
-                        maxView: 'years', // times / days / months / years
-                        startView: 'days', // times / days / months / years
-                        min: null, // starting date to allow selection
-                        max: null, // ending date to allow selection
-                        today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
-                        showDaysNotInMonth: false,
-                        showDisabledTimes: true,
-                        calendars: 1,
-                        format: 'd/m/Y H:i:s', // PHP standard format
-                        uiFormat: 'd/m/Y H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
-                        separator: ' | ', // this will be the separator for multiple dates or date range
-                        mode: 'single', // single / multiple / range
-                        timeFormat: 12, // 12 / 24
-                        minuteStep: 60,
-                        specialDates: []
                     });
+                    if(fecha != undefined){
+                        $("#id_fecha_asignacion").val(fecha.format('D/M/Y'));
+                    }
+                    $("#id_fecha_asignacion").datetimepickerByGiro({
+                            style: 'popup', // / inline / popup
+                            autoclose: true, // autoclose the popup on date / date range selected
+                            uiTarget: false, // the UI target to contain the datetime value
+                            firstDay: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
+                            minView: 'times', // times / days / months / years
+                            maxView: 'years', // times / days / months / years
+                            startView: 'days', // times / days / months / years
+                            min: null, // starting date to allow selection
+                            max: null, // ending date to allow selection
+                            //today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
+                            showDaysNotInMonth: false,
+                            showDisabledTimes: true,
+                            calendars: 1,
+                            format: 'd/m/Y H:i:s', // PHP standard format
+                            uiFormat: 'd/m/Y H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
+                            separator: ' | ', // this will be the separator for multiple dates or date range
+                            mode: 'single', // single / multiple / range
+                            timeFormat: 12, // 12 / 24
+                            minuteStep: 60,
+                            specialDates: []
+                        });
                     $("#id_fecha_recepcion").datetimepickerByGiro({
                         style: 'popup', // / inline / popup
                         autoclose: true, // autoclose the popup on date / date range selected
@@ -499,23 +503,19 @@
                 dragRevertDuration: 0,
                 timeFormat: 'h(:mm)a',
                 drop: function (date, jsEvent, ui, resourceId) {
-                    makeEventsDraggable();
                     var id = $(this).children(".eventid").val();
-                    ProgramEvent(id, date, null, null);
-                    setTimeout(function () {
-                        showEvent(id);
-                    }, 1000);
+                    showEvent(id, date);
                 },
-                eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
+                eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
                     var d = new Date(event.start)
                     ProgramEvent(event.eventID, event.start, null, null);
                     event.start += delta;
                     new PNotify({
-                            title: 'Reprogramación !',
-                            text: 'Visita reprogramada para ' + d.toLocaleDateString('UTC') + '. Perito de campo ' + event.user,
-                            type: 'warning',
-                            styling: 'bootstrap3'
-                        });
+                        title: 'Reprogramación !',
+                        text: 'Visita reprogramada para ' + d.toLocaleDateString('UTC') + '. Perito de campo ' + event.user,
+                        type: 'warning',
+                        styling: 'bootstrap3'
+                    });
                 },
                 eventRender: function (event, element, view) {
                     return $(

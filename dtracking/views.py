@@ -439,6 +439,15 @@ def programar_gestion(request):
         gestion.fecha_recepcion = timezone.make_aware(
             datetime.strptime(fecha_recepcion[0:16],
             '%d/%m/%Y %H:%M'), timezone.get_default_timezone())
+    fin_gestion = request.POST.get('fin_gestion', None)
+    if fin_gestion:
+        gestion.fin_gestion = Gestion_Fin.objects.get(id=int(fin_gestion))
+    uso_gestion = request.POST.get('uso_gestion', None)
+    if uso_gestion:
+        gestion.uso_gestion = Gestion_Uso.objects.get(id=int(uso_gestion))
+    valor = request.POST.get('valor', '')
+    if valor != '':
+        gestion.valor = valor
     if realizada == 'on':
         gestion.realizada = True
     try:
@@ -451,7 +460,7 @@ def programar_gestion(request):
         gestion.notificar()
     obj_json['gestion'] = gestion.to_json()
     obj_json['code'] = 200
-    obj_json['result'] = "Gestion programada exitosamente"
+    obj_json['result'] = "Gestion actualizada exitosamente"
     data = json.dumps(obj_json)
     return HttpResponse(data, content_type='application/json')
 

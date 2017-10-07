@@ -365,7 +365,15 @@
                     "TERMINADO": "#3730b2",
                 }[c.status];
             }
-
+            function segText(status) {
+                return {
+                    "RECEPCIONADO": "RECEPCION",
+                    "ASIGNADO A EVALUADOR": "LOGISTICA",
+                    "LEVANTAMIENTO REALIZADO": "OPERACIONES",
+                    "EN REVISION FINAL DE INFORME": "GERENCIA",
+                    "TERMINADO": "TERMINADO",
+                }[status];
+            }
             function histoGram(fD, id) {
                 var ancho = $('#agenda-peritaje').css('width').replace("px", '');
                 var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
@@ -564,7 +572,7 @@
 
                 // create the second column for each segment.
                 tr.append("td").text(function (d) {
-                    return d.status;
+                    return segText(d.status);
                 });
 
                 // create the third column for each segment.
