@@ -13,7 +13,6 @@ import datetime as datetime_base
 from datetime import datetime, timedelta
 import json
 from django.utils.encoding import smart_str
-from django.utils import timezone
 from colorfield.fields import ColorField
 
 

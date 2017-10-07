@@ -121,8 +121,8 @@
                     <div class="small-box bg-teal">
                         <div class="inner">
                             <h3>Recepción</h3>
-                            <h6><i class="ion ion-android-stopwatch"> </i> De Hoy <strong> {{ t.recepcion.de_hoy }}</strong></h6>
-                            <h6><i class="ion ion-android-warning"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
+                            <h6><i class="ion ion-email-unread"> </i> Nuevos <strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                            <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-happy">{{ t.recepcion.total }}</i>
@@ -136,8 +136,9 @@
                     <div class="small-box bg-green">
                         <div class="inner">
                             <h3>Logística</h3>
-                            <h6><i class="ion ion-android-stopwatch"> </i> Para hoy<strong> {{ t.logistica.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-android-warning"> </i> Incumplidas <strong> {{ t.logistica.incumplidas }}</strong></h6>
+                            <h6><i class="ion ion-android-notifications"> </i> Para hoy: <strong> {{ t.logistica.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-android-cancel"> </i> Incumplidas: <strong> {{ t.logistica.incumplidas }}</strong></h6>
+                            <h6><i class="ion ion-clipboard"> </i> En Agenda: <strong> {{ t.logistica.programadas }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-android-car">{{ t.logistica.total }}</i>
@@ -155,9 +156,9 @@
                     <div class="small-box bg-red">
                         <div class="inner">
                             <h3>Operaciones</h3>
-                            <h6><i class="ion ion-android-stopwatch"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-android-warning"> </i> Atrasadas: <strong> {{ t.operaciones.vencidas }}</strong></h6>
-                            <h6><i class="ion ion-bug"> </i> En tiempo: <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
+                            <h6><i class="ion ion-android-notifications"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas: <strong> {{ t.operaciones.vencidas }}</strong></h6>
+                            <h6><i class="ion ion-ios-time"> </i> En tiempo: <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
@@ -171,9 +172,9 @@
                     <div class="small-box bg-blue">
                         <div class="inner">
                             <h3>Gerencia</h3>
-                            <h6><i class="ion ion-android-stopwatch"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
-                            <h6><i class="ion ion-android-stopwatch"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-android-warning"> </i> Proyeción: <strong> $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
+                            <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
+                            <h6><i class="ion ion-android-notifications"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyeción: <strong> $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>

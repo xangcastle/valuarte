@@ -2,6 +2,7 @@
 from ..models import *
 from django.db.models import Sum
 from datetime import datetime
+from django.utils import timezone
 from django import template
 
 register = template.Library()
@@ -79,13 +80,18 @@ class Totals(template.Node):
         recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
                                                     fecha__day=today.day).count()
         incumplidas = []
+        programadas = []
         agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
         agendadas_de_hoy = agendadas.filter(fecha_asignacion__year=today.year,
                                             fecha_asignacion__month=today.month,
-                                            fecha_asignacion__day=today.day).count()
-        for a in agendadas:
-            if a.dias_retrazo() > 0:
+                                            fecha_asignacion__day=today.day)
+        lista_agendadas_hoy = agendadas_de_hoy.values_list('id', flat=True)
+        for a in agendadas.exclude(id__in=lista_agendadas_hoy):
+            if a.fecha_asignacion > timezone.now():
+                programadas.append(a)
+            else:
                 incumplidas.append(a)
+
 
 
         gs = Gestion.objects.filter(status_gestion__in=[ESTADOS_LOG_GESTION[2][0]])
@@ -109,7 +115,7 @@ class Totals(template.Node):
 
         data = dict()
         data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count()}
-        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy, 'incumplidas': len(incumplidas)}
+        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(), 'incumplidas': len(incumplidas), 'programadas': len(programadas)}
         data['operaciones'] = {'para_hoy': for_today.count(),
                                'vencidas': len(vencidas),
                                'en_tiempo': len(entiempo),
