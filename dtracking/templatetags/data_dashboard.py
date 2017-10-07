@@ -74,30 +74,47 @@ class Totals(template.Node):
         return "<Data Node>"
 
     def render(self, context):
-        gs = Gestion.objects.filter(status_gestion__in=[ESTADOS_LOG_GESTION[2][0], ESTADOS_LOG_GESTION[3][0]])
         today = datetime.now()
+        recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0])
+        recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
+                                                    fecha__day=today.day).count()
+        incumplidas = []
+        agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
+        agendadas_de_hoy = agendadas.filter(fecha_asignacion__year=today.year,
+                                            fecha_asignacion__month=today.month,
+                                            fecha_asignacion__day=today.day).count()
+        for a in agendadas:
+            if a.dias_retrazo() > 0:
+                incumplidas.append(a)
+
+
+        gs = Gestion.objects.filter(status_gestion__in=[ESTADOS_LOG_GESTION[2][0]])
+
         for_today = gs.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
         fecha_vence__day=today.day)
+
         for_today_list = for_today.values_list('id', flat=True)
-        recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0]).count()
-        agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0]).count()
+
         vencidas = []
         entiempo = []
-        en_firma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0]).count()
         for g in gs:
             if g.id not in for_today_list:
                 if g.dias_retrazo() > 0:
                     vencidas.append(g)
                 else:
                     entiempo.append(g)
+
+
+        enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+
         data = dict()
-        data['agendadas'] = agendadas
-        data['recepcionadas'] = recepcionadas
-        data['vencidas'] = len(vencidas)
-        data['para_hoy'] = for_today.count()
-        data['en_tiempo'] = len(entiempo)
-        data['ventas'] = gs.filter(valor__isnull=False).aggregate(Sum('valor'))['valor__sum']
-        data['en_firma'] = en_firma
+        data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count()}
+        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy, 'incumplidas': len(incumplidas)}
+        data['operaciones'] = {'para_hoy': for_today.count(),
+                               'vencidas': len(vencidas),
+                               'en_tiempo': len(entiempo),
+                               'total': for_today.count() + len(vencidas) + len(entiempo)}
+        data['gerencia'] = {'en_firma': enfirma.count(), 'ventas': Gestion.objects.filter(valor__isnull=False).aggregate(Sum('valor'))['valor__sum']}
 
         context[self.varname] = data
         return ''

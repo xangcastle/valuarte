@@ -540,14 +540,7 @@ class Gestion(models.Model):
         o['direccion'] = self.direccion
         o['telefono'] = self.telefono
         o['departamento'] = self.get_departamento()
-        #o['municipio'] = self.municipio.name
-        # o['barrio'] = self.barrio.name
-        o['barra'] = self.barra
-        if self.zona:
-            o['zona'] = self.zona.name
-        else:
-            o['zona'] = ""
-        o['tipo_gestion'] = self.tipo_gestion.id
+        o['tipo_gestion'] = self.tipo_gestion.name
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
         o['descripcion'] = self.direccion

@@ -1,6 +1,6 @@
 {% extends "admin/app_index.html" %}
 
-{% load i18n data_dashboard tipos_gestion static %}
+{% load i18n data_dashboard tipos_gestion static humanize %}
 
 {% block blockbots %}
     <meta charset="utf-8"/>
@@ -118,13 +118,14 @@
 
             <div class="row">
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-gray">
+                    <div class="small-box bg-teal">
                         <div class="inner">
-                            <h3>{{ t.recepcionadas }}</h3>
-                            <p>Avaluos Solicitados</p>
+                            <h3>Recepción</h3>
+                            <h6><i class="ion ion-android-stopwatch"> </i> De Hoy <strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                            <h6><i class="ion ion-android-warning"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-android-add-circle"></i>
+                            <i class="ion ion-happy">{{ t.recepcion.total }}</i>
                         </div>
                         <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
@@ -132,44 +133,14 @@
                 <div class="clearfix visible-sm-block"></div>
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-gray">
+                    <div class="small-box bg-green">
                         <div class="inner">
-                            <h3>{{ t.agendadas }}</h3>
-                            <p>Inspecciones Pendientes</p>
+                            <h3>Logística</h3>
+                            <h6><i class="ion ion-android-stopwatch"> </i> Para hoy<strong> {{ t.logistica.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-android-warning"> </i> Incumplidas <strong> {{ t.logistica.incumplidas }}</strong></h6>
                         </div>
                         <div class="icon">
-                            <i class="ion-android-car"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="clearfix visible-sm-block"></div>
-            </div>
-
-            <div class="row">
-
-                <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-gray">
-                        <div class="inner">
-                            <h3>{{ t.en_tiempo }}</h3>
-                            <p>En Armado</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion-person-stalker"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="clearfix visible-sm-block"></div>
-
-                <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-gray">
-                        <div class="inner">
-                            <h3>{{ t.vencidas }}</h3>
-                            <p>Informes Atrasados</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-android-warning"></i>
+                            <i class="ion ion-android-car">{{ t.logistica.total }}</i>
                         </div>
                         <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
@@ -181,13 +152,15 @@
             <div class="row">
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-gray">
+                    <div class="small-box bg-red">
                         <div class="inner">
-                            <h3>{{ t.para_hoy }}</h3>
-                            <p>Para Hoy</p>
+                            <h3>Operaciones</h3>
+                            <h6><i class="ion ion-android-stopwatch"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-android-warning"> </i> Atrasadas: <strong> {{ t.operaciones.vencidas }}</strong></h6>
+                            <h6><i class="ion ion-bug"> </i> En tiempo: <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-android-stopwatch"></i>
+                            <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
                         </div>
                         <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
@@ -195,32 +168,20 @@
                 <div class="clearfix visible-sm-block"></div>
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-gray">
+                    <div class="small-box bg-blue">
                         <div class="inner">
-                            <h3>{{ t.en_firma }}</h3>
-                            <p>En Firma</p>
+                            <h3>Gerencia</h3>
+                            <h6><i class="ion ion-android-stopwatch"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
+                            <h6><i class="ion ion-android-stopwatch"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-android-warning"> </i> Proyeción: <strong> $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-android-create"></i>
+                            <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
                         </div>
                         <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="clearfix visible-sm-block"></div>
-
-                {% comment %}<div class="col-lg-4 col-xs-6">
-                    <div class="small-box bg-gray">
-                        <div class="inner">
-                            <h3>${{ t.ventas }}</h3>
-                            <p>Proyección</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-cash"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="clearfix visible-sm-block"></div>{% endcomment %}
 
             </div>
 
@@ -280,6 +241,7 @@
                                 dias: v.dias,
                                 barra: v.barra,
                                 user: v.user,
+                                tipo_gestion: v.tipo_gestion,
                             });
                         });
                         $.each(response.pendientes, function (i, v) {
@@ -295,6 +257,7 @@
                                 dias: v.dias,
                                 barra: v.barra,
                                 user: v.user,
+                                tipo_gestion: v.tipo_gestion,
                             });
                         });
 
@@ -312,6 +275,7 @@
                                 dias: v.dias,
                                 barra: v.barra,
                                 user: v.user,
+                                tipo_gestion: v.tipo_gestion,
                             });
                         });
                     }
@@ -319,8 +283,8 @@
                     $(div).fullCalendar({
                         header: {
                             left: 'prev,next',
-                            center: 'title',
-                            right: 'month,listMonth'
+                            center: '',
+                            right: 'title'
                         },
                         defaultView: 'listMonth',
                         lang: 'es',
@@ -334,12 +298,15 @@
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                                     '<div>' + event.title + '</div>' +
+                                    '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<strong>' + event.dias + '</strong>' +
                                     '</div>');
                             } else {
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                                     '<div>' + event.title + '</div>' +
+                                    '<div><small>' + event.tipo_gestion + '</small></div>' +
+                                    '<div><small>' + event.description + '</small></div>' +
                                     '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
                                     '</div>');
                             }
@@ -390,11 +357,11 @@
 
             function segColor(c) {
                 return {
-                    "RECEPCIONADO": "#969696",
-                    "ASIGNADO A EVALUADOR": "#540004",
-                    "LEVANTAMIENTO REALIZADO": "#54004f",
-                    "EN REVISION FINAL DE INFORME": "#000454",
-                    "TERMINADO": "#0c5403",
+                    "RECEPCIONADO": "#39cccc",
+                    "ASIGNADO A EVALUADOR": "#00a65a",
+                    "LEVANTAMIENTO REALIZADO": "#dd4b39",
+                    "EN REVISION FINAL DE INFORME": "#0073b7",
+                    "TERMINADO": "#3730b2",
                 }[c.status];
             }
 
