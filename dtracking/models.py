@@ -535,6 +535,7 @@ class Gestion(models.Model):
     def to_json(self):
         o = {}
         o['id'] = self.id
+        o['status'] = self.status_gestion
         o['destinatario'] = self.destinatario
         o['direccion'] = self.direccion
         o['telefono'] = self.telefono

@@ -197,47 +197,6 @@
             src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
 
     <script>
-        var atachments_info = function () {
-            window.open(
-                $(this).data('url'),
-                $(this).data('name'),
-                "width=600mm, height=500mm,  status=no, menubar=no, location=no");
-        };
-        function ver_gestion(gestion) {
-            $.ajax({
-                url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
-                method: "get",
-                success: function (result) {
-                    if (result.code == 200) {
-                        var tab = $('#logs').empty();
-                        $.each(result.logs, function (i, o) {
-                            var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
-                            tab.append(rw);
-                        });
-                        var url = $("#ficha").attr('url') + result.id_gestion
-                        $("#ficha").attr('data-url', url);
-
-                        url = $("#proforma").attr('url') + result.id_gestion
-                        $("#proforma").attr('data-url', url);
-                        $("#codigo_gestion").html(result.codigo_gestion);
-                        $("#cliente_gestion").html(result.cliente_gestion);
-                        $("#tipo_gestion").html(result.tipo_gestion);
-                        $("#modal-default").iziModal({zindex: 9999});
-                        $("#modal-default").iziModal('open');
-
-
-                        $('.show_atachments').on('click', atachments_info);
-
-
-                    } else {
-                        alert(result.mensaje);
-                    }
-
-                }
-            });
-
-            $(".style-switch-wrapper").removeClass("active");
-        };
         var cargar_municipios = function () {
             $.ajax('/dtracking/get_municipios/',
                 {
@@ -270,47 +229,6 @@
                 $(this).data('name'),
                 "width=900mm, height=700mm,  status=no, menubar=no, location=no");
         }
-        function makeEventsDraggable() {
-            $(".fc-draggable").draggable({
-                zIndex: 999,
-                revert: true,      // will cause the event to go back to its
-                revertDuration: false  //  original position after the drag
-            });
-            $('#external-events').find('.fc-event').each(function () {
-
-                // store data so the calendar knows to render an event upon drop
-                $(this).data('event', {
-                    title: $.trim($(this).text()), // use the element's text as the event title
-                    stick: true // maintain when user navigates (see docs on the renderEvent method)
-                });
-
-                // make the event draggable using jQuery UI
-                $(this).draggable({
-                    zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
-                });
-
-            });
-
-            $('#external-events-listing').droppable({
-                drop: function (event, ui) {
-                    if (dragged) {
-                        var event = dragged[1];
-                        dragged[0].fullCalendar('removeEvents', event._id);
-                        var el = $("<div class='fc-event'>").appendTo(this).text(event.title);
-                        el.draggable({
-                            zIndex: 999,
-                            revert: true,
-                            revertDuration: 0
-                        });
-                        el.data('event', {title: event.title, id: event.id, stick: true});
-                        dragged = null;
-                        makeEventsDraggable();
-                    }
-                }
-            });
-        }
         var showEvent = function (id, fecha) {
             fecha || ( fecha = undefined );
             var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-valor-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify&app_label=dtracking&model=gestion&id=" + id;
@@ -336,31 +254,31 @@
                         }
 
                     });
-                    if(fecha != undefined){
+                    if (fecha != undefined) {
                         $("#id_fecha_asignacion").val(fecha.format('D/M/Y'));
                     }
                     $("#id_fecha_asignacion").datetimepickerByGiro({
-                            style: 'popup', // / inline / popup
-                            autoclose: true, // autoclose the popup on date / date range selected
-                            uiTarget: false, // the UI target to contain the datetime value
-                            firstDay: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
-                            minView: 'times', // times / days / months / years
-                            maxView: 'years', // times / days / months / years
-                            startView: 'days', // times / days / months / years
-                            min: null, // starting date to allow selection
-                            max: null, // ending date to allow selection
-                            //today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
-                            showDaysNotInMonth: false,
-                            showDisabledTimes: true,
-                            calendars: 1,
-                            format: 'd/m/Y H:i:s', // PHP standard format
-                            uiFormat: 'd/m/Y H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
-                            separator: ' | ', // this will be the separator for multiple dates or date range
-                            mode: 'single', // single / multiple / range
-                            timeFormat: 12, // 12 / 24
-                            minuteStep: 60,
-                            specialDates: []
-                        });
+                        style: 'popup', // / inline / popup
+                        autoclose: true, // autoclose the popup on date / date range selected
+                        uiTarget: false, // the UI target to contain the datetime value
+                        firstDay: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
+                        minView: 'times', // times / days / months / years
+                        maxView: 'years', // times / days / months / years
+                        startView: 'days', // times / days / months / years
+                        min: null, // starting date to allow selection
+                        max: null, // ending date to allow selection
+                        //today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
+                        showDaysNotInMonth: false,
+                        showDisabledTimes: true,
+                        calendars: 1,
+                        format: 'd/m/Y H:i:s', // PHP standard format
+                        uiFormat: 'd/m/Y H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
+                        separator: ' | ', // this will be the separator for multiple dates or date range
+                        mode: 'single', // single / multiple / range
+                        timeFormat: 12, // 12 / 24
+                        minuteStep: 60,
+                        specialDates: []
+                    });
                     $("#id_fecha_recepcion").datetimepickerByGiro({
                         style: 'popup', // / inline / popup
                         autoclose: true, // autoclose the popup on date / date range selected
@@ -449,7 +367,47 @@
                 '<span class="btn btn-sm btn-info cotizar" ' +
                 'data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion=' + v.id +
                 '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cotizar</span></li>';
+
+            row = $(row).data('event', gestion_to_event(v));
+            row = $(row).draggable({
+                zIndex: 999,
+                revert: true,
+                revertDuration: 0
+            });
             return row;
+        }
+        var redrawEvent = function (gestion) {
+            var event = undefined;
+            var events = $('#calender').fullCalendar('clientEvents');
+            $.each(events, function (i, e) {
+                if (e.eventID == gestion.id) {
+                    e.title = gestion.titulo
+                    e.description = gestion.descripcion
+                    e.start = moment(gestion.inicio)
+                    e.end = moment(gestion.fin)
+                    e.color = gestion.color
+                    e.textColor = 'white'
+                    e.allDay = false
+                    e.barra = gestion.barra
+                    e.user = gestion.user
+                    $('#calender').fullCalendar('updateEvent', e);
+                }
+            });
+        }
+        var gestion_to_event = function (v) {
+            return {
+                eventID: v.id,
+                title: v.titulo,
+                description: v.descripcion,
+                start: moment(v.inicio),
+                end: moment(v.fin),
+                color: v.color,
+                textColor: 'white',
+                allDay: false,
+                barra: v.barra,
+                user: v.user,
+                stick: true
+            };
         }
         function refreshCalender() {
             var events = [];
@@ -460,25 +418,13 @@
                 url: "{% url 'obtenercitasperitaje' %}",
                 success: function (response) {
                     $.each(response.programadas, function (i, v) {
-                        events.push({
-                            eventID: v.id,
-                            title: v.titulo,
-                            description: v.descripcion,
-                            start: moment(v.inicio),
-                            end: moment(v.fin),
-                            color: v.color,
-                            textColor: 'white',
-                            allDay: false,
-                            barra: v.barra,
-                            user: v.user
-                        });
+                        events.push(gestion_to_event(v));
                     });
                     $('#external-events-listing').empty();
                     $.each(response.pendientes, function (i, v) {
-                        $('#external-events-listing').append(createRow(v));
+                        var r = createRow(v);
+                        $('#external-events-listing').append(r);
                     });
-                    makeEventsDraggable();
-
                     GenerateCalender(events);
                 },
                 error: function (error) {
@@ -504,6 +450,7 @@
                 timeFormat: 'h(:mm)a',
                 drop: function (date, jsEvent, ui, resourceId) {
                     var id = $(this).children(".eventid").val();
+                    $(this).remove();
                     showEvent(id, date);
                 },
                 eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
@@ -551,14 +498,25 @@
                 }
             });
         }
-        var completeEvent = function () {
-            $(this).autocomplete({
-                minLength: 2,
-                source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
-                select: function (i, o) {
-                    ver_gestion(o.item.obj.barra);
+        var onclosemodal = function () {
+            var id = $(this).find('input[name="id"]').val();
+            $.ajax('/admin/ajax/get_object/', {
+                method: "POST",
+                data: {app_label: 'dtracking', model: 'gestion', id: id},
+                success: function (gestion) {
+                    $('#calender').fullCalendar('removeEvents', function (eventObject) {
+                        if (gestion.status != 'ASIGNADO A EVALUADOR' && eventObject.eventID == gestion.id) {
+                            var r = createRow(gestion);
+                            $('#external-events-listing').prepend(r);
+                            return true;
+                        } else {
+                            return false;
+                        }
+
+                    });
                 }
             });
+
         }
         $(document).on("submit", ".form_entrada", function (e) {
             e.preventDefault();
@@ -582,6 +540,7 @@
                             styling: 'bootstrap3'
                         });
                     else {
+                        redrawEvent(e.gestion);
                         new PNotify({
                             title: 'Acción Exitosa !',
                             text: e.result,
@@ -589,7 +548,7 @@
                             styling: 'bootstrap3'
                         });
 
-                        refreshCalender();
+                        //refreshCalender();
                         $("#myModal").modal('hide');
                     }
                     if (typeof(e.function) != "undefined") {
@@ -621,13 +580,11 @@
 
             $("body").on('click', '.cotizar', cotizar);
 
-            $('#nav-search').on('keyup', completeEvent);
 
-            makeEventsDraggable();
             $("#nav-search").click(function () {
                 $(this).select();
             });
-
+            $('#myModal').on('hide.bs.modal', onclosemodal);
         });
 
     </script>
