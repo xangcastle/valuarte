@@ -503,12 +503,15 @@
             });
 
         }
+        var btn_form;
         $(document).on("submit", ".form_entrada", function (e) {
             e.preventDefault();
             var formu = $(this);
+            btn_form = formu.find('input[type=submit]');
             var url = formu.attr('action');
             var formData = new FormData($(formu)[0]);
             var element = this;
+            btn_form.prop( "disabled", true );
             $.ajax({
                 type: "POST",
                 url: url,
@@ -517,6 +520,7 @@
                 processData: false,
                 data: formData,
                 success: function (e) {
+                     btn_form.prop( "disabled", false );
                     if (typeof(e.error) != "undefined" && e.error != "")
                         new PNotify({
                             title: 'Error!',
@@ -545,6 +549,7 @@
                     }
 
                 }, error: function (data) {
+                     btn_form.prop( "disabled", false );
                     new PNotify({
                         title: 'Error!',
                         text: data.responseText,
