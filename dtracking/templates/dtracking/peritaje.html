@@ -97,6 +97,12 @@
         <div class="col-md-3 col-xs-3 col-sm-3">
             <div>
                 <div>
+                    <a title="Reporte de Avaluos" href="#"
+                       class="btn btn-primary btn-circle show_atachments have-info"
+                       data-des="{% url 'reporte' %}"
+                       data-name="Reporte de Avaluos">
+                        <i class="ion-pie-graph"></i>
+                    </a>
                     <div class="grp-module" id="grp-recent-actions-module">
                         <h2>Peritos</h2>
                         <div class="grp-module">
@@ -564,6 +570,13 @@
                 $(this).select();
             });
             $('#myModal').on('hide.bs.modal', onclosemodal);
+
+
+                var have_info = function () {
+                    window.open($(this).data('des'), "ExamenPrevio", "width=900, height=900,  status=no, scrollbars=no, toolbars=no, menubar=no, location=no");
+                }
+                $('.have-info').on('click', have_info);
+
         });
 
     </script>
