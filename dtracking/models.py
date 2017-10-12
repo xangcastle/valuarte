@@ -72,7 +72,7 @@ class Gestor(models.Model):
                                         default='WIFI', null=True, blank=True)
     sms_gateway = models.CharField(max_length=20, null=True)
     foto = models.ImageField(null=True)
-    zonas = models.ManyToManyField('Zona')
+    zonas = models.ManyToManyField('Zona',null=True, blank=True)
     tipo_gestion = models.ManyToManyField('TipoGestion', blank=True)
     intervalo = models.PositiveIntegerField(null=True, verbose_name="intervalo de seguimiento",
                                             help_text="esto determina que tan seguido el gestor reportara su posicion gps en segundos")

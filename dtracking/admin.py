@@ -236,4 +236,3 @@ admin.site.register(Gestor, gestor_admin)
 admin.site.register(Armador, armador_admin)
 admin.site.register(Banco, entidad_admin)
 admin.site.register(Ejecutivo, ejecutivo_admin)
-
