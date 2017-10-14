@@ -540,6 +540,7 @@ class Gestion(models.Model):
         o['direccion'] = self.direccion
         o['telefono'] = self.telefono
         o['departamento'] = self.get_departamento()
+        o['id_tipo_gestion'] = self.tipo_gestion.id
         o['tipo_gestion'] = self.tipo_gestion.name
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
