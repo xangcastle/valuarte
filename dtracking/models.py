@@ -508,6 +508,12 @@ class Gestion(models.Model):
         else:
             return ""
 
+    def get_municipio(self):
+        if self.municipio:
+            return self.municipio.name
+        else:
+            return ""
+
     def render_calendar_fin(self):
         if self.status_gestion == ESTADOS_LOG_GESTION[1][0]:
             return self.fecha_asignacion + timedelta(minutes=self.tipo_gestion.tiempo_ejecucion)
@@ -540,6 +546,7 @@ class Gestion(models.Model):
         o['direccion'] = self.direccion
         o['telefono'] = self.telefono
         o['departamento'] = self.get_departamento()
+        o['municipio'] = self.get_municipio()
         o['id_tipo_gestion'] = self.tipo_gestion.id
         o['tipo_gestion'] = self.tipo_gestion.name
         o['barra'] = self.barra
