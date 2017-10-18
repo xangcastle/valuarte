@@ -35,10 +35,11 @@
        }
        .blue
        {
+         text-align: center;
+         padding: 1em;
          background-color: #7E97AD;
          color: white;
          font-family: "Lato","sans-serif";
-         padding: 0.5em;
        }
     </style>
 </head>
@@ -51,10 +52,7 @@
 <div id="previewImage">
 </div>
 <div id="html-content-holder" style=" width: 816px;
-        padding-left: 25px; padding-top: 10px;">
-
-
-
+        padding-left: 25px; padding-top: 5px;">
   <svg
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:cc="http://creativecommons.org/ns#"
@@ -336,7 +334,7 @@
 
         	<!-- HTML TABLE ONE -->
           <center>
-            <div class="blue" style="width:816px;height:10px" ><span style="float:left;width:50%">ASIGNACIÓN DE AVALÚO <b>{{ o.barra }}</b> </span> <span style="float:right;width:50%"></span></div>
+            <div class="blue" style="width:816px;" >ASIGNACIÓN DE AVALÚO <b>{{ o.barra }}</b> </div>
             </br></br>
             <table class="one">
                 <tr>
@@ -390,10 +388,10 @@
             </table>
 
         </br></br>
-        <div class="blue" style="width:816px;height:10px" ><center> OBSERVACIONES </center></div>
-         <p>
+        <div class="blue" style="width:816px;" ><center> OBSERVACIONES </center></div>
+        <div style="width:808px;background-color:write;height:200px;border-style: solid;border-color:#7E97AD" >
                {{ o.observaciones }}
-         </p>
+        </div>
         </center>
 
     </div>
