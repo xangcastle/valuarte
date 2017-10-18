@@ -336,42 +336,59 @@
 
         	<!-- HTML TABLE ONE -->
           <center>
-            <div class="blue" style="width:816px;height:10px" ><span style="float:left;width:50%">ASIGNACIÓN DE AVALÚO <b>{{ o.barra }}</b> </span> <span style="float:right;width:50%">{{ o.fecha|date:"d/m/y" }}</span></div>
+            <div class="blue" style="width:816px;height:10px" ><span style="float:left;width:50%">ASIGNACIÓN DE AVALÚO <b>{{ o.barra }}</b> </span> <span style="float:right;width:50%"></span></div>
             </br></br>
-            <table class="one" style="float:right;">
+            <table class="one">
                 <tr>
-                  <th >TIPO AVALÚO</th>
-                  <td >{{ o.tipo_gestion.name }}</td>
+                  <th>CLIENTE</th>
+                  <td colspan="3">{{ o.destinatario }}</td>
                 </tr>
                 <tr>
+                  <th>TEL.CLIENTE</th>
+                  <td> {{ o.telefono }}</td>
+                  <th>CONTACTO</th>
+                  <td>{{ o.contacto_envio }}</td>
+                </tr>
+                <tr>
+                  <th>TIPO DE ACALUÓ</th>
+                  <td> {{ o.tipo_gestion.name }}</td>
+                  <th>TEL. CONTACTO</th>
+                  <td>{{ o.contacto_telefono }}</td>
+                </tr>
+                <tr>
+                  <th>FECHA SOLICITUD</th>
+                  <td> {{ o.fecha|date:"d/m/y" }}</td>
+                  <th>FECHA ELABORACIÓN</th>
+                  <td>{{ o.fecha_asignacion }}</td>
+                </tr>
+                <tr>
+                  <th>CIUDAD</th>
+                  <td> {{ o.municipio.name }}</td>
+                  <th>DEPARTAMENTO</th>
+                  <td> {{ o.departamento.name }}</td>
+                </tr>
+                <tr>
+                  <th>UBICACIÓN DEL BIEN A EVALUAR</th>
+                  <td colspan="3"> {{ o.direccion }}</td>
+                </tr>
+                <tr>
+                  <th>PERITO</th>
+                  <td>{{ o.user.username }} - {{ o.user.get_full_name }}</td>
                   <th  >CATEGORIA</th>
                   <td >{{ o.categoria }}</td>
                 </tr>
-              </table>
-              <table class="one">
-                	<tr>
-                    <th>CLIENTE</th>
-                    <th>FECHA ASIGNACIÓN</th>
-                    <th>PERITO</th>
-                  </tr>
-                  <tr>
-                    <td>{{ o.destinatario }}</td>
-                    <td>{{ o.fecha_asignacion }}</td>
-                    <td>{{ o.user.username }} - {{ o.user.get_full_name }}</td>
-                  </tr>
-              </table>
-              <table class="one">
-                  <tr>
-                    <th>TELEFONO</th>
-                    <th>DIRECCIÓN</th>
-                    <th>CONTACTO</th>
-                  </tr>
-                  <tr>
-                    <td> {{ o.telefono }}, {{ o.contacto_telefono }}</td>
-                    <td>{{ o.direccion }}, {{ o.municipio.name }}. {{ o.departamento.name }}</td>
-                    <td>{{ o.contacto_envio }}</td>
-                  </tr>
-              </table>
+                <tr>
+                  <th>BANCO</th>
+                  <td>{{ o.banco }} - {{ o.user.get_full_name }}</td>
+                  <th  >EJECUTIVO</th>
+                  <td >{{ o.banco_ejecutivo }}</td>
+                </tr>
+                <tr>
+                  <th>VALOR AVALUÓ</th>
+                  <td  colspan="3">{{ o.valor }}</td>
+                </tr>
+            </table>
+
         </br></br>
         <div class="blue" style="width:816px;height:10px" ><center> OBSERVACIONES </center></div>
          <p>
