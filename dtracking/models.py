@@ -316,7 +316,7 @@ class Gestion(models.Model):
     municipio = models.ForeignKey(Municipio, null=True, blank=True)
     barrio = models.ForeignKey(Barrio, null=True, blank=True)
     zona = models.ForeignKey(Zona, null=True, blank=True)
-    direccion = models.TextField(max_length=255, null=True, verbose_name="Ubicacion del bien a avaluar")
+    direccion = models.TextField(max_length=255, null=True, verbose_name="Ubicacion del bien a valuar")
     direccion_envio = models.CharField(max_length=255, null=True, blank=True, verbose_name="Dirección de envío")
 
     # contacto del banco
@@ -558,9 +558,9 @@ class Gestion(models.Model):
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
 
-        if self.position:
-            o['latitude'] = str(self.position.latitude)
-            o['longitude'] = str(self.position.longitude)
+        # if self.position and self.position.latitude:
+        #     o['latitude'] = str(self.position.latitude)
+        #     o['longitude'] = str(self.position.longitude)
         if self.media():
             o['media'] = []
             for a in self.media():

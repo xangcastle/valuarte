@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import modelform_factory
 from django.template.loader import render_to_string
-from django.http import HttpResponse
 
 
 @csrf_exempt
@@ -90,7 +89,8 @@ def get_html_form(request, form=None):
 
         if form.is_valid():
             form.save()
-            resp = {"result": "actualizado"}
+            obj = form.instance
+            resp = {"result": "actualizado", "object": obj.to_json()}
         else:
             err = ""
             for e in form.errors:

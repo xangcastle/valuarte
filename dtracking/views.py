@@ -370,14 +370,7 @@ class peritaje(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(peritaje, self).get_context_data(**kwargs)
-        context['pendientes'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0])
         context['peritos'] = Gestor.objects.all()
-        asignadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
-        context['total_vigentes'] = asignadas.filter(fecha_asignacion__gt=datetime.now()).count()
-        context['total_vencidas'] = asignadas.filter(fecha_asignacion__lt=datetime.now()).count()
-        context['total_hoy'] = asignadas.filter(fecha_asignacion__year=datetime.now().year,
-                                                fecha_asignacion__month=datetime.now().month,
-                                                fecha_asignacion__day=datetime.now().day).count()
         return super(peritaje, self).render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -387,16 +380,8 @@ class peritaje(TemplateView):
 
 def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LOG_GESTION[1][0]):
     gestiones = Gestion.objects.all()
-    busqueda = request.GET.get("busqueda", None)
     id_perito = request.GET.get("id_perito", None)
 
-    # if busqueda:
-    #     gestiones = Gestion.objects. \
-    #         filter(status_gestion__in=[status1, ])
-    # else:
-    #     gestiones = Gestion.objects.filter(
-    #         status_gestion__in=[status1, status2])
-    #
     if id_perito and int(id_perito) > 0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
@@ -458,7 +443,7 @@ def programar_gestion(request):
     notify = request.POST.get('notify', None)
     if notify:
         gestion.notificar()
-    obj_json['gestion'] = gestion.to_json()
+    obj_json['object'] = gestion.to_json()
     obj_json['code'] = 200
     obj_json['result'] = "Gestion actualizada exitosamente"
     data = json.dumps(obj_json)
@@ -466,11 +451,11 @@ def programar_gestion(request):
 
 
 def reporte(request):
+    status = int(request.GET.get('status', request.POST.get('status')))
     avaluos = Gestion.objects.filter(
-        status_gestion__in=[ESTADOS_LOG_GESTION[0][0], ESTADOS_LOG_GESTION[1][0],
-        ESTADOS_LOG_GESTION[2][0]
-                            ]).order_by('fecha_vence')
-    return render(request, 'dtracking/reporte.html', {'avaluos': avaluos})
+        status_gestion=ESTADOS_LOG_GESTION[status][0]).order_by('fecha_vence')
+    return render(request, 'dtracking/reporte.html', {'avaluos': avaluos,
+                                                      'titulo': ESTADOS_LOG_GESTION[status][0]})
 
 
 class operaciones(TemplateView):

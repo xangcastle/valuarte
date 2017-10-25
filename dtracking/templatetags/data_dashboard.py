@@ -7,6 +7,7 @@ from django import template
 
 register = template.Library()
 
+
 class data_Node(template.Node):
     def __init__(self, varname):
         self.varname = varname
@@ -92,12 +93,10 @@ class Totals(template.Node):
             else:
                 incumplidas.append(a)
 
-
-
         gs = Gestion.objects.filter(status_gestion__in=[ESTADOS_LOG_GESTION[2][0]])
 
         for_today = gs.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
-        fecha_vence__day=today.day)
+                              fecha_vence__day=today.day)
 
         for_today_list = for_today.values_list('id', flat=True)
 
@@ -110,17 +109,25 @@ class Totals(template.Node):
                 else:
                     entiempo.append(g)
 
-
         enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
 
         data = dict()
         data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count()}
-        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(), 'incumplidas': len(incumplidas), 'programadas': len(programadas)}
+        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
+                             'incumplidas': len(incumplidas), 'programadas': len(programadas)}
         data['operaciones'] = {'para_hoy': for_today.count(),
                                'vencidas': len(vencidas),
                                'en_tiempo': len(entiempo),
                                'total': for_today.count() + len(vencidas) + len(entiempo)}
-        data['gerencia'] = {'en_firma': enfirma.count(), 'ventas': Gestion.objects.filter(valor__isnull=False).aggregate(Sum('valor'))['valor__sum']}
+        data['gerencia'] = {'en_firma': enfirma.count(),
+                            'ventas': Gestion.objects.filter(
+                                valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
+                                                                         ESTADOS_LOG_GESTION[1][0],
+                                                                         ESTADOS_LOG_GESTION[2][0],
+                                                                         ESTADOS_LOG_GESTION[3][0],
+                                                                         ]).aggregate(Sum('valor'))['valor__sum'],
+                            'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
+                            }
 
         context[self.varname] = data
         return ''
@@ -138,8 +145,3 @@ def get_totales(parser, token):
             "'get totales' requiere que el primer argumento sea 'as'")
 
     return Totals(varname=tokens[2])
-
-
-
-
-

@@ -121,7 +121,8 @@
                     <div class="small-box bg-teal">
                         <div class="inner">
                             <h3>Recepción</h3>
-                            <h6><i class="ion ion-email-unread"> </i> Registros Nuevos <strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                            <h6><i class="ion ion-email-unread"> </i> Registros Nuevos
+                                <strong> {{ t.recepcion.de_hoy }}</strong></h6>
                             <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
                         </div>
                         <div class="icon">
@@ -136,9 +137,12 @@
                     <div class="small-box bg-green">
                         <div class="inner">
                             <h3>Logística</h3>
-                            <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy: <strong> {{ t.logistica.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas: <strong> {{ t.logistica.incumplidas }}</strong></h6>
-                            <h6><i class="ion ion-clipboard"> </i> En Agenda: <strong> {{ t.logistica.programadas }}</strong></h6>
+                            <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
+                                <strong> {{ t.logistica.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
+                                <strong> {{ t.logistica.incumplidas }}</strong></h6>
+                            <h6><i class="ion ion-clipboard"> </i> En Agenda:
+                                <strong> {{ t.logistica.programadas }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-android-car">{{ t.logistica.total }}</i>
@@ -156,9 +160,12 @@
                     <div class="small-box bg-red">
                         <div class="inner">
                             <h3>Operaciones</h3>
-                            <h6><i class="ion ion-android-notifications"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas: <strong> {{ t.operaciones.vencidas }}</strong></h6>
-                            <h6><i class="ion ion-ios-time"> </i> En tiempo: <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
+                            <h6><i class="ion ion-android-notifications"> </i> Para hoy:
+                                <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
+                                <strong> {{ t.operaciones.vencidas }}</strong></h6>
+                            <h6><i class="ion ion-ios-time"> </i> En tiempo:
+                                <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
@@ -173,8 +180,10 @@
                         <div class="inner">
                             <h3>Gerencia</h3>
                             <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
-                            <h6><i class="ion ion-android-notifications"> </i> Para hoy: <strong> {{ t.operaciones.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyeción: <strong> $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
+                            <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
+                                <strong> {{ t.gerencia.total }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
+                                $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
@@ -365,6 +374,7 @@
                     "TERMINADO": "#3730b2",
                 }[c.status];
             }
+
             function segText(status) {
                 return {
                     "RECEPCIONADO": "RECEPCION",
@@ -374,6 +384,7 @@
                     "TERMINADO": "TERMINADO",
                 }[status];
             }
+
             function histoGram(fD, id) {
                 var ancho = $('#agenda-peritaje').css('width').replace("px", '');
                 var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};

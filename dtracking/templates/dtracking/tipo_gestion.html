@@ -2,7 +2,7 @@
 
 {% block content %}
 {{ block.super }}
-<div id="modal-default"
+<div id="modal-elementos"
  data-izimodal-title="Editar elementos de este control"
  data-izimodal-icon="icon-home"
  aria-hidden="false"
@@ -63,8 +63,8 @@ $(document).ready(function() {
             }
         });
 
-        $("#modal-default").iziModal({zindex: 9999, bodyOverflow: true});
-        $("#modal-default").iziModal('open');
+        $("#modal-elementos").iziModal({zindex: 9999, bodyOverflow: true});
+        $("#modal-elementos").iziModal('open');
     };
     var tipos = $('.tipo>select');
     $.each(tipos, function(i, o){
@@ -94,7 +94,7 @@ function  guardar_elementos() {
         method:"post",
         data:data,
         success:function (response) {
-            $("#modal-default").iziModal('close');
+            $("#modal-elementos").iziModal('close');
         }
     });
     return false;
