@@ -293,7 +293,7 @@ class Gestion_Uso(Entidad):
 
 class Gestion(models.Model):
     fecha = models.DateField(null=True, blank=True, verbose_name="fecha de solicitud")  # fecha en que se recepciona la solicitud del avaluo
-    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo")  # el codigo del avaluo
+    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo", blank=True)  # el codigo del avaluo
     tipo_gestion = models.ForeignKey(TipoGestion)
     fin_gestion = models.ForeignKey(Gestion_Fin, null=True, blank=True)
     uso_gestion = models.ForeignKey(Gestion_Uso, null=True, blank=True)

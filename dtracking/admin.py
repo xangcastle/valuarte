@@ -75,8 +75,6 @@ class gestion_admin(ImportExportModelAdmin):
 
     )
 
-    readonly_fields = ('user',)
-
     actions = ['action_perito', 'action_cancelar', 'action_asignar']
 
     class asignacion_form(forms.Form):
