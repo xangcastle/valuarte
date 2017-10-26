@@ -102,15 +102,13 @@
     <script>
             $(document).ready(function () {
                 var atachments_info = function () {
-                    console.log(this);
                     window.open(
                         $(this).data('url'),
                         $(this).data('name'),
                         "width=600mm, height=500mm,  status=no, menubar=no, location=no");
                 };
-                function funka() {
-                    alert("funka");
-                }
+
+                $('.show_info').on('click', atachments_info);
 
                 function ver_gestion(gestion) {
                     $.ajax({

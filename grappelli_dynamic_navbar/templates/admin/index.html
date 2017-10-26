@@ -178,7 +178,11 @@
                         <div class="icon">
                             <i class="ion ion-happy">{{ t.recepcion.total }}</i>
                         </div>
-                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a title="Reporte de Recepción" href="#"
+                               class="small-box-footer show_info"
+                               data-url="{% url 'reporte' %}?status=0"
+                               data-name="Reporte de Recepción">Mas info
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix visible-sm-block"></div>
@@ -197,7 +201,11 @@
                         <div class="icon">
                             <i class="ion ion-android-car">{{ t.logistica.total }}</i>
                         </div>
-                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a title="Reporte de Logística" href="#"
+                               class="small-box-footer show_info"
+                               data-url="{% url 'reporte' %}?status=1"
+                               data-name="Reporte de Lógistica">Mas info
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix visible-sm-block"></div>
@@ -220,7 +228,11 @@
                         <div class="icon">
                             <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
                         </div>
-                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a title="Reporte de Operaciones" href="#"
+                               class="small-box-footer show_info"
+                               data-url="{% url 'reporte' %}?status=2"
+                               data-name="Reporte de Operaciones">Mas info
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix visible-sm-block"></div>
@@ -238,7 +250,12 @@
                         <div class="icon">
                             <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
                         </div>
-                        <a href="#" class="small-box-footer">Mas info <i class="fa fa-arrow-circle-right"></i></a>
+
+                        <a title="Reporte de Gerencia" href="#"
+                               class="small-box-footer show_info"
+                               data-url="{% url 'reporte' %}?status=3"
+                               data-name="Reporte de Gerencia">Mas info
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix visible-sm-block"></div>
