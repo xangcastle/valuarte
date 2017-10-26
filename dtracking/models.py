@@ -554,6 +554,8 @@ class Gestion(models.Model):
         o['descripcion'] = self.direccion
         o['inicio'] = str(ifnull(self.render_calendar_inicio(), ''))
         o['fin'] = str(ifnull(self.render_calendar_fin(), ''))
+        o['fecha'] = str(ifnull(self.fecha, ''))
+        o['fecha_vence'] = str(ifnull(self.fecha_vence, ''))
         o['color'] = self.tipo_gestion.color
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()

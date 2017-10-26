@@ -66,10 +66,11 @@ class gestion_admin(ImportExportModelAdmin):
         ('Peritaje y Operaciones', {
             'classes': ('grp-collapse grp-open',),
             'fields': (
-                ('user', 'fecha_asignacion', 'realizada'),
+                ('user', 'fecha_asignacion'),
                 ('fecha_recepcion', 'armador', 'fecha_vence'),
-                'revizada',
-                'ficha_inspeccion', 'position', 'json'
+                ('realizada', 'ficha_inspeccion'),
+                ('revizada', 'informe_final'),
+                'position', 'json'
             )
         }),
 
