@@ -302,7 +302,6 @@ class Gestion(models.Model):
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
     valor = models.FloatField(null=True, blank=True, verbose_name="precio del avaluo ya con iva")
     categoria = models.CharField(max_length=50, null=True, blank=True)
-    informe_final = models.FileField(upload_to="fichas", null=True, blank=True)  # informe final
     status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
                                       default=ESTADOS_LOG_GESTION[0][0], blank=True)
 
@@ -341,7 +340,11 @@ class Gestion(models.Model):
     fecha_vence = models.DateField(null=True, blank=True)
     armador = models.ForeignKey('Operaciones', null=True, blank=True, related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
     revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
-    fecha_entrega_efectiva = models.DateField(null=True, blank=True)
+
+    terminada = models.BooleanField(default=False)  # indica si ya se firmo
+    fecha_entrega_efectiva = models.DateField(null=True, blank=True) # fecha firma
+    informe_final = models.FileField(upload_to="fichas", null=True, blank=True)  # informe final
+
     dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado")
 
     def logs(self):
@@ -420,7 +423,7 @@ class Gestion(models.Model):
                 and self.armador and self.revizada:
             actual = ESTADOS_LOG_GESTION[3][0]
         if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) \
-                and self.armador and self.revizada and self.informe_final:
+                and self.armador and self.revizada and (self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
             actual = ESTADOS_LOG_GESTION[4][0]
 
         return actual

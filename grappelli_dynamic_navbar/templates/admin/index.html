@@ -124,7 +124,7 @@
         }
 
         .main text {
-            font: 12px sans-serif;
+            font: 8px sans-serif;
         }
 
         .month text {
@@ -776,7 +776,7 @@
                 };
             }
 
-            var no_lines = 15;
+            var no_lines = 50;
 
             var lanes = []
                 , items = []
@@ -804,10 +804,10 @@
                         }
                     });
                     var margin = {top: 20, right: 15, bottom: 15, left: 60}
-                        , width = 960 - margin.left - margin.right
+                        , width = 1200 - margin.left - margin.right
                         , height = 600 - margin.top - margin.bottom
-                        , miniHeight = lanes.length * 12 + 50
-                        , mainHeight = height - miniHeight - 50;
+                        , miniHeight = lanes.length * .2 + 20
+                        , mainHeight = height - miniHeight - 80;
 
                     var x = d3.time.scale()
                         .domain([d3.time.sunday(d3.min(items, function (d) {
