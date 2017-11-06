@@ -550,7 +550,7 @@ class Gestion(models.Model):
         o['telefono'] = self.telefono
         o['departamento'] = self.get_departamento()
         o['municipio'] = self.get_municipio()
-        o['barrio'] = self.get_barrio()
+        o['barrio'] = self.barrio
         o['id_tipo_gestion'] = self.tipo_gestion.id
         o['tipo_gestion'] = self.tipo_gestion.name
         o['barra'] = self.barra
@@ -563,8 +563,15 @@ class Gestion(models.Model):
         o['color'] = self.tipo_gestion.color
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
-        o['fin_gestion']=self.fin_gestion
-        o['uso_gestion']=self.uso_gestion
+        if(self.fin_gestion):
+          o['fin_gestion']=   self.fin_gestion.name
+        else :
+          o['fin_gestion']=   ""
+
+        if( self.uso_gestion):
+          o['uso_gestion']=   self.uso_gestion.name
+        else :
+          o['uso_gestion']=   ""
         o['identificacion']=self.identificacion
         o['contacto']      = self.contacto
         o['contacto_telefono']= self.contacto_telefono
@@ -574,8 +581,8 @@ class Gestion(models.Model):
         o['new_ejecutivo'] =self.new_ejecutivo
         o['valor'] =self.valor
         o['dias_armado'] = self.dias
-        o['fecha_asignacion']=self.fecha_asignacion
-        o['fecha_recepcion']=self.fecha_recepcion
+        o['fecha_asignacion']=str(ifnull(self.fecha_asignacion, ''))
+        o['fecha_recepcion']=str(ifnull(self.fecha_recepcion, ''))
         o['armador']=self.armador
 
 
@@ -956,12 +963,3 @@ class Ejecutivo(models.Model):
                 'telefono': self.telefono,
                 'email': self.email,
                 'banco': self.banco.to_json()}
-
-
-def enviar(asunto,texto, correo):
-        email = EmailMessage(asunto,texto,
-                         to=[correo],
-                         )
-        email.content_subtype = "html"
-        # email.attach_file("out.pdf")
-        email.send()
