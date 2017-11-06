@@ -587,7 +587,10 @@ class Gestion(models.Model):
         o['dias_armado'] = self.dias
         o['fecha_asignacion']=str(ifnull(self.fecha_asignacion, ''))
         o['fecha_recepcion']=str(ifnull(self.fecha_recepcion, ''))
-        o['armador']=self.armador
+        if(self.armador):
+          o['armador']=self.armador.username
+        else :
+          o['armador']=""
 
 
         # if self.position and self.position.latitude:
