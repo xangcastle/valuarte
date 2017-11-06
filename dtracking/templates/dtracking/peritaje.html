@@ -330,7 +330,7 @@
             var row = '<li class="grp-row fc-draggable event-' + v.id + '" data-idevent="' + v.id + '">' +
                 '<input class="eventid" type="hidden" value="' + v.id + '">' +
                 '<a href="/admin/dtracking/gestion/' + v.id + '/change/">' + v.barra + '</a>' +
-                '<img src="'+ v.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                '<img src="'+ v.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                 '<span class="grp-font-color-quiet destinatario">' + v.destinatario + '</span>' +
                 '<span class="grp-font-color-quiet telefono">' + v.telefono + '</span>' +
                 '<span class="grp-font-color-quiet direccion">' + v.direccion + '</span>' +
@@ -364,7 +364,7 @@
             });
             var event = $('.event-' + gestion.id);
             if (event.length == 0) {
-                var r = createRow(gestion);
+                var r = createRow(gestion_to_event(gestion));
                 $('#external-events-listing').prepend(r);
             } else {
                 $(event).find('.destinatario').html(gestion.titulo);

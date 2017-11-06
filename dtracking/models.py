@@ -679,9 +679,9 @@ class Gestion(models.Model):
 
     def get_estrella(self):
         if self.priority:
-            return "/static/dtrackin/img/estrella.png"
+            return "/static/dtracking/img/estrella.png"
         else:
-            return  ""
+            return "/static/dtracking/img/no_estrella.png"
 
 
 
