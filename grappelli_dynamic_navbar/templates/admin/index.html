@@ -171,9 +171,9 @@
                     <div class="small-box bg-teal">
                         <div class="inner">
                             <h3>Recepción</h3>
-                            <h6><i class="ion ion-email-unread"> </i> Registros Nuevos
-                                <strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                            <h6><i class="ion ion-email-unread"> </i> Registros Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
                             <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
+                            <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
                         </div>
                         <div class="icon">
                             <i class="ion ion-happy">{{ t.recepcion.total }}</i>
@@ -321,6 +321,7 @@
                                 barra: v.barra,
                                 user: v.user,
                                 tipo_gestion: v.tipo_gestion,
+                                strella: v.strella
                             });
                         });
                         $.each(response.pendientes, function (i, v) {
@@ -337,6 +338,7 @@
                                 barra: v.barra,
                                 user: v.user,
                                 tipo_gestion: v.tipo_gestion,
+                                strella: v.strella
                             });
                         });
 
@@ -355,6 +357,7 @@
                                 barra: v.barra,
                                 user: v.user,
                                 tipo_gestion: v.tipo_gestion,
+                                strella: v.strella
                             });
                         });
                     }
@@ -376,14 +379,14 @@
                             if (div == '#agenda-operaciones') {
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.title + '</div>' +
+                                    '<div>' + event.title  + '</div>' +
                                     '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<strong>' + event.dias + '</strong>' +
                                     '</div>');
                             } else {
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.title + '</div>' +
+                                    '<div>' + event.title +"asdas" +'</div>' +
                                     '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<div><small>' + event.description + '</small></div>' +
                                     '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +

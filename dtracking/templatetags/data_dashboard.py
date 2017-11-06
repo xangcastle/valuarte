@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ..models import *
 from django.db.models import Sum
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 from django import template
 
@@ -77,9 +77,15 @@ class Totals(template.Node):
 
     def render(self, context):
         today = datetime.now()
+        after_tomorrow = today + timedelta(days=2)
+
         recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0])
+
         recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
                                                     fecha__day=today.day).count()
+        recepcionadas_48h = recepcionadas.filter(fecha__year=after_tomorrow.year, fecha__month=after_tomorrow.month,
+                                                    fecha__day=after_tomorrow.day).count()
+
         incumplidas = []
         programadas = []
         agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
@@ -112,7 +118,7 @@ class Totals(template.Node):
         enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
 
         data = dict()
-        data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count()}
+        data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count(), 'a48h': recepcionadas_48h}
         data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
                              'incumplidas': len(incumplidas), 'programadas': len(programadas)}
         data['operaciones'] = {'para_hoy': for_today.count(),

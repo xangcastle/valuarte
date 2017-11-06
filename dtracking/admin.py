@@ -58,7 +58,7 @@ class gestion_admin(ImportExportModelAdmin):
             'fields': (
                 ('contacto', 'contacto_telefono', 'direccion_envio'),
                 ('banco', 'banco_ejecutivo', 'referencia'),
-                ('new_banco', 'new_ejecutivo'),
+                ('new_banco', 'new_ejecutivo', 'priority'),
                 ('valor', 'categoria', 'dias'),
             )
         }),

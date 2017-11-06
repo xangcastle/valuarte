@@ -347,6 +347,8 @@ class Gestion(models.Model):
 
     dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado")
 
+    priority = models.BooleanField(default=False, verbose_name="prioridad")
+
     def logs(self):
         return Log_Gestion.objects.filter(gestion=self)
 
@@ -562,6 +564,7 @@ class Gestion(models.Model):
         o['color'] = self.tipo_gestion.color
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
+        o['strella'] =  "/static/dtrackin/img/Start_godl_256.png"
 
         # if self.position and self.position.latitude:
         #     o['latitude'] = str(self.position.latitude)
