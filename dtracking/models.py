@@ -307,7 +307,7 @@ class Gestion(models.Model):
 
     # datos del cliente
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación", blank=True)
+    identificacion = models.CharField(max_length=25, null=True, verbose_name="Identificación", blank=True)
     contacto = models.CharField(max_length=125, null=True, blank=True, verbose_name="Contacto")
     contacto_telefono = models.CharField(max_length=125, null=True, blank=True, verbose_name="Teléfono del contacto")
     telefono = models.CharField(max_length=65, null=True, blank=True)
@@ -550,6 +550,7 @@ class Gestion(models.Model):
         o['telefono'] = self.telefono
         o['departamento'] = self.get_departamento()
         o['municipio'] = self.get_municipio()
+        o['barrio'] = self.get_barrio()
         o['id_tipo_gestion'] = self.tipo_gestion.id
         o['tipo_gestion'] = self.tipo_gestion.name
         o['barra'] = self.barra
@@ -562,6 +563,23 @@ class Gestion(models.Model):
         o['color'] = self.tipo_gestion.color
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
+        o['fin_gestion']=self.fin_gestion
+        o['uso_gestion']=self.uso_gestion
+        o['identificacion']=self.identificacion
+        o['contacto']      = self.contacto
+        o['contacto_telefono']= self.contacto_telefono
+        o['direccion_envio'] = self.direccion_envio
+        o['referencia'] =self.referencia
+        o['new_banco'] =self.new_banco
+        o['new_ejecutivo'] =self.new_ejecutivo
+        o['valor'] =self.valor
+        o['dias_armado'] = self.dias
+        o['fecha_asignacion']=self.fecha_asignacion
+        o['fecha_recepcion']=self.fecha_recepcion
+        o['armador']=self.armador
+
+
+
 
         # if self.position and self.position.latitude:
         #     o['latitude'] = str(self.position.latitude)
