@@ -956,3 +956,12 @@ class Ejecutivo(models.Model):
                 'telefono': self.telefono,
                 'email': self.email,
                 'banco': self.banco.to_json()}
+
+
+def enviar(asunto,texto, correo):
+        email = EmailMessage(asunto,texto,
+                         to=[correo],
+                         )
+        email.content_subtype = "html"
+        # email.attach_file("out.pdf")
+        email.send()
