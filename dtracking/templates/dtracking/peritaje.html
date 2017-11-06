@@ -276,7 +276,7 @@
             });
         }
         var newEvent = function () {
-            var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones&app_label=dtracking&model=gestion";
+            var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
