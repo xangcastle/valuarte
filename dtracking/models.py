@@ -307,7 +307,7 @@ class Gestion(models.Model):
 
     # datos del cliente
     destinatario = models.CharField(max_length=125, null=True, verbose_name="Cliente")
-    identificacion = models.CharField(max_length=25, null=True, verbose_name="Itentificación", blank=True)
+    identificacion = models.CharField(max_length=25, null=True, verbose_name="Identificación", blank=True)
     contacto = models.CharField(max_length=125, null=True, blank=True, verbose_name="Contacto")
     contacto_telefono = models.CharField(max_length=125, null=True, blank=True, verbose_name="Teléfono del contacto")
     telefono = models.CharField(max_length=65, null=True, blank=True)
@@ -552,6 +552,7 @@ class Gestion(models.Model):
         o['telefono'] = self.telefono
         o['departamento'] = self.get_departamento()
         o['municipio'] = self.get_municipio()
+        o['barrio'] = self.barrio
         o['id_tipo_gestion'] = self.tipo_gestion.id
         o['tipo_gestion'] = self.tipo_gestion.name
         o['barra'] = self.barra
@@ -565,6 +566,29 @@ class Gestion(models.Model):
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
         o['strella'] =  "/static/dtrackin/img/Start_godl_256.png"
+
+        if(self.fin_gestion):
+          o['fin_gestion']=   self.fin_gestion.name
+        else :
+          o['fin_gestion']=   ""
+
+        if( self.uso_gestion):
+          o['uso_gestion']=   self.uso_gestion.name
+        else :
+          o['uso_gestion']=   ""
+        o['identificacion']=self.identificacion
+        o['contacto']      = self.contacto
+        o['contacto_telefono']= self.contacto_telefono
+        o['direccion_envio'] = self.direccion_envio
+        o['referencia'] =self.referencia
+        o['new_banco'] =self.new_banco
+        o['new_ejecutivo'] =self.new_ejecutivo
+        o['valor'] =self.valor
+        o['dias_armado'] = self.dias
+        o['fecha_asignacion']=str(ifnull(self.fecha_asignacion, ''))
+        o['fecha_recepcion']=str(ifnull(self.fecha_recepcion, ''))
+        o['armador']=self.armador
+
 
         # if self.position and self.position.latitude:
         #     o['latitude'] = str(self.position.latitude)
@@ -762,8 +786,6 @@ class Import(models.Model):
         g.barrio = self.idbarrio
         g.municipio = self.idmunicipio
         g.departamento = self.iddepartamento
-        g.zona = get_zona(self.idbarrio)
-        g.user = get_user(g.zona)
         g.fecha_asignacion = fecha_asignacion
         g.fecha_vence = fecha_vence
         g.tipo_gestion = tipo_gestion
@@ -772,30 +794,10 @@ class Import(models.Model):
             self.delete()
 
 
-def get_zona(barrio):
-    try:
-        return Zona.objects.get(
-            id=zona_barrio.objects.filter(barrio=barrio)[0].zona.id)
-    except:
-        return None
-
-
-def get_user(zona):
-    try:
-        user = None
-        for g in Gestor.objects.all():
-            if zona in g.zonas.all():
-                user = g.user
-        return user
-    except:
-        return None
 
 
 def autoasignacion(gestiones):
     for g in gestiones:
-        if not g.zona:
-            g.zona = get_zona(g.barrio)
-        g.user = get_user(g.zona)
         g.fecha_asignacion = datetime.now()
         g.save()
 

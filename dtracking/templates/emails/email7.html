@@ -1,0 +1,114 @@
+<html>
+<head>
+    <style>
+       table {font-family: "Lato","sans-serif";	}
+       table.one {
+           margin-bottom: 1em;
+           display: inline-block;
+         }
+
+       table.one td {
+         text-align: center;
+         width: 10em;
+         padding: 1em; 		}
+
+       table.one th {
+       text-align: center;
+       padding: 0.2em;
+       background-color: #7E97AD;
+       color: white;		}
+
+       table.one tr
+       {
+        height: 1em;
+       }
+
+       table.one tr:nth-child(even)
+       {
+         background-color: #eee;
+       }
+
+       table.one tr:nth-child(odd)
+       {
+         background-color:#fff;
+       }
+       .blue
+       {
+         text-align: center;
+         padding: 1em;
+         background-color: #7E97AD;
+         color: white;
+         font-family: "Lato","sans-serif";
+       }
+    </style>
+</head>
+<body style="max-height: 220mm; max-width: 150mm">
+{% load static %}
+{% load humanize %}
+<script src="/static/dtracking/js/jquery.js"></script>
+<script src="/static/dtracking/js/html2canvas.js"></script>
+
+<div id="previewImage">
+</div>
+<div id="html-content-holder" style=" width: 816px;
+        padding-left: 25px; padding-top: 5px;">
+
+          <center>
+            <table class="one">
+                <tr>
+                  <th>FECHA</th>
+                  <td >---</td>
+                  <th>ESTADO</th>
+                  <td >--</td>
+                </tr>
+                <tr>
+                  <th>CLIENTE</th>
+                  <td colspan="3">---</td>
+                </tr>
+              </table>
+            </br></br>
+            <div class="blue" style="width:816px;" >AREA<b> -----</b> </div>
+            </br></br>
+            <table class="one">
+                <tr>
+                  <th>NUEVOS</th>
+                  <td ></td>
+                </tr>
+                <tr>
+                  <th>SIN ASIGNAR</th>
+                  <td> </td>
+                </tr>
+                <tr>
+                  <th>48 HORAS</th>
+                  <td> </td>
+                </tr>
+
+            </table>
+              </br></br>
+            <div class="blue" style="width:816px;" >AREA 2<b> -----</b> </div>
+            </br></br>
+            <table class="one">
+                <tr>
+                  <th>NUEVOS</th>
+                  <td ></td>
+                </tr>
+                <tr>
+                  <th>SIN ASIGNAR</th>
+                  <td> </td>
+                </tr>
+                <tr>
+                  <th>48 HORAS</th>
+                  <td> </td>
+                </tr>
+
+            </table>
+
+
+
+
+    </div>
+
+
+
+</body>
+</html>

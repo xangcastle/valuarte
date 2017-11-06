@@ -339,7 +339,9 @@
             <table class="one">
                 <tr>
                   <th>CLIENTE</th>
-                  <td colspan="3">{{ o.destinatario }}</td>
+                  <td >{{ o.destinatario }}</td>
+                  <th>IDENTIFICACIÓN</th>
+                  <td >{{ o.identificacion }}</td>
                 </tr>
                 <tr>
                   <th>TEL.CLIENTE</th>
@@ -348,8 +350,15 @@
                   <td>{{ o.contacto_envio }}</td>
                 </tr>
                 <tr>
-                  <th>TIPO DE ACALUÓ</th>
+                  <th>TIPO DE AVALUÓ</th>
                   <td> {{ o.tipo_gestion.name }}</td>
+                  <th>FIN GESTIÓN</th>
+                  <td> {{ o.fin_gestion }}</td>
+                </tr>
+
+                <tr>
+                  <th>USO GESTIÓN</th>
+                  <td> {{ o.uso_gestion }}</td>
                   <th>TEL. CONTACTO</th>
                   <td>{{ o.contacto_telefono }}</td>
                 </tr>
@@ -367,7 +376,52 @@
                 </tr>
                 <tr>
                   <th>UBICACIÓN DEL BIEN A EVALUAR</th>
-                  <td colspan="3"> {{ o.direccion }}</td>
+                  <td colspan="3"> {{ o.direccion }} Barrio: {{ o.barrio.name }}</td>
+                </tr>
+                <tr>
+                  <th>CONTACTO</th>
+                  <td>{{ o.contacto }} </td>
+                  <th  >TELEFONO CONTACTO</th>
+                  <td >{{ o.contacto_telefono }}</td>
+                </tr>
+                <tr>
+                  <th>DIRECCIÓN DE ENVIO</th>
+                  <td colspan="3">{{ o.direccion_envio }} </td>
+                </tr>
+
+                <tr>
+                  <th>BANCO</th>
+                  <td>{{ o.banco }} - {{ o.user.get_full_name }}</td>
+                  <th  >EJECUTIVO</th>
+                  <td >{{ o.banco_ejecutivo }}</td>
+                </tr>
+                <tr>
+                  <th>REFERENCIA BANCARIA</th>
+                  <td colspan="3">{{ o.referencia }}</td>
+                </tr>
+                <tr>
+                  <th>NUEVO BANCO</th>
+                  <td>{{ o.new_banco }} </td>
+                  <th  >NUEVO EJECUTIVO</th>
+                  <td >{{ o.new_ejecutivo }}</td>
+                </tr>
+                <tr>
+                  <th>VALOR CON IVA</th>
+                  <td>{{ o.valor }} </td>
+                  <th  >DIAS EXTRAS POR ARMADO</th>
+                  <td >{{ o.dias_armado }}</td>
+                </tr>
+                <tr>
+                  <th>DIAS ARMADO</th>
+                  <td>{{ o.dias_armado }} </td>
+                  <th  >ARMADOR</th>
+                  <td >{{ o.armador.name }}</td>
+                </tr>
+                <tr>
+                  <th>FECHA ASIGNACIÓN</th>
+                  <td>{{ o.fecha_asignacion }} </td>
+                  <th  >FECHA RECEPCION</th>
+                  <td >{{ o.fecha_recepcion }}</td>
                 </tr>
                 <tr>
                   <th>PERITO</th>
@@ -375,12 +429,7 @@
                   <th  >CATEGORIA</th>
                   <td >{{ o.categoria }}</td>
                 </tr>
-                <tr>
-                  <th>BANCO</th>
-                  <td>{{ o.banco }} - {{ o.user.get_full_name }}</td>
-                  <th  >EJECUTIVO</th>
-                  <td >{{ o.banco_ejecutivo }}</td>
-                </tr>
+
                 <tr>
                   <th>VALOR AVALUÓ</th>
                   <td  colspan="3">{{ o.valor }}</td>
