@@ -48,13 +48,107 @@
 <script src="/static/dtracking/js/jquery.js"></script>
 <script src="/static/dtracking/js/html2canvas.js"></script>
 
-<div id="previewImage">
+
+
+
+
+<div class="row">
+    <div class="col-lg-6 col-xs-6">
+        <div class="small-box bg-teal">
+            <div class="inner">
+                <h3>Recepción</h3>
+                <h6><i class="ion ion-email-unread"> </i> Registros Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
+                <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
+            </div>
+            <div class="icon">
+                <i class="ion ion-happy">{{ t.recepcion.total }}</i>
+            </div>
+            <a title="Reporte de Recepción" href="#"
+                   class="small-box-footer show_info"
+                   data-url="{% url 'reporte' %}?status=0"
+                   data-name="Reporte de Recepción">Mas info
+            </a>
+        </div>
+    </div>
+    <div class="clearfix visible-sm-block"></div>
+
+    <div class="col-lg-6 col-xs-6">
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>Logística</h3>
+                <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
+                    <strong> {{ t.logistica.para_hoy }}</strong></h6>
+                <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
+                    <strong> {{ t.logistica.incumplidas }}</strong></h6>
+                <h6><i class="ion ion-clipboard"> </i> En Agenda:
+                    <strong> {{ t.logistica.programadas }}</strong></h6>
+            </div>
+            <div class="icon">
+                <i class="ion ion-android-car">{{ t.logistica.total }}</i>
+            </div>
+            <a title="Reporte de Logística" href="#"
+                   class="small-box-footer show_info"
+                   data-url="{% url 'reporte' %}?status=1"
+                   data-name="Reporte de Lógistica">Mas info
+            </a>
+        </div>
+    </div>
+    <div class="clearfix visible-sm-block"></div>
+
 </div>
+
+<div class="row">
+
+    <div class="col-lg-6 col-xs-6">
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>Operaciones</h3>
+                <h6><i class="ion ion-android-notifications"> </i> Para hoy:
+                    <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
+                    <strong> {{ t.operaciones.vencidas }}</strong></h6>
+                <h6><i class="ion ion-ios-time"> </i> En tiempo:
+                    <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
+            </div>
+            <a title="Reporte de Operaciones" href="#"
+                   class="small-box-footer show_info"
+                   data-url="{% url 'reporte' %}?status=2"
+                   data-name="Reporte de Operaciones">Mas info
+            </a>
+        </div>
+    </div>
+    <div class="clearfix visible-sm-block"></div>
+
+    <div class="col-lg-6 col-xs-6">
+        <div class="small-box bg-blue">
+            <div class="inner">
+                <h3>Gerencia</h3>
+                <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
+                <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
+                    <strong> {{ t.gerencia.total }}</strong></h6>
+                <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
+                    $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
+            </div>
+            <div class="icon">
+                <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
+            </div>
+
+            <a title="Reporte de Gerencia" href="#"
+                   class="small-box-footer show_info"
+                   data-url="{% url 'reporte' %}?status=3"
+                   data-name="Reporte de Gerencia">Mas info
+            </a>
+        </div>
+    </div>
 <div id="html-content-holder" style=" width: 816px;
         padding-left: 25px; padding-top: 5px;">
 
           <center>
-            <table class="one">
+            <!--<table class="one">
                 <tr>
                   <th>FECHA</th>
                   <td >---</td>
@@ -65,7 +159,7 @@
                   <th>CLIENTE</th>
                   <td colspan="3">---</td>
                 </tr>
-              </table>
+              </table>-->
             </br></br>
             <div class="blue" style="width:816px;" >AREA<b> -----</b> </div>
             </br></br>
@@ -107,93 +201,6 @@
 
 
     </div>
-    <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-
-                <div class="row">
-                    <div class="col-lg-6 col-xs-6">
-                        <div class="small-box bg-teal">
-                            <div class="inner">
-                                <h3>Recepción</h3>
-                                <h6><i class="ion ion-email-unread"> </i> Registros Nuevos<strong> 0</strong></h6>
-                                <h6><i class="ion ion-help"> </i> Sin Asignar <strong> 6</strong></h6>
-                                <h6><i class="ion ion-clock"> </i> + 48H <strong> 0</strong></h6>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-happy">6</i>
-                            </div>
-                            <a title="Reporte de Recepción" href="#" class="small-box-footer show_info" data-url="/dtracking/reporte/?status=0" data-name="Reporte de Recepción">Mas info
-                            </a>
-                        </div>
-                    </div>
-                    <div class="clearfix visible-sm-block"></div>
-
-                    <div class="col-lg-6 col-xs-6">
-                        <div class="small-box bg-green">
-                            <div class="inner">
-                                <h3>Logística</h3>
-                                <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
-                                    <strong> 0</strong></h6>
-                                <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
-                                    <strong> 0</strong></h6>
-                                <h6><i class="ion ion-clipboard"> </i> En Agenda:
-                                    <strong> 1</strong></h6>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-android-car">1</i>
-                            </div>
-                            <a title="Reporte de Logística" href="#" class="small-box-footer show_info" data-url="/dtracking/reporte/?status=1" data-name="Reporte de Lógistica">Mas info
-                            </a>
-                        </div>
-                    </div>
-                    <div class="clearfix visible-sm-block"></div>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-lg-6 col-xs-6">
-                        <div class="small-box bg-red">
-                            <div class="inner">
-                                <h3>Operaciones</h3>
-                                <h6><i class="ion ion-android-notifications"> </i> Para hoy:
-                                    <strong> 0</strong></h6>
-                                <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
-                                    <strong> 1</strong></h6>
-                                <h6><i class="ion ion-ios-time"> </i> En tiempo:
-                                    <strong> 0</strong></h6>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-person-stalker">1</i>
-                            </div>
-                            <a title="Reporte de Operaciones" href="#" class="small-box-footer show_info" data-url="/dtracking/reporte/?status=2" data-name="Reporte de Operaciones">Mas info
-                            </a>
-                        </div>
-                    </div>
-                    <div class="clearfix visible-sm-block"></div>
-
-                    <div class="col-lg-6 col-xs-6">
-                        <div class="small-box bg-blue">
-                            <div class="inner">
-                                <h3>Gerencia</h3>
-                                <h6><i class="ion ion-edit"> </i> En firma: <strong> 0</strong></h6>
-                                <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
-                                    <strong> 8</strong></h6>
-                                <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
-                                    $ 785.5</strong></h6>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-android-contact">0</i>
-                            </div>
-
-                            <a title="Reporte de Gerencia" href="#" class="small-box-footer show_info" data-url="/dtracking/reporte/?status=3" data-name="Reporte de Gerencia">Mas info
-                            </a>
-                        </div>
-                    </div>
-                    <div class="clearfix visible-sm-block"></div>
-
-                </div>
-
-            </div>
 
 
 </body>
