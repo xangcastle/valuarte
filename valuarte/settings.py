@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'dtracking',
+    'background_task',
     'base',
     'geoposition',
     'grappelli_dynamic_navbar',
@@ -141,7 +142,7 @@ GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBjWBugqqWF-lwi6opFnCrDtg6SVj6hlME'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'xangcastle@gmail.com'
+EMAIL_HOST_USER = 'comprafacildistribucion@gmail.com'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = 'ABcq12!@'
 EMAIL_PORT = 587

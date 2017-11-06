@@ -291,7 +291,7 @@
         }
         var editEvent = function () {
             var id = $(this).data('idevent');
-            var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones&app_label=dtracking&model=gestion&id=" + id;
+            var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -330,6 +330,7 @@
             var row = '<li class="grp-row fc-draggable event-' + v.id + '" data-idevent="' + v.id + '">' +
                 '<input class="eventid" type="hidden" value="' + v.id + '">' +
                 '<a href="/admin/dtracking/gestion/' + v.id + '/change/">' + v.barra + '</a>' +
+                '<img src="'+ v.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                 '<span class="grp-font-color-quiet destinatario">' + v.destinatario + '</span>' +
                 '<span class="grp-font-color-quiet telefono">' + v.telefono + '</span>' +
                 '<span class="grp-font-color-quiet direccion">' + v.direccion + '</span>' +
@@ -383,6 +384,7 @@
                 allDay: false,
                 barra: v.barra,
                 user: v.user,
+                strella: v.strella,
                 stick: true
             };
         }
@@ -442,9 +444,10 @@
                     });
                 },
                 eventRender: function (event, element, view) {
+                    console.log(event);
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                        event.barra + '<br> ' + '<img src="/static/dtracking/img/estrella.png" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                        event.barra + '<br> ' + '<img src="'+ event.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                         '<div>' + event.title + '</div>' +
                         '<small>' + event.description + '</small><br> ' +
                         '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +

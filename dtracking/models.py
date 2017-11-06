@@ -11,9 +11,14 @@ from geoposition.fields import GeopositionField
 from jsonfield import JSONField
 import datetime as datetime_base
 from datetime import datetime, timedelta
+from background_task import background
 import json
 from django.utils.encoding import smart_str
 from colorfield.fields import ColorField
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.db.models import Sum
+
 
 
 def add_business_days(origin_date, add_days):
@@ -543,6 +548,143 @@ class Gestion(models.Model):
         else:
             return None
 
+    @staticmethod
+    def totalizar_gestiones():
+        today = datetime.now()
+        after_tomorrow = today + timedelta(days=2)
+
+        recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0])
+
+        recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
+                                                    fecha__day=today.day).count()
+        recepcionadas_48h = recepcionadas.filter(fecha__year=after_tomorrow.year, fecha__month=after_tomorrow.month,
+                                                    fecha__day=after_tomorrow.day).count()
+
+        incumplidas = []
+        programadas = []
+        agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
+        agendadas_de_hoy = agendadas.filter(fecha_asignacion__year=today.year,
+                                            fecha_asignacion__month=today.month,
+                                            fecha_asignacion__day=today.day)
+        lista_agendadas_hoy = agendadas_de_hoy.values_list('id', flat=True)
+        for a in agendadas.exclude(id__in=lista_agendadas_hoy):
+            if a.fecha_asignacion > timezone.now():
+                programadas.append(a)
+            else:
+                incumplidas.append(a)
+
+        gs = Gestion.objects.filter(status_gestion__in=[ESTADOS_LOG_GESTION[2][0]])
+
+        for_today = gs.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
+                              fecha_vence__day=today.day)
+
+        for_today_list = for_today.values_list('id', flat=True)
+
+        vencidas = []
+        entiempo = []
+        for g in gs:
+            if g.id not in for_today_list:
+                if g.dias_retrazo() > 0:
+                    vencidas.append(g)
+                else:
+                    entiempo.append(g)
+
+        enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+
+        data = dict()
+        data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count(), 'a48h': recepcionadas_48h}
+        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
+                             'incumplidas': len(incumplidas), 'programadas': len(programadas)}
+        data['operaciones'] = {'para_hoy': for_today.count(),
+                               'vencidas': len(vencidas),
+                               'en_tiempo': len(entiempo),
+                               'total': for_today.count() + len(vencidas) + len(entiempo)}
+        data['gerencia'] = {'en_firma': enfirma.count(),
+                            'ventas': Gestion.objects.filter(
+                                valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
+                                                                         ESTADOS_LOG_GESTION[1][0],
+                                                                         ESTADOS_LOG_GESTION[2][0],
+                                                                         ESTADOS_LOG_GESTION[3][0],
+                                                                         ]).aggregate(Sum('valor'))['valor__sum'],
+                            'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
+                            }
+        return data
+    @staticmethod
+    def send_email(asunto="",texto="", correo="sebastian.norena.marquez@gmail.com"):
+        today = datetime.now()
+        after_tomorrow = today + timedelta(days=2)
+
+        recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0])
+
+        recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
+                                                    fecha__day=today.day).count()
+        recepcionadas_48h = recepcionadas.filter(fecha__year=after_tomorrow.year, fecha__month=after_tomorrow.month,
+                                                    fecha__day=after_tomorrow.day).count()
+
+        incumplidas = []
+        programadas = []
+        agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
+        agendadas_de_hoy = agendadas.filter(fecha_asignacion__year=today.year,
+                                            fecha_asignacion__month=today.month,
+                                            fecha_asignacion__day=today.day)
+        lista_agendadas_hoy = agendadas_de_hoy.values_list('id', flat=True)
+        for a in agendadas.exclude(id__in=lista_agendadas_hoy):
+            if a.fecha_asignacion > timezone.now():
+                programadas.append(a)
+            else:
+                incumplidas.append(a)
+
+        gs = Gestion.objects.filter(status_gestion__in=[ESTADOS_LOG_GESTION[2][0]])
+
+        for_today = gs.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
+                              fecha_vence__day=today.day)
+
+        for_today_list = for_today.values_list('id', flat=True)
+
+        vencidas = []
+        entiempo = []
+        for g in gs:
+            if g.id not in for_today_list:
+                if g.dias_retrazo() > 0:
+                    vencidas.append(g)
+                else:
+                    entiempo.append(g)
+
+        enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+
+        data = dict()
+        data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count(), 'a48h': recepcionadas_48h}
+        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
+                             'incumplidas': len(incumplidas), 'programadas': len(programadas)}
+        data['operaciones'] = {'para_hoy': for_today.count(),
+                               'vencidas': len(vencidas),
+                               'en_tiempo': len(entiempo),
+                               'total': for_today.count() + len(vencidas) + len(entiempo)}
+        data['gerencia'] = {'en_firma': enfirma.count(),
+                            'ventas': Gestion.objects.filter(
+                                valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
+                                                                         ESTADOS_LOG_GESTION[1][0],
+                                                                         ESTADOS_LOG_GESTION[2][0],
+                                                                         ESTADOS_LOG_GESTION[3][0],
+                                                                         ]).aggregate(Sum('valor'))['valor__sum'],
+                            'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
+                            }
+        texto  = render_to_string('emails/email7.html', data)
+        email = EmailMessage(asunto,texto,
+                         to=[correo],
+                         )
+        email.content_subtype = "html"
+        # email.attach_file("out.pdf")
+        email.send()
+
+    def get_estrella(self):
+        if self.priority:
+            return "/static/dtrackin/img/estrella.png"
+        else:
+            return  ""
+
+
+
     def to_json(self):
         o = {}
         o['id'] = self.id
@@ -565,7 +707,7 @@ class Gestion(models.Model):
         o['color'] = self.tipo_gestion.color
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
-        o['strella'] =  "/static/dtrackin/img/Start_godl_256.png"
+        o['strella'] = self.get_estrella()
 
         if(self.fin_gestion):
           o['fin_gestion']=   self.fin_gestion.name
@@ -587,7 +729,10 @@ class Gestion(models.Model):
         o['dias_armado'] = self.dias
         o['fecha_asignacion']=str(ifnull(self.fecha_asignacion, ''))
         o['fecha_recepcion']=str(ifnull(self.fecha_recepcion, ''))
-        o['armador']=self.armador
+        if(self.armador):
+          o['armador']=self.armador.username
+        else :
+          o['armador']=""
 
 
         # if self.position and self.position.latitude:
