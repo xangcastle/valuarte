@@ -358,18 +358,20 @@
                     e.textColor = 'white'
                     e.allDay = false
                     e.barra = gestion.barra
+                    e.strella = gestion.strella
                     e.user = gestion.user
                     $('#calender').fullCalendar('updateEvent', e);
                 }
             });
             var event = $('.event-' + gestion.id);
             if (event.length == 0) {
-                var r = createRow(gestion_to_event(gestion));
+                var r = createRow(gestion);
                 $('#external-events-listing').prepend(r);
             } else {
                 $(event).find('.destinatario').html(gestion.titulo);
                 $(event).find('.telefono').html(gestion.telefono);
                 $(event).find('.direccion').html(gestion.direcccion);
+                $(event).find('img').attr("src", gestion.strella);
             }
         }
         var gestion_to_event = function (v) {
