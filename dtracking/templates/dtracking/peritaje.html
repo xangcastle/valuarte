@@ -370,11 +370,11 @@
             } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR") {
                 $.each(events, function (i, e) {
                     if (e.eventID == gestion.id) {
-                        $('#calender').fullCalendar('updateEvent', e);
+                        $('#calender').fullCalendar('updateEvent', e.id);
                     }
                 });
             } else {
-                $('#calendar').fullCalendar('removeEvents', gestion_to_event(gestion));
+                $('#calendar').fullCalendar('removeEvents', gestion.id);
             }
         }
         var gestion_to_event = function (gestion, update) {
