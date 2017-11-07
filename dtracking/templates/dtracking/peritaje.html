@@ -358,31 +358,30 @@
             return row;
         }
         var redrawEvent = function (gestion) {
-                $("#event-" + gestion.id).remove();
+            $("#event-" + gestion.id).remove();
             if (gestion.status_gestion == "RECEPCIONADO") {
-                $("#calender").fullCalendar("removeEvents", gestion.id);
+                //$("#calender").fullCalendar("removeEvents", gestion.id);
                 $('#external-events-listing').prepend(createRow(gestion));
-            } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR"){
-                console.log(gestion_to_event(gestion));
-                $('#calendar').fullCalendar( 'renderEvent', gestion_to_event(gestion));
+            } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR") {
+                var events = $('#calender').fullCalendar('clientEvents');
+                $.each(events, function (i, e) {
+                    if (e.eventID == gestion.id) {
+                        e = gestion_to_event(e);
+                        $('#calender').fullCalendar('updateEvent', e);
+                    }
+                });
             } else {
-                $('#calendar').fullCalendar( 'removeEvents', gestion_to_event(gestion));
+                $('#calendar').fullCalendar('removeEvents', gestion_to_event(gestion));
             }
         }
-        var gestion_to_event = function (gestion, update, event) {
+        var gestion_to_event = function (gestion, update) {
             var update = update || true;
-            var event = event || {};
+            var event = gestion
             event.eventID = gestion.id;
-            event.title = gestion.titulo;
-            event.description = gestion.descripcion;
             event.start = moment(gestion.inicio);
             event.end = moment(gestion.fin);
-            event.color = gestion.color;
             event.textColor = 'white';
             event.allDay = false;
-            event.barra = gestion.barra;
-            event.user = gestion.user;
-            event.strella = gestion.strella;
             event.stick = true
             return event
         }
@@ -445,8 +444,8 @@
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                         event.barra + '<br> ' + '<img src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
-                        '<div>' + event.title + '</div>' +
-                        '<small>' + event.description + '</small><br> ' +
+                        '<div>' + event.destinatario + '</div>' +
+                        '<small>' + event.direccion + '</small><br> ' +
                         '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
                         '</div>');
                 },
