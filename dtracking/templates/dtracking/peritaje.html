@@ -367,7 +367,7 @@
                 });
             if (gestion.status_gestion == "RECEPCIONADO") {
                 $('#external-events-listing').prepend(createRow(gestion));
-            } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR") {
+            } else if(gestion.status_gestion == "ASIGNADO A EVALUADOR") {
                 $.each(events, function (i, e) {
                     if (e.eventID == gestion.id) {
                         $('#calender').fullCalendar('renderEvent', gestion_to_event(gestion));
@@ -457,7 +457,7 @@
                         '</div>');
                 },
                 eventClick: function (calEvent, jsEvent, view) {
-                    showEvent(calEvent.eventID);
+                    showEvent(calEvent.id);
                 }
             });
             $('#calender').fullCalendar('option', 'timezone', 'UTC');
