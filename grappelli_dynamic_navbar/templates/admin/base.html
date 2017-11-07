@@ -122,16 +122,17 @@
                         method: "get",
                         success: function (result) {
                             if (result.code == 200) {
+                                console.log(result);
                                 var tab = $('#logs').empty();
                                 $.each(result.logs, function (i, o) {
                                     var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
                                     tab.append(rw);
                                 });
-                                var url = $("#ficha").attr('url') + result.id_gestion
-                                $("#ficha").attr('data-url', url);
+                                var u_ficha = $("#ficha").attr('url') + result.id_gestion
+                                $("#ficha").attr('data-url', u_ficha);
 
-                                url = $("#proforma").attr('url') + result.id_gestion
-                                $("#proforma").attr('data-url', url);
+                                var u_proforma = $("#proforma").attr('url') + result.id_gestion
+                                $("#proforma").attr('data-url', u_proforma);
                                 $("#codigo_gestion").html(result.codigo_gestion);
                                 $("#cliente_gestion").html(result.cliente_gestion);
                                 $("#tipo_gestion").html(result.tipo_gestion);
