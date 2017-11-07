@@ -360,17 +360,17 @@
         var redrawEvent = function (gestion) {
             var events = $('#calender').fullCalendar('clientEvents');
             $("#event-" + gestion.id).remove();
-            if (gestion.status_gestion == "RECEPCIONADO") {
-                $.each(events, function (i, e) {
+            $.each(events, function (i, e) {
                     if(e.id == gestion.id){
                         $("#calender").fullCalendar("removeEvents", gestion.id);
                     }
                 });
+            if (gestion.status_gestion == "RECEPCIONADO") {
                 $('#external-events-listing').prepend(createRow(gestion));
             } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR") {
                 $.each(events, function (i, e) {
                     if (e.eventID == gestion.id) {
-                        $('#calender').fullCalendar('updateEvent', e.id);
+                        $('#calender').fullCalendar('renderEvent', gestion_to_event(gestion));
                     }
                 });
             } else {
