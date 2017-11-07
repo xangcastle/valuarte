@@ -20,7 +20,6 @@ from django.utils import timezone
 from django.db.models import Sum
 
 
-
 def add_business_days(origin_date, add_days):
     '''
     Función que añade días hábiles a una fecha.
@@ -43,6 +42,7 @@ def diff_business_days(origin_date, end_date):
             continue
         days += 1
     return days
+
 
 def ifnull(var, val):
     if var is None:
@@ -77,7 +77,7 @@ class Gestor(models.Model):
                                         default='WIFI', null=True, blank=True)
     sms_gateway = models.CharField(max_length=20, null=True)
     foto = models.ImageField(null=True)
-    zonas = models.ManyToManyField('Zona',null=True, blank=True)
+    zonas = models.ManyToManyField('Zona', null=True, blank=True)
     tipo_gestion = models.ManyToManyField('TipoGestion', blank=True)
     intervalo = models.PositiveIntegerField(null=True, verbose_name="intervalo de seguimiento",
                                             help_text="esto determina que tan seguido el gestor reportara su posicion gps en segundos")
@@ -166,7 +166,8 @@ class TipoGestion(Entidad):
     dias = models.IntegerField(default=4, null=True, verbose_name="dias necesarios para el armado")
 
     def __unicode__(self):
-        return "%s (%s)" % (self.prefijo, self.name)
+        return self.name
+
     def detalles(self):
         return DetalleGestion.objects.filter(tipo_gestion=self)
 
@@ -187,12 +188,13 @@ class TipoGestion(Entidad):
 
     def muestra_color(self):
         return mark_safe('<div style="height: 25px; width: 25px; background-color:%s">' % self.color)
+
     muestra_color.short_description = "color"
 
     class Meta:
         verbose_name = "tipo de avaluo"
         verbose_name_plural = "tipos de avaluos"
-        ordering = ['prefijo',]
+        ordering = ['prefijo', ]
 
 
 TIPOS = (
@@ -281,7 +283,8 @@ BANCOS = (
 
 
 class Gestion_Fin(Entidad):
-    pass
+    def __unicode__(self):
+        return self.name
 
     class Meta:
         verbose_name_plural = "Fines de Avaluo"
@@ -289,6 +292,9 @@ class Gestion_Fin(Entidad):
 
 
 class Gestion_Uso(Entidad):
+    def __unicode__(self):
+        return self.name
+
     fin = models.ForeignKey(Gestion_Fin)
 
     class Meta:
@@ -297,13 +303,16 @@ class Gestion_Uso(Entidad):
 
 
 class Gestion(models.Model):
-    fecha = models.DateField(null=True, blank=True, verbose_name="fecha de solicitud")  # fecha en que se recepciona la solicitud del avaluo
-    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo", blank=True)  # el codigo del avaluo
+    fecha = models.DateField(null=True, blank=True,
+                             verbose_name="fecha de solicitud")  # fecha en que se recepciona la solicitud del avaluo
+    barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo",
+                             blank=True)  # el codigo del avaluo
     tipo_gestion = models.ForeignKey(TipoGestion)
     fin_gestion = models.ForeignKey(Gestion_Fin, null=True, blank=True)
     uso_gestion = models.ForeignKey(Gestion_Uso, null=True, blank=True)
     observaciones = models.TextField(max_length=600, null=True, blank=True)
-    observaciones_cotizacion = models.TextField(max_length=255, null=True, blank=True, verbose_name="observaciones en la cotización")
+    observaciones_cotizacion = models.TextField(max_length=255, null=True, blank=True,
+                                                verbose_name="observaciones en la cotización")
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
     valor = models.FloatField(null=True, blank=True, verbose_name="precio del avaluo ya con iva")
     categoria = models.CharField(max_length=50, null=True, blank=True)
@@ -327,13 +336,15 @@ class Gestion(models.Model):
     banco = models.CharField(max_length=25, choices=BANCOS, verbose_name="Banco", null=True, blank=True,
                              help_text="temporal")
     banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario",
-                             help_text="temporal")
+                                       help_text="temporal")
     new_banco = models.ForeignKey('Banco', null=True, blank=True)
     new_ejecutivo = models.ForeignKey('Ejecutivo', null=True, blank=True)
 
     # peritaje
-    notify = models.BooleanField(default=False, verbose_name="notificar")  # indica si se le notificara via email al perito asignado
-    user = models.ForeignKey('Perito', null=True, blank=True, verbose_name="perito")  # perito de campo al que se le asigna el avaluo
+    notify = models.BooleanField(default=False,
+                                 verbose_name="notificar")  # indica si se le notificara via email al perito asignado
+    user = models.ForeignKey('Perito', null=True, blank=True,
+                             verbose_name="perito")  # perito de campo al que se le asigna el avaluo
     fecha_asignacion = models.DateTimeField(null=True, blank=True)  # fecha de programacion incluye hora
     realizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
     ficha_inspeccion = models.FileField(upload_to="fichas", null=True, blank=True)  # ficha del levantamiento fisico
@@ -343,14 +354,15 @@ class Gestion(models.Model):
     # operaciones
     fecha_recepcion = models.DateField(null=True, blank=True)
     fecha_vence = models.DateField(null=True, blank=True)
-    armador = models.ForeignKey('Operaciones', null=True, blank=True, related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
+    armador = models.ForeignKey('Operaciones', null=True, blank=True,
+                                related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
     revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
 
     terminada = models.BooleanField(default=False)  # indica si ya se firmo
-    fecha_entrega_efectiva = models.DateField(null=True, blank=True) # fecha firma
+    fecha_entrega_efectiva = models.DateField(null=True, blank=True)  # fecha firma
     informe_final = models.FileField(upload_to="fichas", null=True, blank=True)  # informe final
 
-    dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado")
+    dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado", blank=True)
 
     priority = models.BooleanField(default=False, verbose_name="prioridad")
 
@@ -360,7 +372,6 @@ class Gestion(models.Model):
     def notificar(self, *args, **kwargs):
         print("asignar_gestion: Llamando Metodo para generar PDF")
         if self.user.email:
-
             email = EmailMessage("Asignación de Avaluo %s" % self.barra,
                                  "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
                                  "Datos del cliente:<br>"
@@ -430,7 +441,8 @@ class Gestion(models.Model):
                 and self.armador and self.revizada:
             actual = ESTADOS_LOG_GESTION[3][0]
         if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) \
-                and self.armador and self.revizada and (self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
+                and self.armador and self.revizada and (
+            self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
             actual = ESTADOS_LOG_GESTION[4][0]
 
         return actual
@@ -458,7 +470,6 @@ class Gestion(models.Model):
         return dias
 
     dias_retrazo.short_description = "dias de retrazo"
-
 
     def contacto_envio(self):
         if self.banco and self.banco_ejecutivo:
@@ -558,7 +569,7 @@ class Gestion(models.Model):
         recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
                                                     fecha__day=today.day).count()
         recepcionadas_48h = recepcionadas.filter(fecha__year=after_tomorrow.year, fecha__month=after_tomorrow.month,
-                                                    fecha__day=after_tomorrow.day).count()
+                                                 fecha__day=after_tomorrow.day).count()
 
         incumplidas = []
         programadas = []
@@ -609,8 +620,9 @@ class Gestion(models.Model):
                             'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
                             }
         return data
+
     @staticmethod
-    def send_email(asunto="",texto="", correo="sebastian.norena.marquez@gmail.com"):
+    def send_email(asunto="", texto="", correo="sebastian.norena.marquez@gmail.com"):
         today = datetime.now()
         after_tomorrow = today + timedelta(days=2)
 
@@ -619,7 +631,7 @@ class Gestion(models.Model):
         recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
                                                     fecha__day=today.day).count()
         recepcionadas_48h = recepcionadas.filter(fecha__year=after_tomorrow.year, fecha__month=after_tomorrow.month,
-                                                    fecha__day=after_tomorrow.day).count()
+                                                 fecha__day=after_tomorrow.day).count()
 
         incumplidas = []
         programadas = []
@@ -669,10 +681,10 @@ class Gestion(models.Model):
                                                                          ]).aggregate(Sum('valor'))['valor__sum'],
                             'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
                             }
-        texto  = render_to_string('emails/email7.html', data)
-        email = EmailMessage(asunto,texto,
-                         to=[correo],
-                         )
+        texto = render_to_string('emails/email7.html', data)
+        email = EmailMessage(asunto, texto,
+                             to=[correo],
+                             )
         email.content_subtype = "html"
         # email.attach_file("out.pdf")
         email.send()
@@ -683,12 +695,10 @@ class Gestion(models.Model):
         else:
             return "/static/dtracking/img/no_estrella.png"
 
-
-
     def to_json(self):
         o = {}
         o['id'] = self.id
-        o['status'] = self.status_gestion
+        o['idEvent'] = self.id
         o['destinatario'] = self.destinatario
         o['direccion'] = self.direccion
         o['telefono'] = self.telefono
@@ -708,32 +718,29 @@ class Gestion(models.Model):
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
         o['strella'] = self.get_estrella()
-
-        if(self.fin_gestion):
-          o['fin_gestion']=   self.fin_gestion.name
-        else :
-          o['fin_gestion']=   ""
-
-        if( self.uso_gestion):
-          o['uso_gestion']=   self.uso_gestion.name
-        else :
-          o['uso_gestion']=   ""
-        o['identificacion']=self.identificacion
-        o['contacto']      = self.contacto
-        o['contacto_telefono']= self.contacto_telefono
+        if (self.fin_gestion):
+            o['fin_gestion'] = self.fin_gestion.name
+        else:
+            o['fin_gestion'] = ""
+        if (self.uso_gestion):
+            o['uso_gestion'] = self.uso_gestion.name
+        else:
+            o['uso_gestion'] = ""
+        o['identificacion'] = self.identificacion
+        o['contacto'] = self.contacto
+        o['contacto_telefono'] = self.contacto_telefono
         o['direccion_envio'] = self.direccion_envio
-        o['referencia'] =self.referencia
-        o['new_banco'] =self.new_banco
-        o['new_ejecutivo'] =self.new_ejecutivo
-        o['valor'] =self.valor
+        o['referencia'] = self.referencia
+        o['new_banco'] = self.new_banco
+        o['new_ejecutivo'] = self.new_ejecutivo
+        o['valor'] = self.valor
         o['dias_armado'] = self.dias
-        o['fecha_asignacion']=str(ifnull(self.fecha_asignacion, ''))
-        o['fecha_recepcion']=str(ifnull(self.fecha_recepcion, ''))
-        if(self.armador):
-          o['armador']=self.armador.username
-        else :
-          o['armador']=""
-
+        o['fecha_asignacion'] = str(ifnull(self.fecha_asignacion, ''))
+        o['fecha_recepcion'] = str(ifnull(self.fecha_recepcion, ''))
+        if (self.armador):
+            o['armador'] = self.armador.username
+        else:
+            o['armador'] = ""
 
         # if self.position and self.position.latitude:
         #     o['latitude'] = str(self.position.latitude)
@@ -743,7 +750,7 @@ class Gestion(models.Model):
             for a in self.media():
                 o['media'].append(a.to_json())
         if self.status_gestion:
-            o['estado'] = str(self.status_gestion)
+            o['status_gestion'] = str(self.status_gestion)
         if self.json:
             try:
                 o['data'] = json.loads(str(smart_str(self.json)).replace("'", "\""))
@@ -939,8 +946,6 @@ class Import(models.Model):
             self.delete()
 
 
-
-
 def autoasignacion(gestiones):
     for g in gestiones:
         g.fecha_asignacion = datetime.now()
@@ -1040,7 +1045,8 @@ class Registro(models.Model):
 
 class PeritoManager(models.Manager):
     def get_queryset(self):
-        return super(PeritoManager, self).get_queryset().filter(id__in=Gestor.objects.all().values_list('user', flat=True))
+        return super(PeritoManager, self).get_queryset().filter(
+            id__in=Gestor.objects.all().values_list('user', flat=True))
 
 
 class Perito(User):
@@ -1053,7 +1059,8 @@ class Perito(User):
 
 class ArmadorManager(models.Manager):
     def get_queryset(self):
-        return super(ArmadorManager, self).get_queryset().filter(id__in=Armador.objects.all().values_list('user', flat=True))
+        return super(ArmadorManager, self).get_queryset().filter(
+            id__in=Armador.objects.all().values_list('user', flat=True))
 
 
 class Operaciones(User):
@@ -1067,6 +1074,7 @@ class Operaciones(User):
 class Banco(Entidad):
     def __unicode__(self):
         return self.name
+
     class Meta:
         verbose_name_plural = "bancos nacionales"
 

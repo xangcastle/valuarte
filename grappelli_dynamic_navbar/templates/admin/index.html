@@ -171,7 +171,8 @@
                     <div class="small-box bg-teal">
                         <div class="inner">
                             <h3>Recepción</h3>
-                            <h6><i class="ion ion-email-unread"> </i> Registros Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                            <h6><i class="ion ion-email-unread"> </i> Registros
+                                Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
                             <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
                             <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
                         </div>
@@ -179,9 +180,9 @@
                             <i class="ion ion-happy">{{ t.recepcion.total }}</i>
                         </div>
                         <a title="Reporte de Recepción" href="#"
-                               class="small-box-footer show_info"
-                               data-url="{% url 'reporte' %}?status=0"
-                               data-name="Reporte de Recepción">Mas info
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=0"
+                           data-name="Reporte de Recepción">Mas info
                         </a>
                     </div>
                 </div>
@@ -202,9 +203,9 @@
                             <i class="ion ion-android-car">{{ t.logistica.total }}</i>
                         </div>
                         <a title="Reporte de Logística" href="#"
-                               class="small-box-footer show_info"
-                               data-url="{% url 'reporte' %}?status=1"
-                               data-name="Reporte de Lógistica">Mas info
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=1"
+                           data-name="Reporte de Lógistica">Mas info
                         </a>
                     </div>
                 </div>
@@ -229,16 +230,16 @@
                             <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
                         </div>
                         <a title="Reporte de Operaciones" href="#"
-                               class="small-box-footer show_info"
-                               data-url="{% url 'reporte' %}?status=2"
-                               data-name="Reporte de Operaciones">Mas info
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=2"
+                           data-name="Reporte de Operaciones">Mas info
                         </a>
                     </div>
                 </div>
                 <div class="clearfix visible-sm-block"></div>
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-blue">
+                    <div class="small-box bg-blue" id="gerencia-panel">
                         <div class="inner">
                             <h3>Gerencia</h3>
                             <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
@@ -252,9 +253,9 @@
                         </div>
 
                         <a title="Reporte de Gerencia" href="#"
-                               class="small-box-footer show_info"
-                               data-url="{% url 'reporte' %}?status=3"
-                               data-name="Reporte de Gerencia">Mas info
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=3"
+                           data-name="Reporte de Gerencia">Mas info
                         </a>
                     </div>
                 </div>
@@ -379,14 +380,16 @@
                             if (div == '#agenda-operaciones') {
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.title  + '</div>' +
+                                    '<div>' + event.title + '</div>' +
+                                    '<img src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                                     '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<strong>' + event.dias + '</strong>' +
                                     '</div>');
                             } else {
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.title +"asdas" +'</div>' +
+                                    '<div>' + event.title + "asdas" + '</div>' +
+                                    '<img src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                                     '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<div><small>' + event.description + '</small></div>' +
                                     '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
@@ -402,6 +405,7 @@
                 }
             })
         }
+
         GenerateCalendar('/dtracking/obtenercitasperitaje/', '#agenda-peritaje');
         GenerateCalendar('/dtracking/obtenercitasoperaciones/', '#agenda-operaciones');
     </script>
@@ -435,6 +439,7 @@
                 color: d.color
             };
         });
+
         function dashboard(data) {
 
             function segColor(c) {
@@ -606,6 +611,7 @@
                     piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
                         .attrTween("d", arcTween);
                 }
+
                 // Utility function to be called on mouseover a pie slice.
                 function mouseover(d) {
                     var x = data.filter(function (f) {
@@ -687,8 +693,8 @@
 
                 function getLegend(d, aD) { // Utility function to compute percentage.
                     return d3.format("%")(d.total / d3.sum(aD.map(function (v) {
-                            return v.total;
-                        })));
+                        return v.total;
+                    })));
                 }
 
                 return leg;
@@ -699,6 +705,7 @@
             var pC = pieChart(data, '#pie');
             var leg = legend(data, '#tabla');
         }
+
         dashboard(data);
     </script>
     {% comment %}
@@ -766,6 +773,12 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#gerencia-panel').click(function () {
+                url = "/dtracking/gerencia/";
+                window.open(url, '_blank');
+                return false;
+            });
+
             function obj_to_event(v) {
                 return {
                     id: v.id,
@@ -785,7 +798,7 @@
                 , items = []
                 , now = new Date();
 
-            for(var i = 0; i < no_lines; i++){
+            for (var i = 0; i < no_lines; i++) {
                 lanes.push({id: i, label: ""});
             }
 
@@ -799,11 +812,11 @@
                     var l = 0;
                     $.each(response, function (i, o) {
                         var obj = obj_to_event(o);
-                        obj.lane=l;
+                        obj.lane = l;
                         items.push(obj);
                         l++;
-                        if (l>=no_lines){
-                            l=0;
+                        if (l >= no_lines) {
+                            l = 0;
                         }
                     });
                     var margin = {top: 20, right: 15, bottom: 15, left: 60}
@@ -1095,7 +1108,8 @@
                                 return x1(d.end) - x1(d.start);
                             })
                             .attr('height', function (d) {
-                                return .8 * y1(1);;
+                                return .8 * y1(1);
+                                ;
                             })
                             .attr('class', function (d) {
                                 return 'mainItem ' + d.class;
@@ -1136,7 +1150,7 @@
                         for (var i = 0; i < items.length; i++) {
                             d = items[i];
                             if (!paths[d.class]) paths[d.class] = '';
-                            paths[d.class] += ['M',x(d.start),(y2(d.lane) + offset),'H',x(d.end)].join(' ');
+                            paths[d.class] += ['M', x(d.start), (y2(d.lane) + offset), 'H', x(d.end)].join(' ');
                         }
 
                         for (var className in paths) {

@@ -57,8 +57,14 @@
                         <a id="proforma" title="Generar Ficha" href="#"
                            class="btn btn-primary btn-circle show_atachments"
                            url="{% url 'generar_asignacion' %}?documento=" data-url=""
-                           data-name="Generar Proforma">
-                            <i class="ion-clipboard"></i>
+                           data-name="Generar Ficha">
+                            <i class="ion-android-desktop"></i>
+                        </a>
+                        <a id="examen" title="Examen Previo" href="#"
+                           class="btn btn-primary btn-circle show_atachments"
+                           url="{% url 'examen_previo' %}?gestion=" data-url=""
+                           data-name="Examen Previo">
+                            <i class="ion-social-octocat"></i>
                         </a>
                     </div>
                 </div>

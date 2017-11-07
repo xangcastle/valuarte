@@ -218,25 +218,11 @@
                 success: function (response) {
                     body.html(response);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
-                    $("#id_fecha_asignacion").datetimepickerByGiro({
-                        format: 'd/m/Y H:m',
-                        datepicket: false,
-                        timepicker: true,
-                        minView: 1,
-                        maxView: 1,
-                    });
-                    $("#id_fecha_recepcion").datetimepickerByGiro({
-                        format: 'd/m/Y H:m',
-                        datepicket: false,
-                        timepicker: true,
-                        minView: 1,
-                        maxView: 1,
-                    });
-                    var fecha = moment($("#id_fecha_asignacion").val(), 'DD/MM/YYYY HH:mm:ss').toDate();
-                    $("#id_fecha_asignacion").datetimepickerByGiro('update', fecha);
-                    $("#id_fecha_recepcion").datetimepickerByGiro('update', fecha);
                     $(".form_entrada").attr('enctype',"multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
+
+                    $('#id_armador').prop('required', true);
+                    $('#ficha_inspeccion').attr('required', 'true');
                 }
             });
         }
@@ -270,6 +256,7 @@
                             textColor: 'white',
                             allDay: false,
                             barra: v.barra,
+                            strella: v.strella,
                             user: v.user,
                             dias: v.dias,
                         });
@@ -286,16 +273,12 @@
                             textColor: 'white',
                             allDay: false,
                             barra: v.barra,
+                            strella: v.strella,
                             user: v.user,
                             dias: v.dias,
                         });
                     });
                     console.log(events);
-                    $('#external-events-listing').empty();
-                    $.each(response.pendientes, function (i, v) {
-                        $('#external-events-listing').append(createRow(v));
-                    });
-                    makeEventsDraggable();
 
                     GenerateCalender(events);
                 },
@@ -338,7 +321,7 @@
                     }
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                        event.barra + '<br> ' +
+                        event.barra + '<br> ' + '<img src="'+ event.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                         '<div>' + event.title + '</div>' +
                         '<small>' + event.description + '</small><br> ' +
                         '<strong>' + event.dias + '</strong>' +

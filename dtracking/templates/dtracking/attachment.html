@@ -366,7 +366,7 @@
                   <th>FECHA SOLICITUD</th>
                   <td> {{ o.fecha|date:"d/m/y" }}</td>
                   <th>FECHA ELABORACIÓN</th>
-                  <td>{{ o.fecha_asignacion }}</td>
+                  <td>{{ o.fecha_asignacion|date:"d/m/y" }}</td>
                 </tr>
                 <tr>
                   <th>CIUDAD</th>
@@ -413,13 +413,13 @@
                 </tr>
                 <tr>
                   <th>FECHA ASIGNACIÓN</th>
-                  <td>{{ o.fecha_asignacion }} </td>
+                  <td>{{ o.fecha_asignacion|date:"d/m/y" }} </td>
                   <th  >FECHA RECEPCION</th>
-                  <td >{{ o.fecha_recepcion }}</td>
+                  <td >{{ o.fecha_recepcion|date:"d/m/y" }}</td>
                 </tr>
                 <tr>
                   <th>PERITO</th>
-                  <td>{{ o.user.username }} - {{ o.user.get_full_name }}</td>
+                  <td>{{ o.user.get_full_name }}</td>
                   <th  >CATEGORIA</th>
                   <td >{{ o.categoria }}</td>
                 </tr>

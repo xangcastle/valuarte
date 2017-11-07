@@ -80,8 +80,8 @@
                                class="btn btn-primary btn-circle show_atachments have-info"
                                data-des="{% url 'reporte' %}?status=0"
                                data-name="Reporte de Recepción">
-                            <i class="ion-happy"></i>
-                        </a>
+                                <i class="ion-happy"></i>
+                            </a>
                             <a title="Reporte de Logística" href="#"
                                class="btn btn-primary btn-circle show_atachments have-info"
                                data-des="{% url 'reporte' %}?status=1"
@@ -100,7 +100,8 @@
                                data-name="Reporte de Gerencia">
                                 <i class="ion-android-contact"></i>
                             </a>
-                            <a title="Nuevo Avaluo" href="javascript:void(0)" id="new-event" class="btn btn-primary btn-circle">
+                            <a title="Nuevo Avaluo" href="javascript:void(0)" id="new-event"
+                               class="btn btn-primary btn-circle">
                                 <i class="ion-plus-round"></i>
                             </a>
                         </h2>
@@ -166,6 +167,7 @@
     <script type="text/javascript"
             src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
     <script>
+
         var cargar_municipios = function () {
             $.ajax('/dtracking/get_municipios/',
                 {
@@ -207,6 +209,7 @@
                 method: "GET",
                 success: function (response) {
                     body.html(response);
+                    $("#id_user").prop('required', true);
                     modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
                     $("#div_id_ficha_inspeccion").css("display", "none");
                     $("#div_id_fecha_recepcion").css("display", "none");
@@ -215,13 +218,22 @@
                         if ($(this).is(':checked')) {
                             $("#div_id_ficha_inspeccion").css("display", "block");
                             $("#div_id_fecha_recepcion").css("display", "block");
+                            $("#id_fecha_recepcion-view-input").attr('readonly', false);
+                            $("#id_fecha_recepcion-view-input").prop('required', true);
+                            $("#id_fin_gestion").prop('required', true);
+                            $("#id_uso_gestion").prop('required', true);
+                            $("#id_valor").prop('required', true);
                             $("#div_id_armador").css("display", "block");
                         } else {
                             $("#div_id_ficha_inspeccion").css("display", "none");
                             $("#div_id_fecha_recepcion").css("display", "none");
+                            $("#id_fecha_recepcion-view-input").attr('readonly', true);
+                            $("#id_fecha_recepcion-view-input").prop('required', false);
+                            $("#id_fin_gestion").prop('required', false);
+                            $("#id_uso_gestion").prop('required', false);
+                            $("#id_valor").prop('required', false);
                             $("#div_id_armador").css("display", "none");
                         }
-
                     });
                     if (fecha != undefined) {
                         $("#id_fecha_asignacion").val(fecha.format('D/M/Y'));
@@ -276,7 +288,7 @@
             });
         }
         var newEvent = function () {
-            var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion";
+            var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-identificacion-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -290,7 +302,7 @@
             });
         }
         var editEvent = function () {
-            var id = $(this).data('idevent');
+            var id = $(this).data("event").id;
             var params = "fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
@@ -327,10 +339,9 @@
             });
         }
         var createRow = function (v) {
-            var row = '<li class="grp-row fc-draggable event-' + v.id + '" data-idevent="' + v.id + '">' +
-                '<input class="eventid" type="hidden" value="' + v.id + '">' +
+            var row = '<li class="grp-row fc-draggable" id ="event-' + v.id + '">' +
                 '<a href="/admin/dtracking/gestion/' + v.id + '/change/">' + v.barra + '</a>' +
-                '<img src="'+ v.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
+                '<img src="' + v.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                 '<span class="grp-font-color-quiet destinatario">' + v.destinatario + '</span>' +
                 '<span class="grp-font-color-quiet telefono">' + v.telefono + '</span>' +
                 '<span class="grp-font-color-quiet direccion">' + v.direccion + '</span>' +
@@ -338,7 +349,7 @@
                 'data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion=' + v.id +
                 '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cotizar</span></li>';
 
-            row = $(row).data('event', gestion_to_event(v));
+            row = $(row).data('event', v);
             row = $(row).draggable({
                 zIndex: 999,
                 revert: true,
@@ -347,49 +358,35 @@
             return row;
         }
         var redrawEvent = function (gestion) {
-            var events = $('#calender').fullCalendar('clientEvents');
-            $.each(events, function (i, e) {
-                if (e.eventID == gestion.id) {
-                    e.title = gestion.titulo
-                    e.description = gestion.descripcion
-                    e.start = moment(gestion.inicio)
-                    e.end = moment(gestion.fin)
-                    e.color = gestion.color
-                    e.textColor = 'white'
-                    e.allDay = false
-                    e.barra = gestion.barra
-                    e.strella = gestion.strella
-                    e.user = gestion.user
-                    $('#calender').fullCalendar('updateEvent', e);
-                }
-            });
-            var event = $('.event-' + gestion.id);
-            if (event.length == 0) {
-                var r = createRow(gestion);
-                $('#external-events-listing').prepend(r);
+                $("#event-" + gestion.id).remove();
+            if (gestion.status_gestion == "RECEPCIONADO") {
+                $("#calender").fullCalendar("removeEvents", gestion.id);
+                $('#external-events-listing').prepend(createRow(gestion));
+            } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR"){
+                console.log(gestion_to_event(gestion));
+                $('#calendar').fullCalendar( 'renderEvent', gestion_to_event(gestion));
             } else {
-                $(event).find('.destinatario').html(gestion.titulo);
-                $(event).find('.telefono').html(gestion.telefono);
-                $(event).find('.direccion').html(gestion.direcccion);
-                $(event).find('img').attr("src", gestion.strella);
+                $('#calendar').fullCalendar( 'removeEvents', gestion_to_event(gestion));
             }
         }
-        var gestion_to_event = function (v) {
-            return {
-                eventID: v.id,
-                title: v.titulo,
-                description: v.descripcion,
-                start: moment(v.inicio),
-                end: moment(v.fin),
-                color: v.color,
-                textColor: 'white',
-                allDay: false,
-                barra: v.barra,
-                user: v.user,
-                strella: v.strella,
-                stick: true
-            };
+        var gestion_to_event = function (gestion, update, event) {
+            var update = update || true;
+            var event = event || {};
+            event.eventID = gestion.id;
+            event.title = gestion.titulo;
+            event.description = gestion.descripcion;
+            event.start = moment(gestion.inicio);
+            event.end = moment(gestion.fin);
+            event.color = gestion.color;
+            event.textColor = 'white';
+            event.allDay = false;
+            event.barra = gestion.barra;
+            event.user = gestion.user;
+            event.strella = gestion.strella;
+            event.stick = true
+            return event
         }
+
         function refreshCalender() {
             var events = [];
             var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
@@ -410,10 +407,10 @@
                 },
                 error: function (error) {
                     alert(JSON.stringify(error.d));
-                    console.log(error);
                 }
             })//ajax
         }
+
         function GenerateCalender(events) {
 
             $('#calender').fullCalendar('destroy');
@@ -430,9 +427,8 @@
                 dragRevertDuration: 0,
                 timeFormat: 'h(:mm)a',
                 drop: function (date, jsEvent, ui, resourceId) {
-                    var id = $(this).children(".eventid").val();
+                    showEvent($(this).data("event").id, date);
                     $(this).remove();
-                    showEvent(id, date);
                 },
                 eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
                     var d = new Date(event.start)
@@ -446,10 +442,9 @@
                     });
                 },
                 eventRender: function (event, element, view) {
-                    console.log(event);
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                        event.barra + '<br> ' + '<img src="'+ event.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                        event.barra + '<br> ' + '<img src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                         '<div>' + event.title + '</div>' +
                         '<small>' + event.description + '</small><br> ' +
                         '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
@@ -461,6 +456,7 @@
             });
             $('#calender').fullCalendar('option', 'timezone', 'UTC');
         }
+
         function ProgramEvent(id, inicio) {
             var event;
             var data = {
@@ -480,29 +476,18 @@
                 }
             });
         }
+
         var onclosemodal = function () {
             var id = $(this).find('input[name="id"]').val();
-            $.ajax('/admin/ajax/get_object/', {
-                method: "POST",
-                data: {app_label: 'dtracking', model: 'gestion', id: id},
-                success: function (gestion) {
-                    if (gestion.status_gestion == 'RECEPCIONADO') {
-
+            if (id != undefined && id != "") {
+                $.ajax('/admin/ajax/get_object/', {
+                    method: "POST",
+                    data: {app_label: 'dtracking', model: 'gestion', id: id},
+                    success: function (gestion) {
+                        redrawEvent(gestion);
                     }
-                    $('#calender').fullCalendar('removeEvents', function (eventObject) {
-                        if (gestion.status != 'ASIGNADO A EVALUADOR' && eventObject.eventID == gestion.id) {
-
-                            var r = createRow(gestion);
-                            $('#external-events-listing').prepend(r);
-                            return true;
-                        } else {
-                            return false;
-                        }
-
-                    });
-                }
-            });
-
+                });
+            }
         }
         var btn_form;
         $(document).on("submit", ".form_entrada", function (e) {
@@ -530,14 +515,12 @@
                             styling: 'bootstrap3'
                         });
                     else {
-                        redrawEvent(e.object);
                         new PNotify({
                             title: 'Acción Exitosa !',
                             text: e.result,
                             type: 'success',
                             styling: 'bootstrap3'
                         });
-
                         $("#myModal").modal('hide');
                     }
                     if (typeof(e.function) != "undefined") {
@@ -547,6 +530,7 @@
                             param = e.param;
                         window[name](e, element, param);
                     }
+                    redrawEvent(e.object);
 
                 }, error: function (data) {
                     btn_form.prop("disabled", false);

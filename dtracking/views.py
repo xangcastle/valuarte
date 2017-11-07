@@ -435,6 +435,8 @@ def programar_gestion(request):
         gestion.valor = valor
     if realizada == 'on':
         gestion.realizada = True
+    else:
+        gestion.realizada = False
     try:
         gestion.ficha_inspeccion = request.FILES['ficha_inspeccion']
     except:
@@ -478,3 +480,20 @@ class operaciones(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(operaciones, self).get_context_data(**kwargs)
         return super(operaciones, self).render_to_response(context)
+
+
+
+
+class gerencia(TemplateView):
+    template_name = "dtracking/gerencia.html"
+
+    def get(self, request, *args, **kwargs):
+        context = super(gerencia, self).get_context_data(**kwargs)
+        avaluos = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+        print avaluos
+        context['avaluos'] = avaluos
+        return super(gerencia, self).render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(gerencia, self).get_context_data(**kwargs)
+        return super(gerencia, self).render_to_response(context)

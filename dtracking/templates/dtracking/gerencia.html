@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+    {% for a in avaluos %}
+        <form action="/admin/ajax/get_html_form/" enctype="multipart/form-data" method="post" id="form-{{ a.id }}">
+            {% csrf_token %}
+
+            <input type="hidden" name="app_label" value="dtracking"/>
+            <input type="hidden" name="id" value="{{ a.id }}"/>
+            <input type="hidden" name="model" value="gestion"/>
+            <input type="text" value="{{ a.barra }}" name="barra" readonly/>
+            <input type="text" value="{{ a.destinatario }}" name="destinatario" readonly/>
+            <input type="text" value="{{ a.ejecuativo_bancario }}" name="ejecuativo_bancario" readonly/>
+            <input type="checkbox" value="{{ a.terminada }}"/>
+            {% comment %}<input type="file" value="{{ a.ficha_inspeccion }}" required name="ficha_inspeccion">
+            <input type="file" value="{{ a.informe_final }}" required name="informe_final">{% endcomment %}
+            <input type="submit" value="Terminar">
+            <input type="hidden" name="fields" value="id-terminada">
+        </form>
+
+    {% endfor %}
+{% endblock %}
