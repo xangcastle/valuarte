@@ -385,7 +385,7 @@ def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LO
     if id_perito and int(id_perito) > 0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
-    pendientes = [x.to_json() for x in gestiones.filter(status_gestion=status1)]
+    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status1)]
     programadas = [x.to_json() for x in gestiones.filter(status_gestion=status2)]
 
 

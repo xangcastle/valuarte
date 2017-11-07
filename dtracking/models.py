@@ -738,8 +738,6 @@ class Gestion(models.Model):
         o['contacto_telefono'] = self.contacto_telefono
         o['direccion_envio'] = self.direccion_envio
         o['referencia'] = self.referencia
-        o['new_banco'] = self.new_banco
-        o['new_ejecutivo'] = self.new_ejecutivo
         o['valor'] = self.valor
         o['dias_armado'] = self.dias
         o['fecha_asignacion'] = str(ifnull(self.fecha_asignacion, ''))
