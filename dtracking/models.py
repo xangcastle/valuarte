@@ -442,7 +442,7 @@ class Gestion(models.Model):
             actual = ESTADOS_LOG_GESTION[3][0]
         if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) \
                 and self.armador and self.revizada and (
-            self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
+                    self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
             actual = ESTADOS_LOG_GESTION[4][0]
 
         return actual
@@ -685,6 +685,13 @@ class Gestion(models.Model):
         email = EmailMessage(asunto, texto,
                              to=[correo],
                              )
+
+    def send_email(asunto="", texto="", correo="sebastian.norena.marquez@gmail.com"):
+        texto = render_to_string('emails/email7.html', Gestion.totalizar_gestiones())
+        email = EmailMessage(asunto, texto,
+                             to=[correo],
+                             )
+
         email.content_subtype = "html"
         # email.attach_file("out.pdf")
         email.send()
