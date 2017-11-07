@@ -711,7 +711,7 @@ class Gestion(models.Model):
         o['telefono'] = self.telefono
         o['departamento'] = self.get_departamento()
         o['municipio'] = self.get_municipio()
-        o['barrio'] = self.barrio
+        o['barrio'] = str(self.barrio)
         o['id_tipo_gestion'] = self.tipo_gestion.id
         o['tipo_gestion'] = self.tipo_gestion.name
         o['barra'] = self.barra
