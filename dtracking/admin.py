@@ -69,7 +69,8 @@ class gestion_admin(ImportExportModelAdmin):
                 ('user', 'fecha_asignacion'),
                 ('fecha_recepcion', 'armador', 'fecha_vence'),
                 ('realizada', 'ficha_inspeccion'),
-                ('revizada', 'informe_final'),
+                ('revizada', 'fecha_revision',),
+                ('terminada', 'informe_final', 'fecha_entrega_efectiva'),
                 'position', 'json'
             )
         }),

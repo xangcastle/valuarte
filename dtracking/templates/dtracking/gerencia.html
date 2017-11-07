@@ -1,23 +1,67 @@
 {% extends "admin/base_site.html" %}
 
 {% block content %}
-
-    {% for a in avaluos %}
-        <form action="/admin/ajax/get_html_form/" enctype="multipart/form-data" method="post" id="form-{{ a.id }}">
-            {% csrf_token %}
-
-            <input type="hidden" name="app_label" value="dtracking"/>
-            <input type="hidden" name="id" value="{{ a.id }}"/>
-            <input type="hidden" name="model" value="gestion"/>
-            <input type="text" value="{{ a.barra }}" name="barra" readonly/>
-            <input type="text" value="{{ a.destinatario }}" name="destinatario" readonly/>
-            <input type="text" value="{{ a.ejecuativo_bancario }}" name="ejecuativo_bancario" readonly/>
-            <input type="checkbox" value="{{ a.terminada }}"/>
-            {% comment %}<input type="file" value="{{ a.ficha_inspeccion }}" required name="ficha_inspeccion">
-            <input type="file" value="{{ a.informe_final }}" required name="informe_final">{% endcomment %}
-            <input type="submit" value="Terminar">
-            <input type="hidden" name="fields" value="id-terminada">
-        </form>
-
-    {% endfor %}
+    <table>
+        <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Cliente</th>
+            <th>Telefono</th>
+            <th>Fecha Solicitúd</th>
+            <th>Fecha Inspecion</th>
+            <th>Perito</th>
+            <th>Fecha Eleboracion de Informe</th>
+            <th>Armador</th>
+            <th>Ejecutivo</th>
+            <th>Banco</th>
+            <th>Fin de Avaluo</th>
+            <th>Uso del Avaluo</th>
+            <th>Valor</th>
+            <th>Observaciones</th>
+            <th>Dias de Proceso</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for a in avaluos %}
+            <tr>
+                <td><a href="/admin/dtracking/gestion/{{ a.id }}/change/">{{ a.barra }}</a></td>
+                <td>{{ a.destinatario }}</td>
+                <td>{{ a.banco }}</td>
+                <td>{{ a.fecha }}</td>
+                <td>{{ a.fecha_recepcion }}</td>
+                <td>{{ a.user }}</td>
+                <td>{{ a.fecha_revision }}</td>
+                <td>{{ a.armador }}</td>
+                <td>{{ a.telefono }}</td>
+                <td>{{ a.ejecutivo_banco }}</td>
+                <td>{{ a.fin_gestion }}</td>
+                <td>{{ a.uso_gestion }}</td>
+                <td>{{ a.valor }}</td>
+                <td>{{ a.observaciones }}</td>
+                <td>{{ a.dias_proceso }}</td>
+                <td>
+                    <input type="button" value="Terminar" data-id="{{ a.id }}" class="finalizar">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        (function($){
+            var finalizar = function(){
+                var pk = $(this).data("id");
+                $.ajax("/admin/ajax/object_execute/", {
+                    method: "post",
+                    data: {app_label: "dtracking", model: "gestion", id: pk, method: "terminar"},
+                    success: function(){
+                        location.reload();
+                    },
+                })
+            }
+            $(document).ready(function(){
+                $(".finalizar").on("click", finalizar);
+            });
+        })(grp.jQuery)
+    </script>
 {% endblock %}

@@ -10,7 +10,7 @@ from django.db import models
 from geoposition.fields import GeopositionField
 from jsonfield import JSONField
 import datetime as datetime_base
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from background_task import background
 import json
 from django.utils.encoding import smart_str
@@ -358,6 +358,8 @@ class Gestion(models.Model):
                                 related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
     revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
 
+    fecha_revision = models.DateField(null=True, blank=True)  # fecha firma
+
     terminada = models.BooleanField(default=False)  # indica si ya se firmo
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)  # fecha firma
     informe_final = models.FileField(upload_to="fichas", null=True, blank=True)  # informe final
@@ -365,6 +367,20 @@ class Gestion(models.Model):
     dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado", blank=True)
 
     priority = models.BooleanField(default=False, verbose_name="prioridad")
+
+    def terminar(self):
+        print "terminando"
+        self.terminada = True
+        self.save()
+        return {"result": "Avaluo terminado con exito!"}
+
+
+    def dias_proceso(self):
+        if self.fecha and self.fecha_entrega_efectiva:
+            dias = (self.fecha_entrega_efectiva - self.fecha).days
+        if self.fecha and not self.fecha_entrega_efectiva:
+            dias = (date.today() - self.fecha).days
+        return dias
 
     def logs(self):
         return Log_Gestion.objects.filter(gestion=self)
@@ -451,6 +467,10 @@ class Gestion(models.Model):
         return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
     def save(self, *args, **kwargs):
+        if self.revizada and not self.fecha_revision:
+            self.fecha_revision = datetime.now()
+        if self.terminada and not self.fecha_entrega_efectiva:
+            self.fecha_entrega_efectiva = datetime.now()
         if not self.fecha:
             self.fecha = datetime.now()
         if not self.barra:
