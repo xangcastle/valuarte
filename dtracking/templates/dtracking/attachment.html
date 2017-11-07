@@ -352,15 +352,15 @@
                 <tr>
                   <th>TIPO DE AVALUÓ</th>
                   <td> {{ o.tipo_gestion.name }}</td>
-                  <th>FIN GESTIÓN</th>
-                  <td> {{ o.fin_gestion }}</td>
+                  <th>TEL. CONTACTO</th>
+                  <td>{{ o.contacto_telefono }}</td>
                 </tr>
 
                 <tr>
                   <th>USO GESTIÓN</th>
                   <td> {{ o.uso_gestion }}</td>
-                  <th>TEL. CONTACTO</th>
-                  <td>{{ o.contacto_telefono }}</td>
+                  <th>FIN GESTIÓN</th>
+                  <td> {{ o.fin_gestion }}</td>
                 </tr>
                 <tr>
                   <th>FECHA SOLICITUD</th>
@@ -379,12 +379,6 @@
                   <td colspan="3"> {{ o.direccion }} Barrio: {{ o.barrio.name }}</td>
                 </tr>
                 <tr>
-                  <th>CONTACTO</th>
-                  <td>{{ o.contacto }} </td>
-                  <th  >TELEFONO CONTACTO</th>
-                  <td >{{ o.contacto_telefono }}</td>
-                </tr>
-                <tr>
                   <th>DIRECCIÓN DE ENVIO</th>
                   <td colspan="3">{{ o.direccion_envio }} </td>
                 </tr>
@@ -394,34 +388,6 @@
                   <td>{{ o.banco }} - {{ o.user.get_full_name }}</td>
                   <th  >EJECUTIVO</th>
                   <td >{{ o.banco_ejecutivo }}</td>
-                </tr>
-                <tr>
-                  <th>REFERENCIA BANCARIA</th>
-                  <td colspan="3">{{ o.referencia }}</td>
-                </tr>
-                <tr>
-                  <th>VALOR CON IVA</th>
-                  <td>{{ o.valor }} </td>
-                  <th  >DIAS EXTRAS POR ARMADO</th>
-                  <td >{{ o.dias_armado }}</td>
-                </tr>
-                <tr>
-                  <th>DIAS ARMADO</th>
-                  <td>{{ o.dias_armado }} </td>
-                  <th  >ARMADOR</th>
-                  <td >{{ o.armador }}</td>
-                </tr>
-                <tr>
-                  <th>FECHA ASIGNACIÓN</th>
-                  <td>{{ o.fecha_asignacion|date:"d/m/y" }} </td>
-                  <th  >FECHA RECEPCION</th>
-                  <td >{{ o.fecha_recepcion|date:"d/m/y" }}</td>
-                </tr>
-                <tr>
-                  <th>PERITO</th>
-                  <td>{{ o.user.get_full_name }}</td>
-                  <th  >CATEGORIA</th>
-                  <td >{{ o.categoria }}</td>
                 </tr>
 
                 <tr>
