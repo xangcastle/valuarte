@@ -358,15 +358,18 @@
             return row;
         }
         var redrawEvent = function (gestion) {
+            var events = $('#calender').fullCalendar('clientEvents');
             $("#event-" + gestion.id).remove();
             if (gestion.status_gestion == "RECEPCIONADO") {
-                //$("#calender").fullCalendar("removeEvents", gestion.id);
+                $.each(events, function (i, e) {
+                    if(e.id == gestion.id){
+                        $("#calender").fullCalendar("removeEvents", gestion.id);
+                    }
+                });
                 $('#external-events-listing').prepend(createRow(gestion));
             } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR") {
-                var events = $('#calender').fullCalendar('clientEvents');
                 $.each(events, function (i, e) {
                     if (e.eventID == gestion.id) {
-                        e = gestion_to_event(e);
                         $('#calender').fullCalendar('updateEvent', e);
                     }
                 });
