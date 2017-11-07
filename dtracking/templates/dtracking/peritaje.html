@@ -303,7 +303,7 @@
         }
         var editEvent = function () {
             var id = $(this).data("event").id;
-            var params = "barra-fields=tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
+            var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
