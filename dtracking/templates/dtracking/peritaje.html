@@ -457,7 +457,8 @@
                         '</div>');
                 },
                 eventClick: function (calEvent, jsEvent, view) {
-                    showEvent(calEvent.eventID);
+                    var id = ((calEvent.eventID==undefined)?calEvent.id : calEvent.eventID);
+                    showEvent(id);
                 }
             });
             $('#calender').fullCalendar('option', 'timezone', 'UTC');
