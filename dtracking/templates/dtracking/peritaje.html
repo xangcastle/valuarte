@@ -361,24 +361,16 @@
             var events = $('#calender').fullCalendar('clientEvents');
             $("#event-" + gestion.id).remove();
             $.each(events, function (i, e) {
-                    if(e.id == gestion.id){
-                        $("#calender").fullCalendar("removeEvents", gestion.id);
-                    }
-                });
+                if (e.id == gestion.id) {
+                    $("#calender").fullCalendar("removeEvents", gestion.id);
+                }
+            });
             if (gestion.status_gestion == "RECEPCIONADO") {
                 $('#external-events-listing').prepend(createRow(gestion));
-            } else if(gestion.status_gestion == "ASIGNADO A EVALUADOR") {
-                $.each(events, function (i, e) {
-                    if (e.eventID == gestion.id) {
-                        $('#calender').fullCalendar('renderEvent', gestion_to_event(gestion));
-                    }
-                });
+            } else if (gestion.status_gestion == "ASIGNADO A EVALUADOR") {
+                $('#calender').fullCalendar('renderEvent', gestion_to_event(gestion));
             } else {
-                $.each(events, function (i, e) {
-                    if (e.eventID == gestion.id) {
-                        $('#calender').fullCalendar('updateEvent', e.id);
-                    }
-                });
+                console.log(gestion);
             }
         }
         var gestion_to_event = function (gestion, update) {
@@ -457,7 +449,7 @@
                         '</div>');
                 },
                 eventClick: function (calEvent, jsEvent, view) {
-                    var id = ((calEvent.eventID==undefined)?calEvent.id : calEvent.eventID);
+                    var id = ((calEvent.eventID == undefined) ? calEvent.id : calEvent.eventID);
                     showEvent(id);
                 }
             });
