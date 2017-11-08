@@ -41,7 +41,8 @@
                 <td>{{ a.observaciones }}</td>
                 <td>{{ a.dias_proceso }}</td>
                 <td>
-                    <input type="button" value="Terminar" data-id="{{ a.id }}" class="finalizar">
+                    <input type="button" value="Aceptar" data-id="{{ a.id }}" style="background-color: darkturquoise; color: black" class="finalizar">
+                    <input type="button" value="Rechazar" data-id="{{ a.id }}" style="background-color: coral; color: black" class="rechazar">
                 </td>
             </tr>
         {% endfor %}
@@ -59,8 +60,19 @@
                     },
                 })
             }
+            var rechazar = function(){
+                var pk = $(this).data("id");
+                $.ajax("/admin/ajax/object_execute/", {
+                    method: "post",
+                    data: {app_label: "dtracking", model: "gestion", id: pk, method: "rechazar"},
+                    success: function(){
+                        location.reload();
+                    },
+                })
+            }
             $(document).ready(function(){
                 $(".finalizar").on("click", finalizar);
+                $(".rechazar").on("click", rechazar);
             });
         })(grp.jQuery)
     </script>

@@ -258,6 +258,7 @@
                             barra: v.barra,
                             strella: v.strella,
                             user: v.user,
+                            armador: v.armador,
                             dias: v.dias,
                         });
                     });
@@ -275,6 +276,7 @@
                             barra: v.barra,
                             strella: v.strella,
                             user: v.user,
+                            armador: v.armador,
                             dias: v.dias,
                         });
                     });
@@ -315,15 +317,12 @@
                     refreshCalender();
                 },
                 eventRender: function (event, element, view) {
-                    if (event.changing) {
-                        event.changing = false;
-                        ProgramEvent(event.eventID, event.start, null, null);
-                    }
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                         event.barra + '<br> ' + '<img src="'+ event.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                         '<div>' + event.title + '</div>' +
                         '<small>' + event.description + '</small><br> ' +
+                        '<strong>' + event.armador + '</strong><br>' +
                         '<strong>' + event.dias + '</strong>' +
                         '</div>');
                 },

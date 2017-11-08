@@ -374,6 +374,12 @@ class Gestion(models.Model):
         self.save()
         return {"result": "Avaluo terminado con exito!"}
 
+    def rechazar(self):
+        print "rechazando"
+        self.revizada = False
+        self.save()
+        return {"result": "Avaluo rechazado!"}
+
 
     def dias_proceso(self):
         if self.fecha and self.fecha_entrega_efectiva:
