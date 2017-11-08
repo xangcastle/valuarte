@@ -111,44 +111,7 @@
 
             $('.show_info').on('click', atachments_info);
 
-            function ver_gestion(gestion) {
-                $.ajax({
-                    url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
-                    method: "get",
-                    success: function (result) {
-                        if (result.code == 200) {
-                            console.log(result);
-                            var tab = $('#logs').empty();
-                            $.each(result.logs, function (i, o) {
-                                var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
-                                tab.append(rw);
-                            });
 
-                            var u_ficha = "/dtracking/gestion_proforma/?documento=" + result.id_gestion
-                            $("#ficha").attr('href', u_ficha);
-
-                            var u_proforma = "/dtracking/generar_asignacion/?gestion=" + result.id_gestion
-                            $("#proforma").attr('href', u_proforma);
-
-                            var u_examen = "/dtracking/examen_previo/?gestion=" + result.id_gestion
-                            $("#examen").attr('href', u_examen);
-
-                            $("#codigo_gestion").html(result.codigo_gestion);
-                            $("#cliente_gestion").html(result.cliente_gestion);
-                            $("#tipo_gestion").html(result.tipo_gestion);
-                            $("#modal-default").iziModal({zindex: 9999});
-                            $("#modal-default").iziModal('open');
-
-
-                        } else {
-                            alert(result.mensaje);
-                        }
-
-                    }
-                });
-
-                $(".style-switch-wrapper").removeClass("active");
-            };
             var completeEvent = function () {
                 $(this).autocomplete({
                     minLength: 2,
@@ -186,46 +149,46 @@
 {% block extrahead %}
     {{ block.super }}
     <script type="text/javascript">
-        //BORDES PARPADEANTES
+        function ver_gestion(gestion) {
+            var u = "{% url "get_log_gestion" %}?gestion=" + gestion + "";
+            console.log(u);
+                $.ajax({
+                    url: u,
+                    method: "get",
+                    success: function (result) {
+                        if (result.code == 200) {
+                            var tab = $('#logs').empty();
+                            $.each(result.logs, function (i, o) {
+                                var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
+                                tab.append(rw);
+                            });
 
-        //velocidad del parpadeo
-        var velocidad = 200
-        //colores entre los que cambia
-        var color1 = '#FFFF00'
-        var color2 = '#000099'
+                            var u_ficha = "/dtracking/gestion_proforma/?documento=" + result.id_gestion
+                            $("#ficha").attr('href', u_ficha);
 
-        var objeto, color
+                            var u_proforma = "/dtracking/generar_asignacion/?gestion=" + result.id_gestion
+                            $("#proforma").attr('href', u_proforma);
 
-        function inicia() {
-            if (document.all)
-                objeto = document.all.bflash
-            else if (document.getElementById)
-                objeto = document.getElementById("bflash")
-            else //no soportado, finaliza ejecucion del script
-                return
-//inicializacion
-            objeto.style.display = 'block'
-            objeto.style.borderStyle = 'solid'
-            objeto.style.borderColor = color1
-            color = 0
-//comienza el parpadeo
-            setInterval("parpadear()", velocidad)
-        }
+                            var u_examen = "/dtracking/examen_previo/?gestion=" + result.id_gestion
+                            $("#examen").attr('href', u_examen);
 
-        function parpadear() {
+                            $("#codigo_gestion").html(result.codigo_gestion);
+                            $("#cliente_gestion").html(result.cliente_gestion);
+                            $("#tipo_gestion").html(result.tipo_gestion);
+                            $("#modal-default").iziModal({zindex: 9999});
+                            $("#modal-default").iziModal('open');
 
-            if (color == 0) {
-                objeto.style.borderColor = color2
-                color = 1
-            } else {
-                objeto.style.borderColor = color1
-                color = 0
-            }
-        }
 
-        window.onload = inicia
+                        } else {
+                            alert(result.mensaje);
+                        }
+
+                    }
+                });
+
+                $(".style-switch-wrapper").removeClass("active");
+            };
     </script>
-
     <style>
         .prioridad {
             background-color: #03a9f4;

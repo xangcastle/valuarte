@@ -5,6 +5,7 @@
 {% block blockbots %}
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="300">
     {{ block.super }}
 {% endblock %}
 
@@ -170,7 +171,7 @@
                 <div class="col-lg-6 col-xs-6">
                     <div class="small-box bg-teal">
                         <div class="inner">
-                            <h3 id="recepcion-panel"  style="cursor: no-drop;">Recepción</h3>
+                            <h3 id="recepcion-panel" style="cursor: no-drop;">Recepción</h3>
                             <h6><i class="ion ion-email-unread"> </i> Registros
                                 Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
                             <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
@@ -191,7 +192,7 @@
                 <div class="col-lg-6 col-xs-6">
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3 id="logistica-panel"  style="cursor: no-drop;">Logística</h3>
+                            <h3 id="logistica-panel" style="cursor: no-drop;">Logística</h3>
                             <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
                                 <strong> {{ t.logistica.para_hoy }}</strong></h6>
                             <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
@@ -218,7 +219,7 @@
                 <div class="col-lg-6 col-xs-6">
                     <div class="small-box bg-red">
                         <div class="inner">
-                            <h3 id="operaciones-panel"  style="cursor: no-drop;">Operaciones</h3>
+                            <h3 id="operaciones-panel" style="cursor: no-drop;">Operaciones</h3>
                             <h6><i class="ion ion-android-notifications"> </i> Para hoy:
                                 <strong> {{ t.operaciones.para_hoy }}</strong></h6>
                             <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
@@ -346,7 +347,6 @@
                                 prioridad: v.prioridad
                             });
                         });
-
                     } else {
                         $.each(response.programadas, function (i, v) {
                             events.push({
@@ -368,13 +368,12 @@
                             });
                         });
                     }
-                    console.log(events);
                     $(div).fullCalendar('destroy');
                     $(div).fullCalendar({
                         header: {
                             left: 'prev,next',
-                            center: '',
-                            right: 'title'
+                            center: 'title',
+                            right: 'month'
                         },
                         defaultView: 'listMonth',
                         lang: 'es',
@@ -388,7 +387,7 @@
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                                     '<div>' + event.barra + ' - ' + event.title + '</div>' +
-                                    '<img class="'+ event.prioridad+ '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
+                                    '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                                     '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<div><strong style="color: red;">' + event.armador + '</strong></div>' +
                                     '<strong>' + event.dias + '</strong>' +
@@ -404,12 +403,14 @@
                                     '</div>');
                             }
                         },
+                        eventClick: function (calEvent, jsEvent, view) {
+                            ver_gestion(calEvent.barra);
+                        }
                     });
                     $(div).fullCalendar('option', 'timezone', 'UTC');
                 },
                 error: function (error) {
                     alert(JSON.stringify(error.d));
-                    console.log(error);
                 }
             })
         }
@@ -790,15 +791,18 @@
                 url = "/dtracking/operaciones/";
                 window.open(url);
                 return false;
-            });$('#logistica-panel').click(function () {
-                url = "/dtracking/peritaje/";
-                window.open(url);
-                return false;
-            });$('#recepcion-panel').click(function () {
+            });
+            $('#logistica-panel').click(function () {
                 url = "/dtracking/peritaje/";
                 window.open(url);
                 return false;
             });
+            $('#recepcion-panel').click(function () {
+                url = "/dtracking/peritaje/";
+                window.open(url);
+                return false;
+            });
+
             function obj_to_event(v) {
                 return {
                     id: v.id,
