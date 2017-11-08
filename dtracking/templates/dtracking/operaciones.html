@@ -62,7 +62,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-
+                            <div id="extra-tools"></div>
                             <h7 class="modal-title"><span id="eventTitle"></span></h7>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
@@ -70,54 +70,6 @@
 
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="modal-default"
-                 data-izimodal-fullscreen="true"
-                 data-izimodal-title="Estado de su gestion"
-                 data-izimodal-subtitle="Aquí puede informarse del proceso de su avaluo"
-                 data-izimodal-icon="icon-home"
-                 aria-hidden="false"
-                 aria-labelledby="modal-default"
-                 role="dialog" class="iziModal"
-                 data-izimodal-group="grupo1"
-                 data-izimodal-loop="true"
-
-                 style="border-bottom: 3px solid rgb(136, 160, 185);
-                 overflow: hidden; z-index: 999;
-                 border-radius: 3px; max-width: 700px;
-                 display: None; height: 459px;">
-                <div class="iziModal-content">
-                    <div style="padding: 20px">
-                        <div class="row">
-                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="codigo_gestion">3527364</strong></div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Solicitado por:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="cliente_gestion">José Williams Garcia</strong>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Tipo de Avaluo:</h4></div>
-                            <div class="col-sm-8 col-xs-12"><strong id="tipo_gestion">Avaluo de Automovil</strong></div>
-                        </div>
-                        <table class="table table-responsive table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Estado</th>
-                                <th>Ejecutivo</th>
-                                <th>Anexo</th>
-                            </tr>
-                            </thead>
-                            <tbody id="logs">
-
-                            </tbody>
-                        </table>
-                    </div>
-
                 </div>
             </div>
        </div>
@@ -130,72 +82,7 @@
     <script type="text/javascript" src="{% static '/pnotify/dist/pnotify.js' %}"></script>
     <script type="text/javascript" src='{% static 'jquery-datetime-picker-bygiro/dist/jquery.datetimepicker.ByGiro.min.js' %}'></script>
     <script>
-        function ver_gestion(gestion) {
-            $.ajax({
-                url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
-                method: "get",
-                success: function (result) {
-                    if (result.code == 200) {
-                        var tab = $('#logs').empty();
-                        $.each(result.logs, function (i, o) {
-                            var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
-                            tab.append(rw);
-                        });
-                        $("#codigo_gestion").html(result.codigo_gestion);
-                        $("#cliente_gestion").html(result.cliente_gestion);
-                        $("#tipo_gestion").html(result.tipo_gestion);
-                        $("#modal-default").iziModal({zindex: 9999});
-                        $("#modal-default").iziModal('open');
-                    } else {
-                        alert(result.mensaje);
-                    }
 
-                }
-            });
-
-            $(".style-switch-wrapper").removeClass("active");
-        };
-        function makeEventsDraggable() {
-            $(".fc-draggable").draggable({
-                zIndex: 999,
-                revert: true,      // will cause the event to go back to its
-                revertDuration: false  //  original position after the drag
-            });
-            $('#external-events').find('.fc-event').each(function () {
-
-                // store data so the calendar knows to render an event upon drop
-                $(this).data('event', {
-                    title: $.trim($(this).text()), // use the element's text as the event title
-                    stick: true // maintain when user navigates (see docs on the renderEvent method)
-                });
-
-                // make the event draggable using jQuery UI
-                $(this).draggable({
-                    zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
-                });
-
-            });
-
-            $('#external-events-listing').droppable({
-                drop: function (event, ui) {
-                    if (dragged) {
-                        var event = dragged[1];
-                        dragged[0].fullCalendar('removeEvents', event._id);
-                        var el = $("<div class='fc-event'>").appendTo(this).text(event.title);
-                        el.draggable({
-                            zIndex: 999,
-                            revert: true,
-                            revertDuration: 0
-                        });
-                        el.data('event', {title: event.title, id: event.id, stick: true});
-                        dragged = null;
-                        makeEventsDraggable();
-                    }
-                }
-            });
-        }
         var cargar_usos_gestion = function () {
             $.ajax('/dtracking/get_usos_gestion/',
                 {
@@ -212,6 +99,8 @@
         var showEvent = function (id) {
             var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-armador-revizada&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
+            tools = modal.find("#extra-tools").empty();
+            tools.append('<a href="/dtracking/examen_previo/?gestion='+ id + '"s target="_blank">Datos</a>');
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
                 method: "GET",
@@ -225,16 +114,6 @@
                     $('#ficha_inspeccion').attr('required', 'true');
                 }
             });
-        }
-        var createRow = function (v) {
-            var row = '<dic class="fc-event" data-idevent="' + v.id + '">' +
-                '<input class="eventid" type="hidden" value="' + v.id + '">' +
-                '<span>Codigo: ' + v.barra + '</span><br>' +
-                '<span>Cliente: ' + v.destinatario + '</span><br>' +
-                '<span>Telefono: ' + v.telefono + '</span><br>' +
-                '<span>Direccion: </span>' +
-                '<span class="direccion">' + v.direccion + '</span><br></div>';
-            return row;
         }
         function refreshCalender() {
             var events = [];
@@ -260,6 +139,7 @@
                             user: v.user,
                             armador: v.armador,
                             dias: v.dias,
+                            valor: v.valor,
                         });
                     });
                     console.log(events);
@@ -278,6 +158,7 @@
                             user: v.user,
                             armador: v.armador,
                             dias: v.dias,
+                            valor: v.valor,
                         });
                     });
                     console.log(events);
@@ -302,39 +183,19 @@
                 },
                 lang: 'es',
                 events: events,
-                editable: true,
+                editable: false,
                 droppable: true, // this allows things to be dropped onto the calendar
                 dragRevertDuration: 0,
                 timeFormat: 'h(:mm)a',
-                drop: function (date, jsEvent, ui, resourceId) {
-                    makeEventsDraggable();
-                    var id = $(this).children(".eventid").val();
-                    setTimeout(function () {
-                        showEvent(id);
-                    }, 2000);
-                },
-                evenDropStop: function () {
-                    refreshCalender();
-                },
                 eventRender: function (event, element, view) {
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                         event.barra + '<br> ' + '<img src="'+ event.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                         '<div>' + event.title + '</div>' +
-                        '<small>' + event.description + '</small><br> ' +
+                        '<strong> U$ ' + event.valor + '</strong><br> ' +
                         '<strong>' + event.armador + '</strong><br>' +
                         '<strong>' + event.dias + '</strong>' +
                         '</div>');
-                },
-                eventDragStop: function (event, jsEvent, ui, view) {
-
-                    makeEventsDraggable();
-                },
-                eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                    makeEventsDraggable();
-                },
-                viewRender: function () {
-                    makeEventsDraggable();
                 },
                 eventDragStart: function (event, jsEvent, ui, view) {
                     event.changing = true;
@@ -346,16 +207,6 @@
             });
             $('#calender').fullCalendar('option', 'timezone', 'UTC');
         }
-        var completeEvent = function () {
-            $(this).autocomplete({
-                minLength: 2,
-                source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
-                select: function (i, o) {
-                    ver_gestion(o.item.obj.barra);
-                }
-            });
-        }
-
         $(document).on("submit", ".form_entrada", function (e) {
             e.preventDefault();
             var formu = $(this);
@@ -409,11 +260,6 @@
         $(document).ready(function () {
             $('#modal-default').iziModal();
             refreshCalender();
-
-
-            $('#nav-search').on('keyup', completeEvent);
-
-            makeEventsDraggable();
             $("#nav-search").click(function () {
                 $(this).select();
             });

@@ -813,33 +813,34 @@ class Gestion(models.Model):
         reload(sys)
         sys.setdefaultencoding('utf-8')
         variables = []
-        o = json.loads(str(smart_str(self.json)).replace("'", "\""))
-        campos = o['campos']
-        for a, k in campos.items():
-            try:
-                v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
-                obj = v.to_json()
+        if self.json:
+            o = json.loads(str(smart_str(self.json)).replace("'", "\""))
+            campos = o['campos']
+            for a, k in campos.items():
+                try:
+                    v = DetalleGestion.objects.get(tipo_gestion=self.tipo_gestion, nombreVariable=a)
+                    obj = v.to_json()
 
-                if v.tipo == "combobox" or v.tipo == "radio":
-                    elementos = v.elementos()
-                    if elementos:
-                        obj_elementos = []
-                        for elemento in v.elementos():
-                            selecionado = False
-                            if elemento.id == int(k):
-                                obj['value'] = elemento.valor
-                                selecionado = True
-                            obj_elementos.append({'value': elemento.valor, 'selecionado': selecionado})
+                    if v.tipo == "combobox" or v.tipo == "radio":
+                        elementos = v.elementos()
+                        if elementos:
+                            obj_elementos = []
+                            for elemento in v.elementos():
+                                selecionado = False
+                                if elemento.id == int(k):
+                                    obj['value'] = elemento.valor
+                                    selecionado = True
+                                obj_elementos.append({'value': elemento.valor, 'selecionado': selecionado})
 
-                        obj['elementos'] = obj_elementos
+                            obj['elementos'] = obj_elementos
+                        else:
+                            obj['value'] = k
                     else:
                         obj['value'] = k
-                else:
-                    obj['value'] = k
 
-                variables.append(obj)
-            except Exception as e:
-                print "Oops!  That was no valid number.  Try again... %s" % e.message
+                    variables.append(obj)
+                except Exception as e:
+                    print "Oops!  That was no valid number.  Try again... %s" % e.message
         return variables
 
     def variables_plantilla(self):
