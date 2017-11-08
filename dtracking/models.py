@@ -728,6 +728,12 @@ class Gestion(models.Model):
         else:
             return "/static/dtracking/img/no_estrella.png"
 
+    def get_priority(self):
+        if self.priority:
+            return "prioridad"
+        else:
+            return ""
+
     def to_json(self):
         o = {}
         o['id'] = self.id
@@ -768,6 +774,7 @@ class Gestion(models.Model):
         o['dias_armado'] = self.dias
         o['fecha_asignacion'] = str(ifnull(self.fecha_asignacion, ''))
         o['fecha_recepcion'] = str(ifnull(self.fecha_recepcion, ''))
+        o['prioridad'] = self.get_priority()
         if (self.armador):
             o['armador'] = self.armador.username
         else:

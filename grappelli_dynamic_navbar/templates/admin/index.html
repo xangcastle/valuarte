@@ -323,7 +323,8 @@
                                 user: v.user,
                                 armador: v.armador,
                                 tipo_gestion: v.tipo_gestion,
-                                strella: v.strella
+                                strella: v.strella,
+                                prioridad: v.prioridad
                             });
                         });
                         $.each(response.pendientes, function (i, v) {
@@ -341,7 +342,8 @@
                                 user: v.user,
                                 armador: v.armador,
                                 tipo_gestion: v.tipo_gestion,
-                                strella: v.strella
+                                strella: v.strella,
+                                prioridad: v.prioridad
                             });
                         });
 
@@ -361,7 +363,8 @@
                                 user: v.user,
                                 armador: v.armador,
                                 tipo_gestion: v.tipo_gestion,
-                                strella: v.strella
+                                strella: v.strella,
+                                prioridad: v.prioridad
                             });
                         });
                     }
@@ -394,7 +397,7 @@
                                 return $(
                                     '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
                                     '<div>' + event.barra + ' - ' + event.title + '</div>' +
-                                    '<img src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
+                                    '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                                     '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<div><small>' + event.description + '</small></div>' +
                                     '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +

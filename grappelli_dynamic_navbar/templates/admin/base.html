@@ -26,7 +26,8 @@
         <!-- Search Form -->
         <form id="grp-changelist-search-form" action="" method="get" novalidate="">
             <input type="text" name="consulta" id="id_consulta" class="grp-search-field-navbar" value="">
-            <button type="button" value="" class="grp-search-button" id="search_btn" style="margin-left: -25px;"></button>
+            <button type="button" value="" class="grp-search-button" id="search_btn"
+                    style="margin-left: -25px;"></button>
         </form>
     </div></span></h1>
     <div id="modal-default"
@@ -100,91 +101,160 @@
     <script type="text/javascript" src='{% static '/izimodal/js/iziModal.min.js' %}'></script>
 
     <script>
-            $(document).ready(function () {
-                var atachments_info = function () {
-                    window.open(
-                        $(this).data('url'),
-                        $(this).data('name'),
-                        "width=600mm, height=500mm,  status=no, menubar=no, location=no");
-                };
+        $(document).ready(function () {
+            var atachments_info = function () {
+                window.open(
+                    $(this).data('url'),
+                    $(this).data('name'),
+                    "width=600mm, height=500mm,  status=no, menubar=no, location=no");
+            };
 
-                $('.show_info').on('click', atachments_info);
+            $('.show_info').on('click', atachments_info);
 
-                function ver_gestion(gestion) {
-                    $.ajax({
-                        url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
-                        method: "get",
-                        success: function (result) {
-                            if (result.code == 200) {
-                                console.log(result);
-                                var tab = $('#logs').empty();
-                                $.each(result.logs, function (i, o) {
-                                    var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
-                                    tab.append(rw);
-                                });
+            function ver_gestion(gestion) {
+                $.ajax({
+                    url: "{% url "get_log_gestion" %}?gestion=" + gestion + "",
+                    method: "get",
+                    success: function (result) {
+                        if (result.code == 200) {
+                            console.log(result);
+                            var tab = $('#logs').empty();
+                            $.each(result.logs, function (i, o) {
+                                var rw = '<tr><td>' + o.fecha + '</td><td>' + o.estado + '</td><td>' + o.atiende + '</td><td>' + o.anexo + '</td></tr>';
+                                tab.append(rw);
+                            });
 
-                                var u_ficha = "/dtracking/generar_ficha/?gestion=" + result.id_gestion
-                                $("#ficha").attr('href', u_ficha);
+                            var u_ficha = "/dtracking/generar_ficha/?gestion=" + result.id_gestion
+                            $("#ficha").attr('href', u_ficha);
 
-                                var u_proforma = "/dtracking/generar_ficha/?documento=" + result.id_gestion
-                                $("#proforma").attr('href', u_proforma);
+                            var u_proforma = "/dtracking/generar_ficha/?documento=" + result.id_gestion
+                            $("#proforma").attr('href', u_proforma);
 
-                                var u_examen = "/dtracking/examen_previo/?gestion=" + result.id_gestion
-                                $("#examen").attr('href', u_examen);
+                            var u_examen = "/dtracking/examen_previo/?gestion=" + result.id_gestion
+                            $("#examen").attr('href', u_examen);
 
-                                $("#codigo_gestion").html(result.codigo_gestion);
-                                $("#cliente_gestion").html(result.cliente_gestion);
-                                $("#tipo_gestion").html(result.tipo_gestion);
-                                $("#modal-default").iziModal({zindex: 9999});
-                                $("#modal-default").iziModal('open');
+                            $("#codigo_gestion").html(result.codigo_gestion);
+                            $("#cliente_gestion").html(result.cliente_gestion);
+                            $("#tipo_gestion").html(result.tipo_gestion);
+                            $("#modal-default").iziModal({zindex: 9999});
+                            $("#modal-default").iziModal('open');
 
 
-
-                            } else {
-                                alert(result.mensaje);
-                            }
-
+                        } else {
+                            alert(result.mensaje);
                         }
-                    });
 
-                    $(".style-switch-wrapper").removeClass("active");
-                };
-                var completeEvent = function () {
-                    $(this).autocomplete({
-                        minLength: 2,
-                        source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
-                        select: function (i, o) {
-                            ver_gestion(o.item.obj.barra);
-                        },
-                        error: function (error) {
-                            alert(error);
-                        }
-                    });
-                }
+                    }
+                });
 
-                $('#id_consulta').on('keyup', completeEvent);
+                $(".style-switch-wrapper").removeClass("active");
+            };
+            var completeEvent = function () {
+                $(this).autocomplete({
+                    minLength: 2,
+                    source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
+                    select: function (i, o) {
+                        ver_gestion(o.item.obj.barra);
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            }
+
+            $('#id_consulta').on('keyup', completeEvent);
 
 
+            $('#search_btn').click(function (e) {
+                var e = jQuery.Event("keydown");
+                e.which = 50; // # Some key code value
+                $("#id_consulta").trigger(e);
 
-                $('#search_btn').click(function(e) {
-                      var e = jQuery.Event("keydown");
-                       e.which = 50; // # Some key code value
-                       $("#id_consulta").trigger(e);
-
-                      var  l = jQuery.Event("keyup");
-                        l.which = 50; // # Some key code value
-                        $("#id_consulta").trigger(l);
-                        $('#id_consulta').trigger("focus");
-                        $('#id_consulta').trigger("change");
-                  });
-
+                var l = jQuery.Event("keyup");
+                l.which = 50; // # Some key code value
+                $("#id_consulta").trigger(l);
+                $('#id_consulta').trigger("focus");
+                $('#id_consulta').trigger("change");
             });
+
+        });
 
 
     </script>
+{% endblock %}
 
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript">
+        //BORDES PARPADEANTES
 
+        //velocidad del parpadeo
+        var velocidad = 200
+        //colores entre los que cambia
+        var color1 = '#FFFF00'
+        var color2 = '#000099'
 
+        var objeto, color
+
+        function inicia() {
+            if (document.all)
+                objeto = document.all.bflash
+            else if (document.getElementById)
+                objeto = document.getElementById("bflash")
+            else //no soportado, finaliza ejecucion del script
+                return
+//inicializacion
+            objeto.style.display = 'block'
+            objeto.style.borderStyle = 'solid'
+            objeto.style.borderColor = color1
+            color = 0
+//comienza el parpadeo
+            setInterval("parpadear()", velocidad)
+        }
+
+        function parpadear() {
+
+            if (color == 0) {
+                objeto.style.borderColor = color2
+                color = 1
+            } else {
+                objeto.style.borderColor = color1
+                color = 0
+            }
+        }
+
+        window.onload = inicia
+    </script>
+
+    <style>
+        .prioridad {
+            background-color: #03a9f4;
+            animation: parpadeo 1s;
+            -webkit-animation: parpadeo 1s;
+            -moz-animation: parpadeo 1s;
+            animation-iteration-count: infinite;
+            -webkit-animation-iteration-count: infinite;
+            -moz-animation-iteration-count: infinite;
+        }
+
+        @keyframes parpadeo {
+            0% {
+                background-color: white
+            }
+            100% {
+                background-color: transparent;
+            }
+        }
+
+        @-webkit-keyframes parpadeo {
+            0% {
+                background-color: white
+            }
+            100% {
+                background-color: transparent;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block userlinks %}
