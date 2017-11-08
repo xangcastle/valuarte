@@ -163,10 +163,10 @@
                                 tab.append(rw);
                             });
 
-                            var u_ficha = "/dtracking/gestion_proforma/?documento=" + result.id_gestion
+                            var u_ficha = "/dtracking/gestion_proforma/?gestion=" + result.id_gestion
                             $("#ficha").attr('href', u_ficha);
 
-                            var u_proforma = "/dtracking/generar_asignacion/?gestion=" + result.id_gestion
+                            var u_proforma = "/dtracking/generar_asignacion/?documento=" + result.id_gestion
                             $("#proforma").attr('href', u_proforma);
 
                             var u_examen = "/dtracking/examen_previo/?gestion=" + result.id_gestion
