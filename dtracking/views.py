@@ -415,6 +415,10 @@ def programar_gestion(request):
                 datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%d/%m/%Y %H:%M'),
                 timezone.get_default_timezone())
     id_usuario = request.POST.get('user', None)
+    id_armador = request.POST.get('armador', None)
+
+    if id_armador:
+        gestion.armador = User.objects.get(pk=int(id_armador))
     if id_usuario:
         gestion.user = User.objects.get(pk=int(id_usuario))
 
