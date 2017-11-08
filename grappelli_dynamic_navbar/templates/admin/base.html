@@ -133,6 +133,9 @@
 
                                 var u_proforma = $("#proforma").attr('url') + result.id_gestion
                                 $("#proforma").attr('data-url', u_proforma);
+                                var u_examen = $("#examen").attr('url') + result.id_gestion
+                                $("#ficha").attr('data-url', u_examen);
+                                $("#examen").attr('data-url', u_proforma);
                                 $("#codigo_gestion").html(result.codigo_gestion);
                                 $("#cliente_gestion").html(result.cliente_gestion);
                                 $("#tipo_gestion").html(result.tipo_gestion);
