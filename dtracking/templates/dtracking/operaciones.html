@@ -147,6 +147,7 @@
                             armador: v.armador,
                             dias: v.dias,
                             valor: v.valor,
+                            prioridad: v.prioridad,
                         });
                     });
                     console.log(events);
@@ -166,6 +167,7 @@
                             armador: v.armador,
                             dias: v.dias,
                             valor: v.valor,
+                            prioridad: v.prioridad,
                         });
                     });
                     console.log(events);
@@ -197,7 +199,7 @@
                 eventRender: function (event, element, view) {
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                        event.barra + '<br> ' + '<img src="'+ event.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                        event.barra + '<br> ' + '<img class="'+ event.prioridad +'" src="'+ event.strella+'" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                         '<div>' + event.title + '</div>' +
                         '<strong> U$ ' + event.valor + '</strong><br> ' +
                         '<strong>' + event.armador + '</strong><br>' +

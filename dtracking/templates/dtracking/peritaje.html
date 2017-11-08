@@ -442,7 +442,7 @@
                 eventRender: function (event, element, view) {
                     return $(
                         '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                        event.barra + '<br> ' + '<img src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                        event.barra + '<br> ' + '<img class="'+ event.prioridad +'" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                         '<div>' + event.destinatario + '</div>' +
                         '<small>' + event.direccion + '</small><br> ' +
                         '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
