@@ -12,6 +12,12 @@
 {% endblock %}
 
 {% block content %}
+
+    <style>
+    .boton{
+        padding: 10px;
+    }
+    </style>
     <div class="row">
 {% comment %}        <div class="col-xs-12 col-sm-3">
             <div id='external-events'>
@@ -100,7 +106,8 @@
             var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-armador-revizada&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             tools = modal.find("#extra-tools").empty();
-            tools.append('<a href="/dtracking/examen_previo/?gestion='+ id + '"s target="_blank">Datos</a>');
+            tools.append('<a href="/dtracking/examen_previo/?gestion='+ id + '" target="_blank" class="boton">Datos</a>');
+            tools.append('<a href="/dtracking/gestion_adjuntos/?pk='+ id + '"s target="_blank">Drive</a>');
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
                 method: "GET",
