@@ -356,7 +356,7 @@ class Gestion(models.Model):
     fecha_vence = models.DateField(null=True, blank=True)
     armador = models.ForeignKey('Operaciones', null=True, blank=True,
                                 related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo
-    revizada = models.BooleanField(default=False)  # indica si ya se realizo inspecion fisica
+    revizada = models.BooleanField(default=False, verbose_name="armado")  # indica si ya se realizo inspecion fisica
 
     fecha_revision = models.DateField(null=True, blank=True)  # fecha firma
 
