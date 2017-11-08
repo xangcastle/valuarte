@@ -170,7 +170,7 @@
                 <div class="col-lg-6 col-xs-6">
                     <div class="small-box bg-teal">
                         <div class="inner">
-                            <h3  style="cursor: no-drop;">Recepción</h3>
+                            <h3 id="recepcion-panel"  style="cursor: no-drop;">Recepción</h3>
                             <h6><i class="ion ion-email-unread"> </i> Registros
                                 Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
                             <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
@@ -191,7 +191,7 @@
                 <div class="col-lg-6 col-xs-6">
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3  style="cursor: no-drop;">Logística</h3>
+                            <h3 id="logistica-panel"  style="cursor: no-drop;">Logística</h3>
                             <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
                                 <strong> {{ t.logistica.para_hoy }}</strong></h6>
                             <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
@@ -218,7 +218,7 @@
                 <div class="col-lg-6 col-xs-6">
                     <div class="small-box bg-red">
                         <div class="inner">
-                            <h3  style="cursor: no-drop;">Operaciones</h3>
+                            <h3 id="operaciones-panel"  style="cursor: no-drop;">Operaciones</h3>
                             <h6><i class="ion ion-android-notifications"> </i> Para hoy:
                                 <strong> {{ t.operaciones.para_hoy }}</strong></h6>
                             <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
@@ -780,10 +780,22 @@
         $(document).ready(function () {
             $('#gerencia-panel').click(function () {
                 url = "/dtracking/gerencia/";
-                window.open(url, '_blank');
+                window.open(url);
                 return false;
             });
-
+            $('#operaciones-panel').click(function () {
+                url = "/dtracking/operaciones/";
+                window.open(url);
+                return false;
+            });$('#logistica-panel').click(function () {
+                url = "/dtracking/peritaje/";
+                window.open(url);
+                return false;
+            });$('#recepcion-panel').click(function () {
+                url = "/dtracking/peritaje/";
+                window.open(url);
+                return false;
+            });
             function obj_to_event(v) {
                 return {
                     id: v.id,
