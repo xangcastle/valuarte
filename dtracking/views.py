@@ -429,6 +429,7 @@ def programar_gestion(request):
             datetime.strptime(fecha_recepcion[0:16],
             '%d/%m/%Y %H:%M'), timezone.get_default_timezone())
     fin_gestion = request.POST.get('fin_gestion', None)
+    notify = request.POST.get('notify', None)
     if fin_gestion:
         gestion.fin_gestion = Gestion_Fin.objects.get(id=int(fin_gestion))
     uso_gestion = request.POST.get('uso_gestion', None)
@@ -446,7 +447,7 @@ def programar_gestion(request):
     except:
         pass
     gestion.save()
-    notify = request.POST.get('notify', None)
+
     if notify:
         gestion.notificar()
     obj_json['object'] = gestion.to_json()

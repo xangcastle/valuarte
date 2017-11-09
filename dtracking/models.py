@@ -18,6 +18,7 @@ from colorfield.fields import ColorField
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.db.models import Sum
+from django.conf import settings
 
 
 def add_business_days(origin_date, add_days):
@@ -392,30 +393,16 @@ class Gestion(models.Model):
         return Log_Gestion.objects.filter(gestion=self)
 
     def notificar(self, *args, **kwargs):
-        #Gestion.send_email()
-        print("asignar_gestion: Llamando Metodo para generar PDF")
-        if self.user.email:
-            email = EmailMessage("Asignación de Avaluo %s" % self.barra,
-                                 "<h3/>Se le ha asignado el avaluo: %s - %s<h3>"
-                                 "Datos del cliente:<br>"
-                                 "<span>Nombre: %s</span><br>"
-                                 "<span>Direccion: %s</span><br>"
-                                 "<a href='www.valuarte.com.ni/dtracking/generar_asignacion/?documento=%s'> Imprimir aqui!</a><br>" % (
-                                     self.destinatario, self.barra, self.destinatario,
-                                     self.direccion, self.id),
-                                 to=[self.user.email],
-                                 )
-
-            email.content_subtype = "html"
-            # print("asignar_gestion: Agregando attachmet al correo")
-            # email.attach_file("out.pdf")
-            print("asignar_gestion: Iniciando envio de correo electronico")
-            email.send()
-            print("asignar_gestion: Correo electronico enviado")
-
+        email = None
+        if self.status_gestion == ESTADOS_LOG_GESTION[1][0] :
+           email = self.user.email
+        elif self.status_gestion == ESTADOS_LOG_GESTION[2][0] :
+           email = self.armador.email
+        if email:
+           Gestion.send_email("Asignacion de Avaluo "+ self.barra,render_to_string('emails/asignacion_gestion.html',{'gestion':self}),email)
         if kwargs.has_key('request'):
             request = kwargs.pop('request')
-            self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][1])
+            self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][0])
 
     def get_categoria(self):
         try:
@@ -630,6 +617,9 @@ class Gestion(models.Model):
         enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
 
         data = dict()
+        data['list_48']      =recepcionadas_48h
+        data['list_hoy']     =for_today
+        data['list_enfirma'] =enfirma
         data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count(), 'a48h': recepcionadas_48h}
         data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
                              'incumplidas': len(incumplidas), 'programadas': len(programadas)}
@@ -647,20 +637,19 @@ class Gestion(models.Model):
                             'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
                             }
         return data
+    @staticmethod
+    def notificar_reporte_diario():
+        asunto= "Reporte diario - Gestiones "+datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+        Gestion.send_email(asunto,render_to_string('emails/email7.html'),settings.EMAILS_REPORTE_DIARIO)
+
 
     @staticmethod
-    def send_email(asunto="", texto="", correo="sistema@valuarte.com.ni"):
-        today = datetime.now()
-        asunto= today.strftime("%Y-%m-%d %H:%M:%S");
-        #recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0],echa__year=today.year, fecha__month=today.month,fecha__day=today.day)
-        #{'recepcionadas':recepcionadas}
-        texto = render_to_string('emails/email7.html')
-        email = EmailMessage("Reporte diario - "+asunto, texto,
+    def send_email(asunto="", texto="", correo=""):
+
+        email = EmailMessage(asunto, texto,
                              to=[correo],
                              )
-
         email.content_subtype = "html"
-        # email.attach_file("out.pdf")
         email.send()
 
     def get_estrella(self):
