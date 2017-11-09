@@ -127,7 +127,7 @@ def cargar_gestion(request):
         g.json = request.POST.get('json', '')
         g.realizada = True
         g.save()
-        g.log(g.user, g.fecha, ESTADOS_LOG_GESTION[2][0])
+        #g.log(g.user, g.fecha, ESTADOS_LOG_GESTION[2][0])
         obj = g.to_json()
         obj['mensaje'] = "gestion subida con exito"
         data = [obj, ]
@@ -380,6 +380,7 @@ class peritaje(TemplateView):
 
 def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LOG_GESTION[1][0]):
     gestiones = Gestion.objects.all()
+    print(gestiones);
     id_perito = request.GET.get("id_perito", None)
 
     if id_perito and int(id_perito) > 0:
@@ -387,6 +388,7 @@ def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LO
 
     pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status1)]
     programadas = [x.to_json() for x in gestiones.filter(status_gestion=status2)]
+    print(programadas)
 
 
     return HttpResponse(json.dumps({'programadas': programadas, 'pendientes':pendientes}) , content_type='application/json')

@@ -400,9 +400,9 @@ class Gestion(models.Model):
            email = self.armador.email
         if email:
            Gestion.send_email("Asignacion de Avaluo "+ self.barra,render_to_string('emails/asignacion_gestion.html',{'gestion':self}),email)
-        if kwargs.has_key('request'):
+        """if kwargs.has_key('request'):
             request = kwargs.pop('request')
-            self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][0])
+            self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][0])"""
 
     def get_categoria(self):
         try:
@@ -426,9 +426,9 @@ class Gestion(models.Model):
             return None
 
     def get_user_log(self, status):
-        if status == ESTADOS_LOG_GESTION[2][0]:
+        if status == ESTADOS_LOG_GESTION[1][0]:# 1 , 0
             return self.user
-        elif status == ESTADOS_LOG_GESTION[3][0]:
+        elif status == ESTADOS_LOG_GESTION[2][0]:# 2,0
             return self.armador
         else:
             return None
@@ -447,11 +447,9 @@ class Gestion(models.Model):
             actual = ESTADOS_LOG_GESTION[1][0]
         if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion:
             actual = ESTADOS_LOG_GESTION[2][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion \
-                and self.armador and self.revizada:
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada:
             actual = ESTADOS_LOG_GESTION[3][0]
-        if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) \
-                and self.armador and self.revizada and (
+        if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
                     self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
             actual = ESTADOS_LOG_GESTION[4][0]
 
@@ -993,6 +991,7 @@ class Log_Gestion(models.Model):
                 "{:d}:{:02d}".format(
                     self.gestion.fecha_asignacion.hour,
                     self.gestion.fecha_asignacion.minute))
+                    ##
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
             txt = "Inspeccion fisica realizada."
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
