@@ -392,6 +392,7 @@ class Gestion(models.Model):
         return Log_Gestion.objects.filter(gestion=self)
 
     def notificar(self, *args, **kwargs):
+        #Gestion.send_email()
         print("asignar_gestion: Llamando Metodo para generar PDF")
         if self.user.email:
             email = EmailMessage("Asignación de Avaluo %s" % self.barra,
@@ -648,73 +649,13 @@ class Gestion(models.Model):
         return data
 
     @staticmethod
-    def send_email(asunto="", texto="", correo="sebastian.norena.marquez@gmail.com"):
+    def send_email(asunto="", texto="", correo="sistema@valuarte.com.ni"):
         today = datetime.now()
-        after_tomorrow = today + timedelta(days=2)
-
-        recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0])
-
-        recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
-                                                    fecha__day=today.day).count()
-        recepcionadas_48h = recepcionadas.filter(fecha__year=after_tomorrow.year, fecha__month=after_tomorrow.month,
-                                                 fecha__day=after_tomorrow.day).count()
-
-        incumplidas = []
-        programadas = []
-        agendadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0])
-        agendadas_de_hoy = agendadas.filter(fecha_asignacion__year=today.year,
-                                            fecha_asignacion__month=today.month,
-                                            fecha_asignacion__day=today.day)
-        lista_agendadas_hoy = agendadas_de_hoy.values_list('id', flat=True)
-        for a in agendadas.exclude(id__in=lista_agendadas_hoy):
-            if a.fecha_asignacion > timezone.now():
-                programadas.append(a)
-            else:
-                incumplidas.append(a)
-
-        gs = Gestion.objects.filter(status_gestion__in=[ESTADOS_LOG_GESTION[2][0]])
-
-        for_today = gs.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
-                              fecha_vence__day=today.day)
-
-        for_today_list = for_today.values_list('id', flat=True)
-
-        vencidas = []
-        entiempo = []
-        for g in gs:
-            if g.id not in for_today_list:
-                if g.dias_retrazo() > 0:
-                    vencidas.append(g)
-                else:
-                    entiempo.append(g)
-
-        enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
-
-        data = dict()
-        data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count(), 'a48h': recepcionadas_48h}
-        data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
-                             'incumplidas': len(incumplidas), 'programadas': len(programadas)}
-        data['operaciones'] = {'para_hoy': for_today.count(),
-                               'vencidas': len(vencidas),
-                               'en_tiempo': len(entiempo),
-                               'total': for_today.count() + len(vencidas) + len(entiempo)}
-        data['gerencia'] = {'en_firma': enfirma.count(),
-                            'ventas': Gestion.objects.filter(
-                                valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
-                                                                         ESTADOS_LOG_GESTION[1][0],
-                                                                         ESTADOS_LOG_GESTION[2][0],
-                                                                         ESTADOS_LOG_GESTION[3][0],
-                                                                         ]).aggregate(Sum('valor'))['valor__sum'],
-                            'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
-                            }
-        texto = render_to_string('emails/email7.html', data)
-        email = EmailMessage(asunto, texto,
-                             to=[correo],
-                             )
-
-    def send_email(asunto="", texto="", correo="sebastian.norena.marquez@gmail.com"):
-        texto = render_to_string('emails/email7.html', Gestion.totalizar_gestiones())
-        email = EmailMessage(asunto, texto,
+        asunto= today.strftime("%Y-%m-%d %H:%M:%S");
+        #recepcionadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0],echa__year=today.year, fecha__month=today.month,fecha__day=today.day)
+        #{'recepcionadas':recepcionadas}
+        texto = render_to_string('emails/email7.html')
+        email = EmailMessage("Reporte diario - "+asunto, texto,
                              to=[correo],
                              )
 
