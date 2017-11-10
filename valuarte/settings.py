@@ -141,11 +141,11 @@ GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBjWBugqqWF-lwi6opFnCrDtg6SVj6hlME'
 
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'comprafacildistribucion@gmail.com'
+EMAIL_HOST = 'ts000433.ferozo.com'
+EMAIL_HOST_USER = 'sistema@valuarte.com.ni'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = 'ABcq12!@'
-EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = '3EjW*me9dL'
+EMAIL_PORT = 465
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -180,3 +180,6 @@ WKHTMLTOPDF_CMD_OPTIONS = {
 }
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
+
+# reporte diario
+EMAILS_REPORTE_DIARIO ="mario.rojas@valuarte@valuarte.com.ni;gerardo.calderon@valuarte.com.ni"

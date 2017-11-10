@@ -44,162 +44,151 @@
 </head>
 <body style="max-height: 220mm; max-width: 150mm">
 {% load static %}
-{% load humanize %}
-<script src="/static/dtracking/js/jquery.js"></script>
-<script src="/static/dtracking/js/html2canvas.js"></script>
-
-
-
-
-
-<div class="row">
-    <div class="col-lg-6 col-xs-6">
-        <div class="small-box bg-teal">
-            <div class="inner">
-                <h3>Recepción</h3>
-                <h6><i class="ion ion-email-unread"> </i> Registros Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
-                <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
-                <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
-            </div>
-            <div class="icon">
-                <i class="ion ion-happy">{{ t.recepcion.total }}</i>
-            </div>
-            <a title="Reporte de Recepción" href="#"
-                   class="small-box-footer show_info"
-                   data-url="{% url 'reporte' %}?status=0"
-                   data-name="Reporte de Recepción">Mas info
-            </a>
-        </div>
-    </div>
-    <div class="clearfix visible-sm-block"></div>
-
-    <div class="col-lg-6 col-xs-6">
-        <div class="small-box bg-green">
-            <div class="inner">
-                <h3>Logística</h3>
-                <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
-                    <strong> {{ t.logistica.para_hoy }}</strong></h6>
-                <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
-                    <strong> {{ t.logistica.incumplidas }}</strong></h6>
-                <h6><i class="ion ion-clipboard"> </i> En Agenda:
-                    <strong> {{ t.logistica.programadas }}</strong></h6>
-            </div>
-            <div class="icon">
-                <i class="ion ion-android-car">{{ t.logistica.total }}</i>
-            </div>
-            <a title="Reporte de Logística" href="#"
-                   class="small-box-footer show_info"
-                   data-url="{% url 'reporte' %}?status=1"
-                   data-name="Reporte de Lógistica">Mas info
-            </a>
-        </div>
-    </div>
-    <div class="clearfix visible-sm-block"></div>
-
-</div>
+{% load humanize data_dashboard %}
+{% get_totales as t %}
 
 <div class="row">
 
-    <div class="col-lg-6 col-xs-6">
-        <div class="small-box bg-red">
-            <div class="inner">
-                <h3>Operaciones</h3>
-                <h6><i class="ion ion-android-notifications"> </i> Para hoy:
-                    <strong> {{ t.operaciones.para_hoy }}</strong></h6>
-                <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
-                    <strong> {{ t.operaciones.vencidas }}</strong></h6>
-                <h6><i class="ion ion-ios-time"> </i> En tiempo:
-                    <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
-            </div>
-            <a title="Reporte de Operaciones" href="#"
-                   class="small-box-footer show_info"
-                   data-url="{% url 'reporte' %}?status=2"
-                   data-name="Reporte de Operaciones">Mas info
-            </a>
-        </div>
-    </div>
-    <div class="clearfix visible-sm-block"></div>
-
-    <div class="col-lg-6 col-xs-6">
-        <div class="small-box bg-blue">
-            <div class="inner">
-                <h3>Gerencia</h3>
-                <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
-                <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
-                    <strong> {{ t.gerencia.total }}</strong></h6>
-                <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
-                    $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
-            </div>
-            <div class="icon">
-                <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
-            </div>
-
-            <a title="Reporte de Gerencia" href="#"
-                   class="small-box-footer show_info"
-                   data-url="{% url 'reporte' %}?status=3"
-                   data-name="Reporte de Gerencia">Mas info
-            </a>
-        </div>
-    </div>
 <div id="html-content-holder" style=" width: 816px;
         padding-left: 25px; padding-top: 5px;">
 
-          <center>
-            <!--<table class="one">
+            <table class="one">
+              <tr>
+                <th colspan="2">Registros Nuevos</th>
+                <th colspan="2">Logística</th>
+                <th colspan="2">Operaciones</th>
+                <th colspan="2">Gerencia</th>
+              </tr>
                 <tr>
-                  <th>FECHA</th>
-                  <td >---</td>
-                  <th>ESTADO</th>
-                  <td >--</td>
+                  <th>Registros Nuevos</th>
+                  <td >{{ t.recepcion.de_hoy }}</td>
+                  <th>Cítas de hoy</th>
+                  <td >{{ t.logistica.para_hoy }}</td>
+                  <th>Para hoy </th>
+                  <td >{{ t.operaciones.para_hoy }}</td>
+                  <th>En firma </th>
+                  <td >{{ t.gerencia.en_firma }}</td>
                 </tr>
                 <tr>
-                  <th>CLIENTE</th>
-                  <td colspan="3">---</td>
+                  <th>Sin Asignar</th>
+                  <td>{{ t.recepcion.total }}</td>
+                  <th>Cítas de hoy</th>
+                  <td >{{ t.logistica.para_hoy }}</td>
+                  <th>Atrasadas </th>
+                  <td>{{ t.operaciones.vencidas }}</td>
+                  <th>Total Avaluos </th>
+                  <td>{{ t.gerencia.total }}</td>
                 </tr>
-              </table>-->
-            </br></br>
-            <div class="blue" style="width:816px;" >AREA<b> -----</b> </div>
+                <tr>
+                  <th>+ 48H</th>
+                  <td>{{ t.recepcion.a48h }}</td>
+                  <th>Cítas Incumplidas</th>
+                  <td>{{ t.logistica.incumplidas }}</td>
+                  <th>+ 48H</th>
+                  <td>{{ t.operaciones.en_tiempo }}</td>
+                  <th>Proyección</th>
+                  <td>$ {{ t.gerencia.ventas|intcomma }}</td>
+                </tr>
+                <tr>
+                  <th>Total</th>
+                  <td>{{ t.recepcion.total }}</td>
+                  <th>En Agenda</th>
+                  <td>{{ t.logistica.programadas }}</td>
+                  <th>Total</th>
+                  <td >{{ t.operaciones.total }}</td>
+                  <th></th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th></th>
+                  <td></td>
+                  <th>Total</th>
+                  <td>{{ t.logistica.total }}</td>
+                  <th></th>
+                  <td></td>
+                  <th></th>
+                  <td></td>
+                </tr>
+            </table>
+          </br>
+
+          {% if t.list_48 %}
+          <div class="blue"  ><b>Gestiones pendientes con mas de 48 horas</b> </div>
+          </br></br>
+            <table class="one">
+              <thead>
+                <th>Codigo</th>
+                <th>Cliente</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Observaciones</th>
+              </thead>
+              <tbody>
+                {% for  gestion in t.list_48 %}
+                  <tr>
+                    <td>{{gestion.barra}}</td>
+                    <td>{{gestion.destinatario.name}}</td>
+                    <td>{{gestion.direccion}}</td>
+                    <td>{{gestion.telefono}}</td>
+                    <td>{{gestion.observaciones}}</td>
+                  </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          {% endif %}
+
+          {% if t.list_hoy %}
+          <div class="blue"  ><b>Gestiones Para Hoy</b> </div>
+          </br></br>
+            <table class="one">
+              <thead>
+                <th>Codigo</th>
+                <th>Cliente</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Observaciones</th>
+              </thead>
+              <tbody>
+                {% for  gestion in t.list_hoy %}
+                  <tr>
+                    <td>{{gestion.barra}}</td>
+                    <td>{{gestion.destinatario.name}}</td>
+                    <td>{{gestion.direccion}}</td>
+                    <td>{{gestion.telefono}}</td>
+                    <td>{{gestion.observaciones}}</td>
+                  </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          {% endif %}
+
+          {% if t.list_enfirma %}
+            <div class="blue"  ><b>Gestiones Pendientes de firma</b> </div>
             </br></br>
             <table class="one">
-                <tr>
-                  <th>NUEVOS</th>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <th>SIN ASIGNAR</th>
-                  <td> </td>
-                </tr>
-                <tr>
-                  <th>48 HORAS</th>
-                  <td> </td>
-                </tr>
+              <thead>
+                <th>Codigo</th>
+                <th>Cliente</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Observaciones</th>
+              </thead>
+              <tbody>
+                {% for  gestion in t.list_enfirma %}
+                  <tr>
+                      <td>{{gestion.barra}}</td>
+                      <td>{{gestion.destinatario.name}}</td>
+                      <td>{{gestion.direccion}}</td>
+                      <td>{{gestion.telefono}}</td>
+                      <td>{{gestion.observaciones}}</td>
+                  </tr>
+                {% endfor %}
 
+              </tbody>
             </table>
-              </br></br>
-            <div class="blue" style="width:816px;" >AREA 2<b> -----</b> </div>
-            </br></br>
-            <table class="one">
-                <tr>
-                  <th>NUEVOS</th>
-                  <td ></td>
-                </tr>
-                <tr>
-                  <th>SIN ASIGNAR</th>
-                  <td> </td>
-                </tr>
-                <tr>
-                  <th>48 HORAS</th>
-                  <td> </td>
-                </tr>
-
-            </table>
-
-
-
-
+          {% endif %}
     </div>
 
 

@@ -1,0 +1,74 @@
+<html>
+<head>
+    <style>
+       table {font-family: "Lato","sans-serif";	}
+       table.one {
+           margin-bottom: 1em;
+           display: inline-block;
+         }
+
+       table.one td {
+         text-align: center;
+         width: 10em;
+         padding: 1em; 		}
+
+       table.one th {
+       text-align: center;
+       padding: 0.2em;
+       background-color: #7E97AD;
+       color: white;		}
+
+       table.one tr
+       {
+        height: 1em;
+       }
+
+       table.one tr:nth-child(even)
+       {
+         background-color: #eee;
+       }
+
+       table.one tr:nth-child(odd)
+       {
+         background-color:#fff;
+       }
+       .blue
+       {
+         text-align: center;
+         padding: 1em;
+         background-color: #7E97AD;
+         color: white;
+         font-family: "Lato","sans-serif";
+       }
+    </style>
+</head>
+<body style="max-height: 220mm; max-width: 150mm">
+{% load static %}
+
+<div class="row">
+
+<div id="html-content-holder" style=" width: 816px;
+        padding-left: 25px; padding-top: 5px;">
+            <div class="blue"  ><b>Se le ha asignado el avaluo: {{gestion.barra}}</b> </div>
+            </br></br>
+            </br></br>
+            <center>
+                <table class="one" >
+                    <tr>
+                      <th colspan="12">Datos del cliente</th>
+                    </tr>
+                    <tr>
+                      <td colspan="4">Nombre</td>
+                      <td colspan="4">Dirección</td>
+                      <td colspan="4">Ver Gestión</td>
+                    </tr>
+                     <tr>
+                       <td colspan="4">{{gestion.destinatario}}</td>
+                       <td colspan="4">{{gestion.direccion}}</td>
+                       <td colspan="4"><a href='www.valuarte.com.ni/dtracking/generar_asignacion/?documento={{gestion.id}}'> Imprimir aqui!</a><br></td>
+                     </tr>
+                </table>
+          </center>
+    </div>
+</body>
+</html>
