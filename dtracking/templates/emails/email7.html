@@ -72,8 +72,8 @@
                 <tr>
                   <th>Sin Asignar</th>
                   <td>{{ t.recepcion.total }}</td>
-                  <th>Cítas de hoy</th>
-                  <td >{{ t.logistica.para_hoy }}</td>
+                  <th>Cítas Incumplidas</th>
+                  <td>{{ t.logistica.incumplidas }}</td>
                   <th>Atrasadas </th>
                   <td>{{ t.operaciones.vencidas }}</td>
                   <th>Total Avaluos </th>
@@ -82,9 +82,9 @@
                 <tr>
                   <th>+ 48H</th>
                   <td>{{ t.recepcion.a48h }}</td>
-                  <th>Cítas Incumplidas</th>
-                  <td>{{ t.logistica.incumplidas }}</td>
-                  <th>+ 48H</th>
+                  <th>En Agenda</th>
+                  <td>{{ t.logistica.programadas }}</td>
+                  <th>En tiempo</th>
                   <td>{{ t.operaciones.en_tiempo }}</td>
                   <th>Proyección</th>
                   <td>$ {{ t.gerencia.ventas|intcomma }}</td>
@@ -92,8 +92,8 @@
                 <tr>
                   <th>Total</th>
                   <td>{{ t.recepcion.total }}</td>
-                  <th>En Agenda</th>
-                  <td>{{ t.logistica.programadas }}</td>
+                  <th></th>
+                  <td></td>
                   <th>Total</th>
                   <td >{{ t.operaciones.total }}</td>
                   <th></th>
@@ -133,17 +133,17 @@
               <tbody>
                 {% for  gestion in t.list_48 %}
                   <tr>
-                    <td>{{gestion.fecha.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
                     <td>{{gestion.observaciones}}</td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
-                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
-                    <td>{{gestion.user.get_full_name()}}</td>
-                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
-                    <td>{{gestion.fecha_entrega_efectiva.strftime("%d-%m-%Y")}}</td>
-                    <td>{{gestion.dias_proceso()}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.user.get_full_name}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.dias_proceso}}</td>
                   </tr>
                 {% endfor %}
 
@@ -172,17 +172,17 @@
               <tbody>
                 {% for  gestion in t.list_hoy %}
                   <tr>
-                    <td>{{gestion.fecha.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
                     <td>{{gestion.observaciones}}</td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
-                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
-                    <td>{{gestion.user.get_full_name()}}</td>
-                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
-                    <td>{{gestion.fecha_entrega_efectiva.strftime("%d-%m-%Y")}}</td>
-                    <td>{{gestion.dias_proceso()}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.user.get_full_name}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.dias_proceso}}</td>
                   </tr>
                 {% endfor %}
 
@@ -211,17 +211,17 @@
               <tbody>
                 {% for  gestion in t.list_enfirma %}
                   <tr>
-                      <td>{{gestion.fecha.strftime("%d-%m-%Y")}}</td>
+                      <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
                       <td>{{gestion.barra}}</td>
                       <td>{{gestion.destinatario}}</td>
                       <td>{{gestion.observaciones}}</td>
                       <td>{{gestion.banco}}</td>
                       <td>{{gestion.banco_ejecutivo}}</td>
-                      <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
-                      <td>{{gestion.user.get_full_name()}}</td>
-                      <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
-                      <td>{{gestion.fecha_entrega_efectiva.strftime("%d-%m-%Y")}}</td>
-                      <td>{{gestion.dias_proceso()}}</td>
+                      <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                      <td>{{gestion.user.get_full_name}}</td>
+                      <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                      <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
+                      <td>{{gestion.dias_proceso}}</td>
                   </tr>
                 {% endfor %}
 
