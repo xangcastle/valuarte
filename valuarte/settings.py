@@ -140,7 +140,8 @@ GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBjWBugqqWF-lwi6opFnCrDtg6SVj6hlME'
 # Variables para el envio por gmail
 
 
-EMAIL_USE_TLS = True
+#EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
 EMAIL_HOST = 'ts000433.ferozo.com'
 EMAIL_HOST_USER = 'sistema@valuarte.com.ni'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

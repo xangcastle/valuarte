@@ -994,10 +994,14 @@ class Log_Gestion(models.Model):
                     ##
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
             txt = "Inspeccion fisica realizada."
+            if self.gestion.json:
+                txt += " Ver informacion <a>Aqui!</a>"
         if self.estado == ESTADOS_LOG_GESTION[3][0]:
-            txt = "Inicio del Proceso."
+            txt = "En revisión de informe finál. Armador %s" % self.gestion.armador.get_full_name()
         if self.estado == ESTADOS_LOG_GESTION[4][0]:
-            txt = "Inicio del Proceso."
+            txt = "Avaluo terminado."
+            if self.gestion.informe_final:
+                " Puede descargar una versión digital en <a>este enlace.</a>"
         return txt
 
 
