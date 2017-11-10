@@ -117,20 +117,33 @@
           </br></br>
             <table class="one">
               <thead>
+                <th>Fecha de Solicitud</th>
                 <th>Codigo</th>
                 <th>Cliente</th>
-                <th>Dirección</th>
-                <th>Telefono</th>
                 <th>Observaciones</th>
+                <th>Banco</th>
+                <th>Ejecutivo</th>
+                <th>Fecha Asignación</th>
+                <th>Perito</th>
+                <th>Fecha Inspección</th>
+                <th>Armador	</th>
+                <th>Entrega</th>
+                <th>Dias en Proceso</th>
               </thead>
               <tbody>
                 {% for  gestion in t.list_48 %}
                   <tr>
+                    <td>{{gestion.fecha.strftime("%d-%m-%Y")}}</td>
                     <td>{{gestion.barra}}</td>
-                    <td>{{gestion.destinatario.name}}</td>
-                    <td>{{gestion.direccion}}</td>
-                    <td>{{gestion.telefono}}</td>
+                    <td>{{gestion.destinatario}}</td>
                     <td>{{gestion.observaciones}}</td>
+                    <td>{{gestion.banco}}</td>
+                    <td>{{gestion.banco_ejecutivo}}</td>
+                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.user.get_full_name()}}</td>
+                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.fecha_entrega_efectiva.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.dias_proceso()}}</td>
                   </tr>
                 {% endfor %}
 
@@ -143,20 +156,33 @@
           </br></br>
             <table class="one">
               <thead>
+                <th>Fecha de Solicitud</th>
                 <th>Codigo</th>
                 <th>Cliente</th>
-                <th>Dirección</th>
-                <th>Telefono</th>
                 <th>Observaciones</th>
+                <th>Banco</th>
+                <th>Ejecutivo</th>
+                <th>Fecha Asignación</th>
+                <th>Perito</th>
+                <th>Fecha Inspección</th>
+                <th>Armador	</th>
+                <th>Entrega</th>
+                <th>Dias en Proceso</th>
               </thead>
               <tbody>
                 {% for  gestion in t.list_hoy %}
                   <tr>
+                    <td>{{gestion.fecha.strftime("%d-%m-%Y")}}</td>
                     <td>{{gestion.barra}}</td>
-                    <td>{{gestion.destinatario.name}}</td>
-                    <td>{{gestion.direccion}}</td>
-                    <td>{{gestion.telefono}}</td>
+                    <td>{{gestion.destinatario}}</td>
                     <td>{{gestion.observaciones}}</td>
+                    <td>{{gestion.banco}}</td>
+                    <td>{{gestion.banco_ejecutivo}}</td>
+                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.user.get_full_name()}}</td>
+                    <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.fecha_entrega_efectiva.strftime("%d-%m-%Y")}}</td>
+                    <td>{{gestion.dias_proceso()}}</td>
                   </tr>
                 {% endfor %}
 
@@ -169,20 +195,33 @@
             </br></br>
             <table class="one">
               <thead>
+                <th>Fecha de Solicitud</th>
                 <th>Codigo</th>
                 <th>Cliente</th>
-                <th>Dirección</th>
-                <th>Telefono</th>
                 <th>Observaciones</th>
+                <th>Banco</th>
+                <th>Ejecutivo</th>
+                <th>Fecha Asignación</th>
+                <th>Perito</th>
+                <th>Fecha Inspección</th>
+                <th>Armador	</th>
+                <th>Entrega</th>
+                <th>Dias en Proceso</th>
               </thead>
               <tbody>
                 {% for  gestion in t.list_enfirma %}
                   <tr>
+                      <td>{{gestion.fecha.strftime("%d-%m-%Y")}}</td>
                       <td>{{gestion.barra}}</td>
-                      <td>{{gestion.destinatario.name}}</td>
-                      <td>{{gestion.direccion}}</td>
-                      <td>{{gestion.telefono}}</td>
+                      <td>{{gestion.destinatario}}</td>
                       <td>{{gestion.observaciones}}</td>
+                      <td>{{gestion.banco}}</td>
+                      <td>{{gestion.banco_ejecutivo}}</td>
+                      <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
+                      <td>{{gestion.user.get_full_name()}}</td>
+                      <td>{{gestion.fecha_asignacion.strftime("%d-%m-%Y")}}</td>
+                      <td>{{gestion.fecha_entrega_efectiva.strftime("%d-%m-%Y")}}</td>
+                      <td>{{gestion.dias_proceso()}}</td>
                   </tr>
                 {% endfor %}
 
