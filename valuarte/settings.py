@@ -183,4 +183,4 @@ WKHTMLTOPDF_CMD_OPTIONS = {
 CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 # reporte diario
-EMAILS_REPORTE_DIARIO ="mario.rojas@valuarte@valuarte.com.ni,gerardo.calderon@valuarte.com.ni,sistema@valuarte.com.ni,sebastian.norena.marquez@gmail.com"
+EMAILS_REPORTE_DIARIO ="mario.rojas@valuarte@valuarte.com.ni,gerardo.calderon@valuarte.com.ni,sistema@valuarte.com.ni,paola.ubeda@valuarte.com.ni,elvis.rivera@segdel.com,gerencia@segdel.com"
