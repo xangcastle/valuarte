@@ -119,7 +119,7 @@
                 <th>Banco	Ejecutivo</th>
                 <th>Fecha Asignación</th>
                 <th>Perito</th>
-                <th>Dias Retraso</th>
+                <th>Dias Proceso</th>
               </thead>
               <tbody>
                 {% for  gestion in t.list_incumplidas %}
@@ -127,12 +127,12 @@
                     <td>{{gestion.fecha|date:"d-m-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
-                    <td style="200px"><p>{{gestion.direccion}}, {{gestion.departamento.name}} </p></td>
+                    <td style="200px"><p style="font-size:7px;">{{gestion.direccion}}, {{gestion.departamento.name}} </p></td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
                     <td>{{gestion.fecha_asignacion|date:"d-m-Y"}}</td>
                     <td>{{gestion.user.get_full_name}}</td>
-                    <td>{{gestion.dias_retrazo}}</td>
+                    <td>{{gestion.dias_proceso}}</td>
                   </tr>
                 {% endfor %}
 
