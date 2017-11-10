@@ -620,6 +620,7 @@ class Gestion(models.Model):
         data['list_48']      =recepcionadas_48h
         data['list_hoy']     =for_today
         data['list_enfirma'] =enfirma
+        data['list_incumplidas']=incumplidas
         data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count(), 'a48h': recepcionadas_48h}
         data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
                              'incumplidas': len(incumplidas), 'programadas': len(programadas)}
@@ -639,7 +640,7 @@ class Gestion(models.Model):
         return data
     @staticmethod
     def notificar_reporte_diario():
-        asunto= "Reporte diario - Gestiones "+datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+        asunto= "Reporte diario - Avalúos "+datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         Gestion.send_email(asunto,render_to_string('emails/email7.html'),settings.EMAILS_REPORTE_DIARIO)
 
 

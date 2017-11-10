@@ -112,8 +112,46 @@
             </table>
           </br>
 
+          {% if t.list_incumplidas %}
+          <div class="blue"  ><b>Citas Incumplidas</b> </div>
+          </br></br>
+            <table class="one">
+              <thead>
+                <th>Fecha de Solicitud</th>
+                <th>Codigo</th>
+                <th>Cliente</th>
+                <th>Observaciones</th>
+                <th>Banco</th>
+                <th>Ejecutivo</th>
+                <th>Fecha Asignación</th>
+                <th>Perito</th>
+                <th>Fecha Inspección</th>
+                <th>Armador	</th>
+                <th>Entrega</th>
+                <th>Dias en Proceso</th>
+              </thead>
+              <tbody>
+                {% for  gestion in t.list_incumplidas %}
+                  <tr>
+                    <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.barra}}</td>
+                    <td>{{gestion.destinatario}}</td>
+                    <td>{{gestion.observaciones}}</td>
+                    <td>{{gestion.banco}}</td>
+                    <td>{{gestion.banco_ejecutivo}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.user.get_full_name}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.dias_proceso}}</td>
+                  </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          {% endif %}
           {% if t.list_48 %}
-          <div class="blue"  ><b>Gestiones pendientes con mas de 48 horas</b> </div>
+          <div class="blue"  ><b>Avalúos pendientes con mas de 48 horas</b> </div>
           </br></br>
             <table class="one">
               <thead>
@@ -152,7 +190,7 @@
           {% endif %}
 
           {% if t.list_hoy %}
-          <div class="blue"  ><b>Gestiones Para Hoy</b> </div>
+          <div class="blue"  ><b>Avalúos Para Hoy</b> </div>
           </br></br>
             <table class="one">
               <thead>
@@ -191,7 +229,7 @@
           {% endif %}
 
           {% if t.list_enfirma %}
-            <div class="blue"  ><b>Gestiones Pendientes de firma</b> </div>
+            <div class="blue"  ><b>Avalúos Pendientes de firma</b> </div>
             </br></br>
             <table class="one">
               <thead>
