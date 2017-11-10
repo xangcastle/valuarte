@@ -76,8 +76,8 @@
                   <td>{{ t.logistica.incumplidas }}</td>
                   <th>Atrasadas </th>
                   <td>{{ t.operaciones.vencidas }}</td>
-                  <th>Total Avaluos </th>
-                  <td>{{ t.gerencia.total }}</td>
+                  <th>Proyección</th>
+                  <td>$ {{ t.gerencia.ventas|intcomma }}</td>    
                 </tr>
                 <tr>
                   <th>+ 48H</th>
@@ -86,28 +86,18 @@
                   <td>{{ t.logistica.programadas }}</td>
                   <th>En tiempo</th>
                   <td>{{ t.operaciones.en_tiempo }}</td>
-                  <th>Proyección</th>
-                  <td>$ {{ t.gerencia.ventas|intcomma }}</td>
+                  <th></th>
+                  <td></td>
                 </tr>
                 <tr>
                   <th>Total</th>
                   <td>{{ t.recepcion.total }}</td>
-                  <th></th>
-                  <td></td>
-                  <th>Total</th>
-                  <td >{{ t.operaciones.total }}</td>
-                  <th></th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th></th>
-                  <td></td>
                   <th>Total</th>
                   <td>{{ t.logistica.total }}</td>
-                  <th></th>
-                  <td></td>
-                  <th></th>
-                  <td></td>
+                  <th>Total</th>
+                  <td >{{ t.operaciones.total }}</td>
+                  <th>Avaluos en proceso</th>
+                  <td>{{ t.gerencia.total }}</td>
                 </tr>
             </table>
           </br>
