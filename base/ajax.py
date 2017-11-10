@@ -83,16 +83,9 @@ def get_html_form(request, form=None):
         form = modelform_factory(filter.model, fields=request.POST.get('fields').split("-"))
         id = request.POST.get('id', None)
         if id:
-<<<<<<< Updated upstream
             form = form(request.POST, request.FILES or None, instance=filter.get_instance(int(id)))
         else:
             form = form(request.POST, request.FILES)
-
-=======
-            form = form(request.POST or None,instance=filter.get_instance(int(id)))
-        else:
-            form = form(request.POST,request.FILES)
->>>>>>> Stashed changes
         if form.is_valid():
             form.save()
             obj = form.instance
