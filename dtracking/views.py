@@ -461,9 +461,17 @@ def programar_gestion(request):
 
 def reporte(request):
     status = int(request.GET.get('status', request.POST.get('status')))
-    avaluos = Gestion.objects.filter(
-        status_gestion=ESTADOS_LOG_GESTION[status][0]).order_by('fecha_vence')
-    return render(request, 'dtracking/reporte.html', {'avaluos': avaluos,
+    if ESTADOS_LOG_GESTION[status][0] == ESTADOS_LOG_GESTION[0][0]:
+        reporte = reporteRecepcion()
+    if ESTADOS_LOG_GESTION[status][0] == ESTADOS_LOG_GESTION[1][0]:
+        reporte = reporteLogistica()
+    if ESTADOS_LOG_GESTION[status][0] == ESTADOS_LOG_GESTION[2][0]:
+        reporte = reporteOperaciones()
+    if ESTADOS_LOG_GESTION[status][0] == ESTADOS_LOG_GESTION[3][0]:
+        reporte = reporteControlCalidad()
+    if ESTADOS_LOG_GESTION[status][0] == ESTADOS_LOG_GESTION[4][0]:
+        reporte = reporteTerminados()
+    return render(request, 'dtracking/reporte.html', {'head': reporte['head'], 'data': reporte['data'],
                                                       'titulo': ESTADOS_LOG_GESTION[status][0]})
 
 

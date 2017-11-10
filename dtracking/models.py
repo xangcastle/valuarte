@@ -1068,3 +1068,65 @@ class Ejecutivo(models.Model):
                 'telefono': self.telefono,
                 'email': self.email,
                 'banco': self.banco.to_json()}
+
+
+def reporteRecepcion():
+    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Tipo de Avaluo', 'Observaciones']
+    data = []
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0]).order_by('fecha')
+    for q in qs:
+        data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo, q.tipo_gestion.name, q.observaciones])
+    return {'head': head, 'data': data}
+
+
+def reporteLogistica():
+    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
+            'Perito']
+    data = []
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0]).order_by('fecha')
+    for q in qs:
+        data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
+                    q.fecha_asignacion, q.user.get_full_name()])
+    return {'head': head, 'data': data}
+
+
+def reporteOperaciones():
+    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
+            'Perito', 'Fecha Inspección', 'Armador', 'Fecha Vencimiento', 'Dias de Retraso']
+    data = []
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0]).order_by('fecha')
+    for q in qs:
+        data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
+                    q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
+                    q.armador.get_full_name(), q.fecha_vence.strftime("%d-%m-%Y"), q.dias_retrazo()])
+    return {'head': head, 'data': data}
+
+
+def reporteControlCalidad():
+    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
+            'Perito', 'Fecha Inspección', 'Armador', 'Fecha Vencimiento', 'Dias de Retraso']
+    data = []
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0]).order_by('fecha')
+    for q in qs:
+        data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
+                    q.fecha_asignacion, q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
+                    q.armador.get_full_name(), q.fecha_vence.strftime("%d-%m-%Y"), q.dias_retrazo()])
+    return {'head': head, 'data': data}
+
+
+def reporteTerminados():
+    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
+            'Perito', 'Fecha Inspección', 'Armador', 'Fecha Entrega', 'Dias en Proceso']
+    data = []
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0]).order_by('fecha')
+    for q in qs:
+        data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
+                    q.fecha_asignacion, q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
+                    q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
+    return {'head': head, 'data': data}
+
+
+
+
+
+

@@ -60,6 +60,7 @@
             margin: 0px;
             padding: 0px;
         }
+
         td {
             text-align: center;
         }
@@ -70,33 +71,20 @@
 </br>
 <table>
     <thead>
-    <th>Fecha Solicitud</th>
-    <th>Ejecutivo</th>
-    <th>Banco</th>
-    <th>Nombre del cliente</th>
-    <th>Tipo de Avaluo</th>
-    <th>Estado</th>
-    <th>Fecha Inspeccion</th>
-    <th>Fecha Vencimiento</th>
-    <th>Dias de Retrazo</th>
+    {% for h in head %}
+        <th>{{ h }}</th>
+    {% endfor %}
     </thead>
     <tfoot></tfoot>
     <tbody>
-    {% for a in avaluos %}
+    {% for r in data %}
         <tr style="background-color: {{ a.tipo_gestion.color }}">
-            <td>{{ a.fecha|date:"d-m-y" }}</td>
-            <td>{{ a.banco_ejecutivo }}</td>
-            <td>{{ a.banco }}</td>
-            <td>{{ a.destinatario }}</td>
-            <td>{{ a.tipo_gestion.prefijo }}</td>
-            <td>{{ a.status_gestion }}</td>
-            <td>{{ a.fecha_recepcion|date:"d-m-y" }}</td>
-            <td>{{ a.fecha_vence|date:"d-m-y" }}</td>
-            <td>{{ a.dias_retrazo }}</td>
+            {% for t in r %}
+                <td>{{ t }}</td>
+            {% endfor %}
         </tr>
     {% endfor %}
     </tbody>
 </table>
 
 </body>
-</table>
