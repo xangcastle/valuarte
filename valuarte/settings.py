@@ -145,7 +145,7 @@ EMAIL_USE_SSL = True
 EMAIL_HOST = 'ts000433.ferozo.com'
 EMAIL_HOST_USER = 'sistema@valuarte.com.ni'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = '3EjW*me9dL'
+EMAIL_HOST_PASSWORD = 'SVal2017'
 EMAIL_PORT = 465
 
 STATICFILES_FINDERS = (
@@ -183,4 +183,4 @@ WKHTMLTOPDF_CMD_OPTIONS = {
 CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 # reporte diario
-EMAILS_REPORTE_DIARIO ="mario.rojas@valuarte@valuarte.com.ni,gerardo.calderon@valuarte.com.ni,sistema@valuarte.com.ni,sebastian.norena.marquez@gmail.com,cesarabel@deltacopiers.com"
+EMAILS_REPORTE_DIARIO ="mario.rojas@valuarte@valuarte.com.ni,gerardo.calderon@valuarte.com.ni,sistema@valuarte.com.ni,sebastian.norena.marquez@gmail.com"
