@@ -645,12 +645,12 @@ class Gestion(models.Model):
 
     @staticmethod
     def send_email(asunto="", texto="", correo=""):
-
-        email = EmailMessage(asunto, texto,
-                             to=[correo],
-                             )
-        email.content_subtype = "html"
-        email.send()
+        for e in correo.split(','):
+            email = EmailMessage(asunto, texto,
+                                 to=[e],
+                                 )
+            email.content_subtype = "html"
+            email.send()
 
     def get_estrella(self):
         if self.priority:
