@@ -83,9 +83,9 @@ def get_html_form(request, form=None):
         form = modelform_factory(filter.model, fields=request.POST.get('fields').split("-"))
         id = request.POST.get('id', None)
         if id:
-            form = form(request.POST or None, instance=filter.get_instance(int(id)))
+            form = form(request.POST, request.FILES or None, instance=filter.get_instance(int(id)))
         else:
-            form = form(request.POST)
+            form = form(request.POST, request.FILES)
 
         if form.is_valid():
             form.save()
