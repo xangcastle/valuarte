@@ -1109,7 +1109,7 @@ def reporteControlCalidad():
     qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0]).order_by('fecha')
     for q in qs:
         data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
-                    q.fecha_asignacion, q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
+                    q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
                     q.armador.get_full_name(), q.fecha_vence.strftime("%d-%m-%Y"), q.dias_retrazo()])
     return {'head': head, 'data': data}
 
@@ -1121,7 +1121,7 @@ def reporteTerminados():
     qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0]).order_by('fecha')
     for q in qs:
         data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
-                    q.fecha_asignacion, q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
+                    q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
                     q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
     return {'head': head, 'data': data}
 
