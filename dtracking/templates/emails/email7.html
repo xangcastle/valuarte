@@ -118,32 +118,23 @@
             <table class="one">
               <thead>
                 <th>Fecha de Solicitud</th>
-                <th>Codigo</th>
-                <th>Cliente</th>
-                <th>Observaciones</th>
+                <th>Código de Avaluo</th>
+                <th>Nombre del Cliente</th>
                 <th>Banco</th>
-                <th>Ejecutivo</th>
+                <th>Banco	Ejecutivo</th>
                 <th>Fecha Asignación</th>
                 <th>Perito</th>
-                <th>Fecha Inspección</th>
-                <th>Armador	</th>
-                <th>Entrega</th>
-                <th>Dias en Proceso</th>
               </thead>
               <tbody>
                 {% for  gestion in t.list_incumplidas %}
                   <tr>
-                    <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha|date:"d-m-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
-                    <td>{{gestion.observaciones}}</td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
-                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"d-m-Y"}}</td>
                     <td>{{gestion.user.get_full_name}}</td>
-                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
-                    <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
-                    <td>{{gestion.dias_proceso}}</td>
                   </tr>
                 {% endfor %}
 
@@ -158,30 +149,21 @@
                 <th>Fecha de Solicitud</th>
                 <th>Codigo</th>
                 <th>Cliente</th>
-                <th>Observaciones</th>
                 <th>Banco</th>
                 <th>Ejecutivo</th>
-                <th>Fecha Asignación</th>
-                <th>Perito</th>
-                <th>Fecha Inspección</th>
-                <th>Armador	</th>
-                <th>Entrega</th>
-                <th>Dias en Proceso</th>
+                <th>Tipo de Avaluo</th>
+                <th>Observaciones</th>
               </thead>
               <tbody>
                 {% for  gestion in t.list_48 %}
                   <tr>
-                    <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha|date:"d-m-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
-                    <td>{{gestion.observaciones}}</td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
-                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
-                    <td>{{gestion.user.get_full_name}}</td>
-                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
-                    <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
-                    <td>{{gestion.dias_proceso}}</td>
+                    <td>{{gestion.user.tipo_gestion.name}}</td>
+                    <td>{{gestion.user.observaciones}}</td>
                   </tr>
                 {% endfor %}
 
@@ -197,30 +179,30 @@
                 <th>Fecha de Solicitud</th>
                 <th>Codigo</th>
                 <th>Cliente</th>
-                <th>Observaciones</th>
                 <th>Banco</th>
                 <th>Ejecutivo</th>
                 <th>Fecha Asignación</th>
                 <th>Perito</th>
                 <th>Fecha Inspección</th>
                 <th>Armador	</th>
-                <th>Entrega</th>
-                <th>Dias en Proceso</th>
+                <th>Fecha Vencimiento</th>
+                <th>Dias en Retraso</th>
+
               </thead>
               <tbody>
                 {% for  gestion in t.list_hoy %}
                   <tr>
-                    <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha|date:"d-m-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
-                    <td>{{gestion.observaciones}}</td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
-                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                    <td>{{gestion.fecha_asignacion|date:"d-m-Y"}}</td>
                     <td>{{gestion.user.get_full_name}}</td>
-                    <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
-                    <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
-                    <td>{{gestion.dias_proceso}}</td>
+                    <td>{{gestion.ficha_inspeccion|date:"d-m-Y"}}</td>
+                    <td>{{gestion.armador.get_full_name}}</td>
+                    <td>{{gestion.fecha_vence|date:"d-m-Y"}}</td>
+                    <td>{{gestion.dias_retrazo}}</td>
                   </tr>
                 {% endfor %}
 
@@ -249,16 +231,17 @@
               <tbody>
                 {% for  gestion in t.list_enfirma %}
                   <tr>
-                      <td>{{gestion.fecha|date:"dd-mm-Y"}}</td>
+                      <td>{{gestion.fecha|date:"d-m-Y"}}</td>
                       <td>{{gestion.barra}}</td>
                       <td>{{gestion.destinatario}}</td>
                       <td>{{gestion.observaciones}}</td>
                       <td>{{gestion.banco}}</td>
                       <td>{{gestion.banco_ejecutivo}}</td>
-                      <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
+                      <td>{{gestion.fecha_asignacion|date:"d-m-Y"}}</td>
                       <td>{{gestion.user.get_full_name}}</td>
-                      <td>{{gestion.fecha_asignacion|date:"dd-mm-Y"}}</td>
-                      <td>{{gestion.fecha_entrega_efectiva|date:"dd-mm-Y"}}</td>
+                      <td>{{gestion.ficha_inspeccion|date:"d-m-Y"}}</td>
+                      <td>{{gestion.armador.get_full_name}}</td>
+                      <td>{{gestion.fecha_entrega_efectiva|date:"d-m-Y"}}</td>
                       <td>{{gestion.dias_proceso}}</td>
                   </tr>
                 {% endfor %}
