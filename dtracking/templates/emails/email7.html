@@ -49,59 +49,63 @@
 
 <div class="row">
 
-<div id="html-content-holder" style=" width: 816px;
+<div id="html-content-holder" style=" width: 1000px;
         padding-left: 25px; padding-top: 5px;">
-
-            <table class="one">
-              <tr>
-                <th colspan="2">Registros Nuevos</th>
-                <th colspan="2">Logística</th>
-                <th colspan="2">Operaciones</th>
-                <th colspan="2">Gerencia</th>
-              </tr>
+        <table >
+           <tr>
+            <td>
+              <table class="one">
                 <tr>
-                  <th>Registros Nuevos</th>
-                  <td >{{ t.recepcion.de_hoy }}</td>
-                  <th>Cítas de hoy</th>
-                  <td >{{ t.logistica.para_hoy }}</td>
-                  <th>Para hoy </th>
-                  <td >{{ t.operaciones.para_hoy }}</td>
-                  <th>En firma </th>
-                  <td >{{ t.gerencia.en_firma }}</td>
+                  <th colspan="2">Registros Nuevos</th>
+                  <th colspan="2">Logística</th>
+                  <th colspan="2">Operaciones</th>
+                  <th colspan="2">Gerencia</th>
                 </tr>
-                <tr>
-                  <th>Sin Asignar</th>
-                  <td>{{ t.recepcion.total }}</td>
-                  <th>Cítas Incumplidas</th>
-                  <td>{{ t.logistica.incumplidas }}</td>
-                  <th>Atrasadas </th>
-                  <td>{{ t.operaciones.vencidas }}</td>
-                  <th>Proyección</th>
-                  <td>$ {{ t.gerencia.ventas|intcomma }}</td>
-                </tr>
-                <tr>
-                  <th>+ 48H</th>
-                  <td>{{ t.recepcion.a48h }}</td>
-                  <th>En Agenda</th>
-                  <td>{{ t.logistica.programadas }}</td>
-                  <th>En tiempo</th>
-                  <td>{{ t.operaciones.en_tiempo }}</td>
-                  <th></th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Total</th>
-                  <td>{{ t.recepcion.total }}</td>
-                  <th>Total</th>
-                  <td>{{ t.logistica.total }}</td>
-                  <th>Total</th>
-                  <td >{{ t.operaciones.total }}</td>
-                  <th>Avaluos en proceso</th>
-                  <td>{{ t.gerencia.total }}</td>
-                </tr>
-            </table>
-          </br>
-
+                  <tr>
+                    <th>Registros Nuevos</th>
+                    <td >{{ t.recepcion.de_hoy }}</td>
+                    <th>Cítas de hoy</th>
+                    <td >{{ t.logistica.para_hoy }}</td>
+                    <th>Para hoy </th>
+                    <td >{{ t.operaciones.para_hoy }}</td>
+                    <th>En firma </th>
+                    <td >{{ t.gerencia.en_firma }}</td>
+                  </tr>
+                  <tr>
+                    <th>Sin Asignar</th>
+                    <td>{{ t.recepcion.total }}</td>
+                    <th>Cítas Incumplidas</th>
+                    <td>{{ t.logistica.incumplidas }}</td>
+                    <th>Atrasadas </th>
+                    <td>{{ t.operaciones.vencidas }}</td>
+                    <th>Proyección</th>
+                    <td>$ {{ t.gerencia.ventas|intcomma }}</td>
+                  </tr>
+                  <tr>
+                    <th>+ 48H</th>
+                    <td>{{ t.recepcion.a48h }}</td>
+                    <th>En Agenda</th>
+                    <td>{{ t.logistica.programadas }}</td>
+                    <th>En tiempo</th>
+                    <td>{{ t.operaciones.en_tiempo }}</td>
+                    <th></th>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th>Total</th>
+                    <td>{{ t.recepcion.total }}</td>
+                    <th>Total</th>
+                    <td>{{ t.logistica.total }}</td>
+                    <th>Total</th>
+                    <td >{{ t.operaciones.total }}</td>
+                    <th>Avaluos en proceso</th>
+                    <td>{{ t.gerencia.total }}</td>
+                  </tr>
+              </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
           {% if t.list_incumplidas %}
           <div class="blue"  ><b>Citas Incumplidas</b> </div>
           </br></br>
@@ -123,7 +127,7 @@
                     <td>{{gestion.fecha|date:"d-m-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
-                    <td>{{gestion.direccion}} {{gestion.departamento}} {{gestion.municipio}}</td>
+                    <td style="100px">{{gestion.direccion}}, {{gestion.departamento.name}} </td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
                     <td>{{gestion.fecha_asignacion|date:"d-m-Y"}}</td>
@@ -135,6 +139,10 @@
               </tbody>
             </table>
           {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
           {% if t.list_48 %}
           <div class="blue"  ><b>Avalúos pendientes con mas de 48 horas</b> </div>
           </br></br>
@@ -164,7 +172,10 @@
               </tbody>
             </table>
           {% endif %}
-
+        </td>
+      </tr>
+      <tr>
+        <td>
           {% if t.list_hoy %}
           <div class="blue"  ><b>Avalúos Para Hoy</b> </div>
           </br></br>
@@ -203,7 +214,10 @@
               </tbody>
             </table>
           {% endif %}
-
+      </td>
+    </tr>
+    <tr>
+      <td>
           {% if t.list_enfirma %}
             <div class="blue"  ><b>Avalúos Pendientes de firma</b> </div>
             </br></br>
@@ -241,6 +255,9 @@
               </tbody>
             </table>
           {% endif %}
+        </td>
+      </tr>
+    </table>
     </div>
 
 
