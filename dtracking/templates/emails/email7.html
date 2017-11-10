@@ -77,7 +77,7 @@
                   <th>Atrasadas </th>
                   <td>{{ t.operaciones.vencidas }}</td>
                   <th>Proyección</th>
-                  <td>$ {{ t.gerencia.ventas|intcomma }}</td>    
+                  <td>$ {{ t.gerencia.ventas|intcomma }}</td>
                 </tr>
                 <tr>
                   <th>+ 48H</th>
@@ -110,10 +110,12 @@
                 <th>Fecha de Solicitud</th>
                 <th>Código de Avaluo</th>
                 <th>Nombre del Cliente</th>
+                <th>Dirección</th>
                 <th>Banco</th>
                 <th>Banco	Ejecutivo</th>
                 <th>Fecha Asignación</th>
                 <th>Perito</th>
+                <th>Dias Retraso</th>
               </thead>
               <tbody>
                 {% for  gestion in t.list_incumplidas %}
@@ -121,10 +123,12 @@
                     <td>{{gestion.fecha|date:"d-m-Y"}}</td>
                     <td>{{gestion.barra}}</td>
                     <td>{{gestion.destinatario}}</td>
+                    <td>{{gestion.direccion}} {{gestion.departamento}} {{gestion.municipio}}</td>
                     <td>{{gestion.banco}}</td>
                     <td>{{gestion.banco_ejecutivo}}</td>
                     <td>{{gestion.fecha_asignacion|date:"d-m-Y"}}</td>
                     <td>{{gestion.user.get_full_name}}</td>
+                    <td>{{gestion.dias_retrazo}}</td>
                   </tr>
                 {% endfor %}
 

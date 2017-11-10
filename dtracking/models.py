@@ -615,6 +615,12 @@ class Gestion(models.Model):
                     entiempo.append(g)
 
         enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+        ventas  = Gestion.objects.filter(
+            valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
+                                                     ESTADOS_LOG_GESTION[1][0],
+                                                     ESTADOS_LOG_GESTION[2][0],
+                                                     ESTADOS_LOG_GESTION[3][0],
+                                                     ]).aggregate(Sum('valor'))['valor__sum']
 
         data = dict()
         data['list_48']      =recepcionadas_48h
@@ -629,12 +635,7 @@ class Gestion(models.Model):
                                'en_tiempo': len(entiempo),
                                'total': for_today.count() + len(vencidas) + len(entiempo)}
         data['gerencia'] = {'en_firma': enfirma.count(),
-                            'ventas': Gestion.objects.filter(
-                                valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
-                                                                         ESTADOS_LOG_GESTION[1][0],
-                                                                         ESTADOS_LOG_GESTION[2][0],
-                                                                         ESTADOS_LOG_GESTION[3][0],
-                                                                         ]).aggregate(Sum('valor'))['valor__sum'],
+                            'ventas':'{:,}'.format(ventas),
                             'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
                             }
         return data
