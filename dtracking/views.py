@@ -254,7 +254,7 @@ def get_log_gestion(request):
                 jresponse['mensaje'] = "Gestion no encontrada"
                 jresponse['code'] = 400
             else:
-                logs = Log_Gestion.objects.filter(gestion=gestion)
+                logs = Log_Gestion.objects.filter(gestion=gestion).order_by('-id')
                 jlogs = []
                 for log in logs:
                     user = log.usuario
@@ -380,17 +380,12 @@ class peritaje(TemplateView):
 
 def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LOG_GESTION[1][0]):
     gestiones = Gestion.objects.all()
-    print(gestiones);
     id_perito = request.GET.get("id_perito", None)
-
     if id_perito and int(id_perito) > 0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
     pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status1)]
     programadas = [x.to_json() for x in gestiones.filter(status_gestion=status2)]
-    print(programadas)
-
-
     return HttpResponse(json.dumps({'programadas': programadas, 'pendientes':pendientes}) , content_type='application/json')
 
 
@@ -425,6 +420,7 @@ def programar_gestion(request):
         gestion.user = User.objects.get(pk=int(id_usuario))
 
     realizada = request.POST.get('realizada', None)
+
     fecha_recepcion = request.POST.get('fecha_recepcion', None)
     if fecha_recepcion:
         gestion.fecha_recepcion = timezone.make_aware(
