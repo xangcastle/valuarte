@@ -369,6 +369,7 @@ class Gestion(models.Model):
 
     priority = models.BooleanField(default=False, verbose_name="prioridad")
 
+
     def terminar(self):
         print "terminando"
         self.terminada = True

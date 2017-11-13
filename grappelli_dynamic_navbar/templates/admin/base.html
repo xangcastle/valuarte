@@ -114,7 +114,7 @@
             var completeEvent = function () {
                 $(this).autocomplete({
                     minLength: 2,
-                    source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario",
+                    source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario,barra",
                     select: function (i, o) {
                         ver_gestion(o.item.obj.barra);
                     },

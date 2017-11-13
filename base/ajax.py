@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import modelform_factory
 from django.template.loader import render_to_string
+import operator
 
 
 @csrf_exempt
@@ -24,12 +25,11 @@ def get_collection(request):
 @csrf_exempt
 def autocomplete(request):
     result = []
-    column = request.GET.get('column_name')
+    columns = request.GET.get('column_name').split(",")
+    columns = [('{}__like'.format(column), request.GET.get('term')) for column in columns]
     queryset = Filter(app_label=request.GET.get('app_label'),
                       model_name=request.GET.get('model')
-                      ).filter_by_list(
-        [('{}__like'.format(column),
-          request.GET.get('term')), ])
+                      ).filter_by_list(columns, operator.or_)
     for q in queryset:
         result.append({'obj': q.to_json(),
                        'label': str(q),

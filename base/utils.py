@@ -69,17 +69,17 @@ class Filter(object):
                 final_filter.append(f)
         return [Q(x) for x in final_filter]
 
-    def filter_by_json(self, filters=None):
+    def filter_by_json(self, filters=None, op=operator.and_):
         if filters:
             final_filter = []
             for k, v in json.loads(str(filters).replace("'", "\"")).items():
                 final_filter.append((str(k), str(v)))
-            return self.model.objects.filter(reduce(operator.and_, self.format(final_filter)))
+            return self.model.objects.filter(reduce(op, self.format(final_filter)))
         else:
             return self.model.objects.all()
 
-    def filter_by_list(self, filters=[]):
+    def filter_by_list(self, filters=[], op=operator.and_):
         if len(filters) > 0:
-            return self.model.objects.filter(reduce(operator.and_, self.format(filters)))
+            return self.model.objects.filter(reduce(op, self.format(filters)))
         else:
             return self.model.objects.all()
