@@ -86,7 +86,6 @@ def get_html_form(request, form=None):
             form = form(request.POST, request.FILES or None, instance=filter.get_instance(int(id)))
         else:
             form = form(request.POST, request.FILES)
-
         if form.is_valid():
             form.save()
             obj = form.instance
@@ -97,6 +96,3 @@ def get_html_form(request, form=None):
                 err += "error en el campo " + str(e)
             resp = {'error': err}
     return HttpResponse(json.dumps(resp), content_type="application/json")
-
-
-

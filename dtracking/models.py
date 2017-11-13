@@ -469,8 +469,6 @@ class Gestion(models.Model):
         if not self.barra:
             self.barra = self.get_code()
         self.categoria = self.get_categoria()
-        print(self.realizada)
-        print("sebas")
         self.status_gestion = self.get_status_gestion()
         self.fecha_vence = self.get_fecha_vence()
         super(Gestion, self).save()
