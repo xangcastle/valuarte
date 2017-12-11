@@ -61,6 +61,10 @@
                            class="btn btn-primary btn-circle" target="_blank">
                             <i class="ion-social-octocat"></i>
                         </a>
+                        <a id="editar" title="Editar" href="#"
+                           class="btn btn-primary btn-circle">
+                            <i class="ion-edit"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="row">
@@ -148,9 +152,11 @@
 {% block extrahead %}
     {{ block.super }}
     <script type="text/javascript">
+        var test = function () {
+                                alert("funka!");
+                            }
         function ver_gestion(gestion) {
             var u = "{% url "get_log_gestion" %}?gestion=" + gestion + "";
-            console.log(u);
                 $.ajax({
                     url: u,
                     method: "get",
@@ -167,6 +173,9 @@
                             $("#proforma").attr('href', u_proforma);
                             var u_examen = "/dtracking/examen_previo/?gestion=" + result.id_gestion
                             $("#examen").attr('href', u_examen);
+                            $("#editar").attr('data-id_gestion', result.id_gestion);
+
+                            $('#editar').on('click', test);
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);
                             $("#tipo_gestion").html(result.tipo_gestion);
@@ -178,7 +187,6 @@
 
                     }
                 });
-
                 $(".style-switch-wrapper").removeClass("active");
             };
     </script>
