@@ -340,8 +340,8 @@ class Gestion(models.Model):
                              help_text="temporal")
     banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario",
                                        help_text="temporal")
-    new_banco = models.ForeignKey('Banco', null=True, blank=True)
-    new_ejecutivo = models.ForeignKey('Ejecutivo', null=True, blank=True)
+    banco_sucursal = models.CharField(max_length=100, null=True, blank=True, verbose_name="Sucursal bancaria",
+                                       help_text="temporal")
 
     # peritaje
     notify = models.BooleanField(default=False,
@@ -587,6 +587,14 @@ class Gestion(models.Model):
             return None
 
     @staticmethod
+    def datos_facturacion():
+        h = timezone.now()
+        gs = Gestion.objects.filter(realizada=True, fecha_recepcion__day=h.day,
+                                    fecha_recepcion__month=h.month,
+                                    fecha_recepcion__year=h.year)
+        return gs
+
+    @staticmethod
     def totalizar_gestiones():
         today = datetime.now()
         after_tomorrow = today + timedelta(days=2)
@@ -654,11 +662,11 @@ class Gestion(models.Model):
                             'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
                             }
         return data
+
     @staticmethod
     def notificar_reporte_diario():
         asunto= "Reporte diario - Avalúos "+datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         Gestion.send_email(asunto,render_to_string('emails/email7.html'),settings.EMAILS_REPORTE_DIARIO)
-
 
     @staticmethod
     def send_email(asunto="", texto="", correo=""):
@@ -1144,6 +1152,19 @@ def reporteTerminados():
                     q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
     return {'head': head, 'data': data}
 
+
+
+def reporteFacturacion():
+    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
+            'Perito', 'Fecha Inspección', 'Armador', 'Fecha Entrega', 'Dias en Proceso', 'Facturar']
+    data = []
+    qs = Gestion.objects.filter(realizad=ESTADOS_LOG_GESTION[4][0]).order_by('fecha')
+    for q in qs:
+        data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
+                     q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(),
+                     q.fecha_recepcion.strftime("%d-%m-%Y"),
+                     q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
+    return {'head': head, 'data': data}
 
 
 

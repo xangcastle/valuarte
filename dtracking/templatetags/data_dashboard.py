@@ -85,10 +85,36 @@ def get_totales(parser, token):
     tokens = token.contents.split()
     args = len(tokens)
     if not args == 3:
-        raise template.TemplateSyntaxError("'get totales requiere exactamente  arumentos y se pasaron %s'" % args)
+        raise template.TemplateSyntaxError("'get totales requiere exactamente 3 arumentos y se pasaron %s'" % args)
 
     if not tokens[1] == 'as':
         raise template.TemplateSyntaxError(
             "'get totales' requiere que el primer argumento sea 'as'")
 
     return Totals(varname=tokens[2])
+
+
+class facturacion(template.Node):
+    def __init__(self, varname):
+        self.varname = varname
+
+    def __repr__(self):
+        return "<Data Node>"
+
+    def render(self, context):
+        context[self.varname] = Gestion.datos_facturacion()
+        return ''
+
+
+@register.tag
+def get_facturacion(parser, token):
+    tokens = token.contents.split()
+    args = len(tokens)
+    if not args == 3:
+        raise template.TemplateSyntaxError("'get facturacion requiere exactamente 3 arumentos y se pasaron %s'" % args)
+
+    if not tokens[1] == 'as':
+        raise template.TemplateSyntaxError(
+            "'get facturacion' requiere que el primer argumento sea 'as'")
+
+    return facturacion(varname=tokens[2])
