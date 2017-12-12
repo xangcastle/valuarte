@@ -3,6 +3,13 @@
 {% load grappelli_dynamic_navbar static %}
 
 {% block admin_title %}
+  <style>
+  input[type="text"], input[type="password"], input[type="number"], .vDateField, .vTimeField, .vIntegerField, .vPositiveSmallIntegerField, .vManyToManyRawIdAdminField, .vForeignKeyRawIdAdminField {
+    width: 100%;
+  }
+  </style>
+
+
     <h1 id="grp-admin-title"><strong>Valuarte</strong> <span><div id="search" class="">
         <style>
             input[type=text].grp-search-field-navbar {
@@ -187,30 +194,6 @@
                     body.html(response);
                     modal.iziModal({zindex: 10000});
                     modal.iziModal('open');
-                    {% comment %}$('#id_departamento').on('change', cargar_municipios);
-                    $('#id_fecha').datetimepickerByGiro({
-                        style: 'popup', // / inline / popup
-                        autoclose: true, // autoclose the popup on date / date range selected
-                        uiTarget: false, // the UI target to contain the datetime value
-                        firstDay: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
-                        minView: 'times', // times / days / months / years
-                        maxView: 'years', // times / days / months / years
-                        startView: 'days', // times / days / months / years
-                        min: null, // starting date to allow selection
-                        max: null, // ending date to allow selection
-                        today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
-                        showDaysNotInMonth: false,
-                        showDisabledTimes: true,
-                        calendars: 1,
-                        format: 'Y-m-d H:i:s', // PHP standard format
-                        uiFormat: 'Y-m-d H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
-                        separator: ' | ', // this will be the separator for multiple dates or date range
-                        mode: 'single', // single / multiple / range
-                        timeFormat: 12, // 12 / 24
-                        minuteStep: 60,
-                        specialDates: []
-                    });
-                    $('#id_fin_gestion').on('change', cargar_usos_gestion);{% endcomment %}
                 }
             });
         }
@@ -234,6 +217,9 @@
                             $("#examen").attr('href', u_examen);
                             $("#editar").attr('data-event', result.id_gestion);
                             $('#editar').on('click', editEvent);
+                            if(result.status_gestion ==="LEVANTAMIENTO REALIZADO"){
+                                $("#editar").css('visibility', 'hidden');
+                            }
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);
                             $("#tipo_gestion").html(result.tipo_gestion);
