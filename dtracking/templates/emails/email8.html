@@ -69,14 +69,14 @@
                         </tr>
                         {% for a in f %}
                             <tr>
-                                <td>{{ a.barra }}</td>
-                                <td>{{ a.destinatario }}</td>
-                                <td>{{ a.banco }}</td>
-                                <td>{{ a.banco_ejecutivo }}</td>
-                                <td>{{ a.user }}</td>
-                                <td>{{ a.armador }}</td>
-                                <td>{{ a.dias_proceso }}</td>
-                                <td><a href="http://www.valuarte.com.ni/dtracking/gestion_proforma/?gestion={{ a.id }}" target="_blank">Facturar</a></td>
+                                <td colspan="2">{{ a.barra }}</td>
+                                <td colspan="2">{{ a.destinatario }}</td>
+                                <td colspan="2">{{ a.banco }}</td>
+                                <td colspan="2">{{ a.banco_ejecutivo }}</td>
+                                <td colspan="2">{{ a.user }}</td>
+                                <td colspan="2">{{ a.armador }}</td>
+                                <td colspan="2">{{ a.dias_proceso }}</td>
+                                <td colspan="2"><a href="http://www.valuarte.com.ni/dtracking/gestion_proforma/?gestion={{ a.id }}" target="_blank">Facturar</a></td>
                             </tr>
                         {% endfor %}
                     </table>
