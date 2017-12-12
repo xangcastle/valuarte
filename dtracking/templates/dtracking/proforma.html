@@ -70,7 +70,7 @@
 <div class="campo precio-unitario">${{ o.subtotal|intcomma }}</div>
 <div class="campo total-detalle">${{ o.subtotal|intcomma }}</div>
 <div class="campo iva">${{ o.iva|intcomma }}</div>
-<div class="campo total">${{ o.valor|intcomma }}</div>
+<div class="campo total">${{ o.total_pagar|intcomma }}</div>
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -448,7 +448,7 @@
            x="0 101.1718 211.914 252.9296 363.67181"
            y="0"
            sodipodi:role="line"
-           id="tspan4732">$0.00</tspan></text>
+           id="tspan4732">${{ o.monto_descuento }}</tspan></text>
 </g><g
        id="g4736"
        transform="matrix(0.05,0,0,0.05,316.80002,361.97226)"><text

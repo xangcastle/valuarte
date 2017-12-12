@@ -202,7 +202,7 @@
         }
         var showEvent = function (id, fecha) {
             fecha || ( fecha = undefined );
-            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-direccion-valor-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify&app_label=dtracking&model=gestion&id=" + id;
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-direccion-valor-descuento-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -288,7 +288,7 @@
             });
         }
         var newEvent = function () {
-            var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-identificacion-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion";
+            var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-descuento-destinatario-identificacion-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -303,7 +303,7 @@
         }
         var editEvent = function () {
             var id = $(this).data("event").id;
-            var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
+            var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-descuento-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {

@@ -61,6 +61,8 @@ urlpatterns = [
         name='reporte'),
     url(r'^operaciones/', operaciones.as_view(),
         name='operaciones'),
+    url(r'^control/', control.as_view(),
+        name='control'),
     url(r'^gerencia/', gerencia.as_view(),
         name='gerencia'),
     url(r'^obtenercitasoperaciones/', obtener_citas_operaciones,

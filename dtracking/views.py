@@ -420,6 +420,7 @@ def programar_gestion(request):
         gestion.user = User.objects.get(pk=int(id_usuario))
 
     realizada = request.POST.get('realizada', None)
+    gestion.descuento = int(request.POST.get('descuento', '0'))
 
     fecha_recepcion = request.POST.get('fecha_recepcion', None)
     if fecha_recepcion:
@@ -500,7 +501,7 @@ class gerencia(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(gerencia, self).get_context_data(**kwargs)
-        avaluos = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+        avaluos = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0])
         print avaluos
         context['avaluos'] = avaluos
         return super(gerencia, self).render_to_response(context)
@@ -508,3 +509,19 @@ class gerencia(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(gerencia, self).get_context_data(**kwargs)
         return super(gerencia, self).render_to_response(context)
+
+
+
+class control(TemplateView):
+    template_name = "dtracking/control.html"
+
+    def get(self, request, *args, **kwargs):
+        context = super(control, self).get_context_data(**kwargs)
+        avaluos = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+        print avaluos
+        context['avaluos'] = avaluos
+        return super(control, self).render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        context = super(control, self).get_context_data(**kwargs)
+        return super(control, self).render_to_response(context)

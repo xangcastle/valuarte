@@ -317,6 +317,7 @@ class Gestion(models.Model):
                                                 verbose_name="observaciones en la cotización")
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
     valor = models.FloatField(null=True, blank=True, verbose_name="precio del avaluo ya con iva")
+    descuento = models.IntegerField(default=0, verbose_name="% descuento")
     categoria = models.CharField(max_length=50, null=True, blank=True)
     status_gestion = models.CharField(max_length=60, null=True, choices=ESTADOS_LOG_GESTION,
                                       default=ESTADOS_LOG_GESTION[0][0], blank=True)
@@ -510,6 +511,12 @@ class Gestion(models.Model):
             return round(self.valor / 1.15, 2)
         else:
             return 0.0
+
+    def monto_descuento(self):
+        return round((self.subtotal() * self.descuento)/100, 2)
+
+    def total_pagar(self):
+        return round((self.subtotal() - self.monto_descuento()) + self.iva(), 2)
 
     def descripcion(self):
         if self.tipo_gestion and self.observaciones:
