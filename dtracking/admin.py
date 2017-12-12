@@ -58,7 +58,7 @@ class gestion_admin(ImportExportModelAdmin):
             'fields': (
                 ('contacto', 'contacto_telefono', 'direccion_envio'),
                 ('banco', 'banco_ejecutivo', 'referencia'),
-                ('new_banco', 'new_ejecutivo', 'priority'),
+                ('priority'),
                 ('valor', 'categoria', 'dias'),
             )
         }),
@@ -225,11 +225,13 @@ class armador_admin(admin.ModelAdmin):
     list_display = ('user', 'nombres', 'apellidos','activo')
     search_fields = ('user__username', 'user__first_name', 'user__last_name')
 
+class uso_admin(entidad_admin):
+    fields =('code','name','fin')
 
 admin.site.register(Gestion, gestion_admin)
 admin.site.register(TipoGestion, tipoGestion_admin)
 admin.site.register(Gestion_Fin, finalidad_admin)
-admin.site.register(Gestion_Uso, entidad_admin)
+admin.site.register(Gestion_Uso, uso_admin)
 admin.site.register(Departamento, entidad_admin)
 # admin.site.register(Municipio, entidad_admin)
 admin.site.register(Gestor, gestor_admin)
