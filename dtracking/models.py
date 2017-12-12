@@ -362,7 +362,7 @@ class Gestion(models.Model):
 
     fecha_revision = models.DateField(null=True, blank=True)  # fecha firma
 
-    control = models.BooleanField(default=False, verbose_name="armado")  # indica si ya se realizo control de calidad
+    control = models.BooleanField(default=False, verbose_name="control")  # indica si ya se realizo control de calidad
 
     fecha_control = models.DateField(null=True, blank=True)  # fecha control de calidad
 
@@ -373,7 +373,18 @@ class Gestion(models.Model):
     dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado", blank=True)
 
     priority = models.BooleanField(default=False, verbose_name="prioridad")
+    def terminarControl(self):
+        print "terminando"
+        self.control = True
+        self.fecha_control = datetime.now()
+        self.save()
+        return {"result": "Avaluo terminado con exito!"}
 
+    def rechazarControl(self):
+        print "rechazando"
+        self.revizada = False
+        self.save()
+        return {"result": "Avaluo rechazado!"}
 
     def terminar(self):
         print "terminando"
@@ -383,7 +394,7 @@ class Gestion(models.Model):
 
     def rechazar(self):
         print "rechazando"
-        self.revizada = False
+        self.control = False
         self.save()
         return {"result": "Avaluo rechazado!"}
 
@@ -433,7 +444,7 @@ class Gestion(models.Model):
 
     def get_user_log(self, status):
         if status == ESTADOS_LOG_GESTION[1][0]:# 1 , 0
-            return self.user
+            return self.userESTADOS_LOG_GESTION
         elif status == ESTADOS_LOG_GESTION[2][0]:# 2,0
             return self.armador
         else:
@@ -447,19 +458,18 @@ class Gestion(models.Model):
 
     def get_status_gestion(self):
         actual = ESTADOS_LOG_GESTION[0][0]
-        if not self.user and not self.fecha_asignacion:
+        if not self.user and not self.fecha_asignacion: #Recepcion
             actual = ESTADOS_LOG_GESTION[0][0]
-        if self.user and self.fecha_asignacion:
+        if self.user and self.fecha_asignacion: #Logistica
             actual = ESTADOS_LOG_GESTION[1][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion:
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion: # operaciones
             actual = ESTADOS_LOG_GESTION[2][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada:
+        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada: #control de calidad
             actual = ESTADOS_LOG_GESTION[3][0]
         if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
-                    self.control):
+                    self.control):#firma
             actual = ESTADOS_LOG_GESTION[4][0]
-        if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
-                    self.control and self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
+        if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (self.control and self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
             actual = ESTADOS_LOG_GESTION[5][0]
         return actual
 
@@ -634,7 +644,7 @@ class Gestion(models.Model):
                 else:
                     entiempo.append(g)
 
-        enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+        enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0])
         ventas  = Gestion.objects.filter(
             valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
                                                      ESTADOS_LOG_GESTION[1][0],
@@ -643,7 +653,7 @@ class Gestion(models.Model):
                                                      ESTADOS_LOG_GESTION[4][0],
                                                      ]).aggregate(Sum('valor'))['valor__sum']
 
-        gestiones_control = Gestion.objects.filter(valor__isnull=True, status_gestion=ESTADOS_LOG_GESTION[3][0])
+        gestiones_control = Gestion.objects.filter( status_gestion=ESTADOS_LOG_GESTION[3][0])
 
         control_para_hoy = gestiones_control.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
                               fecha_vence__day=today.day)
@@ -1194,6 +1204,3 @@ def reporteFacturacion():
                      q.fecha_recepcion.strftime("%d-%m-%Y"),
                      q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
     return {'head': head, 'data': data}
-
-
-

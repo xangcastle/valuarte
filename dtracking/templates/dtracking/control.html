@@ -21,6 +21,10 @@
             <th>Valor</th>
             <th>Observaciones</th>
             <th>Dias de Proceso</th>
+            <th>
+              <input type="button" value="Aceptar"  style="background-color: darkturquoise; color: black" class="finalizar">
+              <input type="button" value="Rechazar"  style="background-color: coral; color: black" class="rechazar">
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -42,10 +46,7 @@
                 <td>{{ a.observaciones }}</td>
                 <td>{{ a.dias_proceso }}</td>
                 <td>
-                    <input type="button" value="Aceptar" data-id="{{ a.id }}" style="background-color: darkturquoise; color: black" class="finalizar">
-                </td>
-                <td>
-                    <input type="button" value="Rechazar" data-id="{{ a.id }}" style="background-color: coral; color: black" class="rechazar">
+                   <input type="checkbox" value="{{ a.id }}" class="checkbox_control">
                 </td>
             </tr>
         {% endfor %}
@@ -53,25 +54,32 @@
     </table>
     <script>
         (function($){
-            var finalizar = function(){
-                var pk = $(this).data("id");
-                $.ajax("/admin/ajax/object_execute/", {
-                    method: "post",
-                    data: {app_label: "dtracking", model: "gestion", id: pk, method: "terminar"},
-                    success: function(){
-                        location.reload();
-                    },
-                })
+            var finalizar = function()
+            {
+                //var pk = $(this).data("id");
+                $("input[type=checkbox]:checked").each ( function() {
+                     $.ajax("/admin/ajax/object_execute/", {
+                         method: "post",
+                         data: {app_label: "dtracking", model: "gestion", id: $(this).val(), method: "terminarControl"},
+                         success: function(){
+
+                         },
+                     })
+                  });
+                  location.reload();
+
             }
             var rechazar = function(){
-                var pk = $(this).data("id");
-                $.ajax("/admin/ajax/object_execute/", {
-                    method: "post",
-                    data: {app_label: "dtracking", model: "gestion", id: pk, method: "rechazar"},
-                    success: function(){
-                        location.reload();
-                    },
-                })
+                $("input[type=checkbox]:checked").each ( function() {
+                  $.ajax("/admin/ajax/object_execute/", {
+                      method: "post",
+                      data: {app_label: "dtracking", model: "gestion", id: $(this).val(), method: "rechazarControl"},
+                      success: function(){
+
+                      },
+                  })
+                });
+                location.reload();
             }
             $(document).ready(function(){
                 $(".finalizar").on("click", finalizar);
