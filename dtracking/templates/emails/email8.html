@@ -1,0 +1,88 @@
+<html>
+<head>
+    <style>
+        table {
+            font-family: "Lato", "sans-serif";
+        }
+
+        table.one {
+            margin-bottom: 1em;
+            display: inline-block;
+        }
+
+        table.one td {
+            text-align: center;
+            width: 10em;
+            padding: 1em;
+        }
+
+        table.one th {
+            text-align: center;
+            padding: 0.2em;
+            background-color: #7E97AD;
+            color: white;
+        }
+
+        table.one tr {
+            height: 1em;
+        }
+
+        table.one tr:nth-child(even) {
+            background-color: #eee;
+        }
+
+        table.one tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .blue {
+            text-align: center;
+            padding: 1em;
+            background-color: #7E97AD;
+            color: white;
+            font-family: "Lato", "sans-serif";
+        }
+    </style>
+</head>
+<body style="max-height: 220mm; max-width: 150mm">
+{% load static %}
+{% load humanize data_dashboard %}
+{% get_facturacion as f %}
+
+<div class="row">
+
+    <div id="html-content-holder"
+         style="height: 800px;overflow: auto;width:1000px;padding-left: 25px; padding-top: 5px;">
+        <table>
+            <tr>
+                <td>
+                    <table class="one">
+                        <tr>
+                            <th colspan="2">Codigo</th>
+                            <th colspan="2">Cliente</th>
+                            <th colspan="2">Banco</th>
+                            <th colspan="2">Ejecutivo</th>
+                            <th colspan="2">Perito</th>
+                            <th colspan="2">Armador</th>
+                            <th colspan="2">Dias en Procesos</th>
+                            <th colspan="2">Facturar</th>
+                        </tr>
+                        {% for a in f %}
+                            <tr>
+                                <td>{{ a.barra }}</td>
+                                <td>{{ a.destinatario }}</td>
+                                <td>{{ a.banco }}</td>
+                                <td>{{ a.banco_ejecutivo }}</td>
+                                <td>{{ a.user }}</td>
+                                <td>{{ a.armador }}</td>
+                                <td>{{ a.dias_proceso }}</td>
+                                <td><a href="/dtracking/gestion_proforma/?gestion={{ a.id }}" target="_blank">Facturar</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
