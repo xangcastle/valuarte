@@ -587,7 +587,7 @@ class Gestion(models.Model):
 
     @staticmethod
     def datos_facturacion():
-        h = timezone.now()
+        h = datetime.now() - timedelta(days=1)
         gs = Gestion.objects.filter(realizada=True, fecha_recepcion__day=h.day,
                                     fecha_recepcion__month=h.month,
                                     fecha_recepcion__year=h.year)
