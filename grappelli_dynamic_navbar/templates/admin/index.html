@@ -217,7 +217,7 @@
             <div class="row">
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-red">
+                    <div class="small-box bg-red" url="{% url 'operaciones' %}" >
                         <div class="inner">
                             <h3 id="operaciones-panel" style="cursor: no-drop;">Operaciones</h3>
                             <h6><i class="ion ion-android-notifications"> </i> Para hoy:
@@ -240,7 +240,7 @@
                 <div class="clearfix visible-sm-block"></div>
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-purple">
+                    <div class="small-box bg-purple" url="{% url 'control' %}">
                         <div class="inner">
                             <h3 id="gerencia-panel" style="cursor: no-drop;">Control Calidad</h3>
                             <h6><i class="ion ion-android-notifications"> </i> Para hoy:
@@ -268,7 +268,7 @@
             <div class="row">
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-blue">
+                    <div class="small-box bg-blue" url="{% url 'gerencia' %}">
                         <div class="inner">
                             <h3 id="gerencia-panel" style="cursor: no-drop;">Gerencia</h3>
                             <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
@@ -328,6 +328,15 @@
         <div id="timeline"></div>
     </div>
     <script type="text/javascript">
+
+        var irPortal = function()
+        {
+            var url = $(this).attr('url');
+            if(url != undefined)
+               window.location =  url ;
+        }
+        $(".small-box").on('click',irPortal);
+
         function GenerateCalendar(url, div) {
             var events = [];
             var data = {};
