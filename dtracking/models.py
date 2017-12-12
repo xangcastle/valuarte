@@ -67,8 +67,9 @@ CONECTIONS = (
 ESTADOS_LOG_GESTION = (('RECEPCIONADO', 'RECEPCIONADO'),  # 0 0
                        ('ASIGNADO A EVALUADOR', 'ASIGNADO A EVALUADOR'),  # 1 0
                        ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'),  # 2 0
-                       ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'),  # 3 0
-                       ('TERMINADO', 'TERMINADO'))  # 4 0
+                       ('CONTROL DE CALIDAD', 'CONTROL DE CALIDAD'),  # 3 0
+                       ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'),  # 4 0
+                       ('TERMINADO', 'TERMINADO'))  # 5 0
 
 
 class Gestor(models.Model):
@@ -361,6 +362,10 @@ class Gestion(models.Model):
 
     fecha_revision = models.DateField(null=True, blank=True)  # fecha firma
 
+    control = models.BooleanField(default=False, verbose_name="armado")  # indica si ya se realizo control de calidad
+
+    fecha_control = models.DateField(null=True, blank=True)  # fecha control de calidad
+
     terminada = models.BooleanField(default=False)  # indica si ya se firmo
     fecha_entrega_efectiva = models.DateField(null=True, blank=True)  # fecha firma
     informe_final = models.FileField(upload_to="fichas", null=True, blank=True)  # informe final
@@ -451,9 +456,11 @@ class Gestion(models.Model):
         if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada:
             actual = ESTADOS_LOG_GESTION[3][0]
         if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
-                    self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
+                    self.control):
             actual = ESTADOS_LOG_GESTION[4][0]
-
+        if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
+                    self.control and self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
+            actual = ESTADOS_LOG_GESTION[5][0]
         return actual
 
     def log(self, usuario, fecha, estado):
@@ -620,6 +627,8 @@ class Gestion(models.Model):
                                                      ESTADOS_LOG_GESTION[2][0],
                                                      ESTADOS_LOG_GESTION[3][0],
                                                      ]).aggregate(Sum('valor'))['valor__sum']
+
+        control = Gestion.objects.filter(valor__isnull=True, status_gestion=ESTADOS_LOG_GESTION[4][0])
 
         data = dict()
         data['list_48']      =recepcionadas_48h
@@ -1127,3 +1136,7 @@ def reporteTerminados():
                     q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
                     q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
     return {'head': head, 'data': data}
+
+
+
+
