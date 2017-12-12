@@ -113,9 +113,6 @@
         }
     </style>
     <style>
-
-        <
-        style >
         .chart {
             shape-rendering: crispEdges;
         }
@@ -159,6 +156,9 @@
             stroke: gray;
             fill: blue;
             fill-opacity: .165;
+        }
+        .bg-purple{
+          background-color: #793eb7 !important;
         }
 
     </style>
@@ -240,17 +240,18 @@
                 <div class="clearfix visible-sm-block"></div>
 
                 <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-blue">
+                    <div class="small-box bg-purple">
                         <div class="inner">
-                            <h3 id="gerencia-panel" style="cursor: no-drop;">Gerencia</h3>
-                            <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
-                            <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
-                                <strong> {{ t.gerencia.total }}</strong></h6>
-                            <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
-                                $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
+                            <h3 id="gerencia-panel" style="cursor: no-drop;">Control Calidad</h3>
+                            <h6><i class="ion ion-android-notifications"> </i> Para hoy:
+                                <strong> {{ t.control.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
+                                <strong> {{ t.control.vencidas }}</strong></h6>
+                            <h6><i class="ion ion-ios-time"> </i> En tiempo:
+                                <strong> {{ t.control.en_tiempo }}</strong></h6>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
+                            <i class="ion ion-android-contact">{{ t.control.total }}</i>
                         </div>
 
                         <a title="Reporte de Gerencia" href="#"
@@ -391,7 +392,8 @@
                                 armador: v.armador,
                                 tipo_gestion: v.tipo_gestion,
                                 strella: v.strella,
-                                prioridad: v.prioridad
+                                prioridad: v.prioridad,
+                                banco_ejecutivo: v.banco_ejecutivo
                             });
                         });
                     }
@@ -426,6 +428,7 @@
                                     '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                                     '<div><small>' + event.tipo_gestion + '</small></div>' +
                                     '<div><small>' + event.description + '</small></div>' +
+                                    '<div><small><strong>Ejecutivo: </strong>' + event.banco_ejecutivo + '</small></div>' +
                                     '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
                                     '</div></td></tr>');
                             }

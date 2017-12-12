@@ -11,7 +11,6 @@ from geoposition.fields import GeopositionField
 from jsonfield import JSONField
 import datetime as datetime_base
 from datetime import datetime, timedelta, date
-from background_task import background
 import json
 from django.utils.encoding import smart_str
 from colorfield.fields import ColorField
@@ -641,9 +640,21 @@ class Gestion(models.Model):
                                                      ESTADOS_LOG_GESTION[1][0],
                                                      ESTADOS_LOG_GESTION[2][0],
                                                      ESTADOS_LOG_GESTION[3][0],
+                                                     ESTADOS_LOG_GESTION[4][0],
                                                      ]).aggregate(Sum('valor'))['valor__sum']
 
-        control = Gestion.objects.filter(valor__isnull=True, status_gestion=ESTADOS_LOG_GESTION[4][0])
+        gestiones_control = Gestion.objects.filter(valor__isnull=True, status_gestion=ESTADOS_LOG_GESTION[3][0])
+
+        control_para_hoy = gestiones_control.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
+                              fecha_vence__day=today.day)
+        control_vencidas = []
+        control_entiempo = []
+        for g in gestiones_control:
+            if g.id not in control_para_hoy:
+                if g.dias_retrazo() > 0:
+                    control_vencidas.append(g)
+                else:
+                    control_entiempo.append(g)
 
         data = dict()
         data['list_48']      =recepcionadas_48h
@@ -657,8 +668,20 @@ class Gestion(models.Model):
                                'vencidas': len(vencidas),
                                'en_tiempo': len(entiempo),
                                'total': for_today.count() + len(vencidas) + len(entiempo)}
+        data['control'] = {
+                            'para_hoy': control_para_hoy.count(),
+                            'vencidas': len(control_vencidas),
+                            'en_tiempo': len(control_entiempo),
+                            'total': control_para_hoy.count() + len(control_vencidas) + len(control_entiempo)
+        }
+
+        if ventas:
+            cont_ventas = '{:,}'.format(ventas)
+        else:
+            cont_ventas = 0
+
         data['gerencia'] = {'en_firma': enfirma.count(),
-                            'ventas':'{:,}'.format(ventas),
+                            'ventas':cont_ventas,
                             'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
                             }
         return data
@@ -701,6 +724,7 @@ class Gestion(models.Model):
         o['barrio'] = str(self.barrio)
         o['id_tipo_gestion'] = self.tipo_gestion.id
         o['tipo_gestion'] = self.tipo_gestion.name
+        o['banco_ejecutivo'] = self.banco_ejecutivo
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
         o['descripcion'] = self.direccion
