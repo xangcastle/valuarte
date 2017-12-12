@@ -61,8 +61,8 @@
                            class="btn btn-primary btn-circle" target="_blank">
                             <i class="ion-social-octocat"></i>
                         </a>
-                        <a id="editar" title="Editar" href="#"
-                           class="btn btn-primary btn-circle">
+                        <a id="editar" title="Editar" href="javascript:void(0)"
+                           class="btn btn-primary btn-circle" onclick="editEvent()">
                             <i class="ion-edit"></i>
                         </a>
                     </div>
@@ -95,9 +95,33 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
+
+
+    <div id="modal-edit"
+         data-izimodal-fullscreen="true"
+         data-izimodal-title="Estado de su gestion"
+         data-izimodal-subtitle="Aquí puede informarse del proceso de su avaluo"
+         data-izimodal-icon="icon-home"
+         aria-hidden="false"
+         aria-labelledby="modal-default"
+         role="dialog" class="iziModal"
+         data-izimodal-group="grupo1"
+         data-izimodal-loop="true"
+
+         style="border-bottom: 3px solid rgb(136, 160, 185);
+                 overflow: hidden; z-index: 999;
+                 border-radius: 3px; max-width: 700px;
+                 display: None; height: 459px;">
+
+        <div class="iziModal-content" >
+          <div class="modal-content" style="padding: 10px">
+
+          </div>
+        </div>
+    </div>
+
     <link rel="stylesheet" href="{% static '/izimodal/css/iziModal.min.css' %}" type="text/css">
     <script type="text/javascript" src='{% static '/jquery/dist/jquery.min.js' %}'></script>
     <script type="text/javascript" src='{% static '/jquery-ui/jquery-ui.min.js' %}'></script>
@@ -153,16 +177,17 @@
     {{ block.super }}
     <script type="text/javascript">
         var editEvent = function () {
-            var id = $(this).data("event").id;
+            var id = $("#editar").data("event");
             var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
-            modal = $("#myModal");
-            body = modal.find(".modal-body").empty();
+            modal = $("#modal-edit");
+            body = modal.find(".modal-content").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
                 method: "GET",
                 success: function (response) {
                     body.html(response);
-                    modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
-                    $('#id_departamento').on('change', cargar_municipios);
+                    modal.iziModal({zindex: 10000});
+                    modal.iziModal('open');
+                    {% comment %}$('#id_departamento').on('change', cargar_municipios);
                     $('#id_fecha').datetimepickerByGiro({
                         style: 'popup', // / inline / popup
                         autoclose: true, // autoclose the popup on date / date range selected
@@ -185,7 +210,7 @@
                         minuteStep: 60,
                         specialDates: []
                     });
-                    $('#id_fin_gestion').on('change', cargar_usos_gestion);
+                    $('#id_fin_gestion').on('change', cargar_usos_gestion);{% endcomment %}
                 }
             });
         }
@@ -208,7 +233,6 @@
                             var u_examen = "/dtracking/examen_previo/?gestion=" + result.id_gestion
                             $("#examen").attr('href', u_examen);
                             $("#editar").attr('data-event', result.id_gestion);
-
                             $('#editar').on('click', editEvent);
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);
