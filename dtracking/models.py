@@ -1046,6 +1046,7 @@ class Log_Gestion(models.Model):
     estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION, null=True)
 
     def anexo(self):
+        txt =""
         if self.estado == ESTADOS_LOG_GESTION[0][0]:
             return "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[1][0]:

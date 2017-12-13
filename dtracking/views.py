@@ -251,7 +251,7 @@ def get_log_gestion(request):
         try:
             gestion = Gestion.objects.get(barra=codigo_gestion)
             if not gestion:
-                jresponse['mensaje'] = codigo_gestion
+                jresponse['mensaje'] = "Gestion no encontrada"
                 jresponse['code'] = 400
             else:
                 logs = Log_Gestion.objects.filter(gestion=gestion).order_by('-id')
@@ -274,7 +274,7 @@ def get_log_gestion(request):
                 jresponse['code'] = 200
                 jresponse['logs'] = jlogs
 
-        except:
+        except :
             jresponse['mensaje'] = "Gestion no encontrada"
             jresponse['code'] = 400
 
