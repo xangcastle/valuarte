@@ -56,10 +56,17 @@
             <div style="padding: 20px">
                 <div class="row">
                     <div class="col-sm-12 col-xs-12">
-                        <a id="ficha" title="Generar Proforma" href="#"
+                        <a id="ficha" title="" href="#"
                            class="btn btn-primary btn-circle" target="_blank">
                             <i class="ion-pie-graph"></i>
                         </a>
+
+                        <a id="facturaproforma" title="" style="cursor:pointer;display:none"
+                           class="btn btn-primary btn-circle" target="_blank">
+                            <i class="ion-social-buffer-outline"></i>
+                        </a>
+
+
                         <a id="proforma" title="Generar Ficha" href="#"
                            class="btn btn-primary btn-circle" target="_blank">
                             <i class="ion-android-desktop"></i>
@@ -75,7 +82,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion:</h4></div>
+                    <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion :</h4></div>
                     <div class="col-sm-8 col-xs-12">
                         <strong id="codigo_gestion">3527364</strong>
                     </div>
@@ -197,6 +204,10 @@
                 }
             });
         }
+        var finalizarEvent = function () {
+
+        }
+
         function ver_gestion(gestion) {
             var u = "{% url "get_log_gestion" %}?gestion=" + gestion + "";
                 $.ajax({
@@ -217,12 +228,23 @@
                             $("#examen").attr('href', u_examen);
                             $("#editar").attr('data-event', result.id_gestion);
                             $('#editar').on('click', editEvent);
+                            $("#facturaproforma").on('click', finalizarEvent);
+
                             if(result.status_gestion ==="LEVANTAMIENTO REALIZADO"){
                                 $("#editar").css('visibility', 'hidden');
                             }
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);
                             $("#tipo_gestion").html(result.tipo_gestion);
+                            console.log(result.factura_gestion);
+                            if(result.factura_gestion)
+                               $("#ficha").attr('title','Generar Factura');
+                            else
+                            {
+                              $("#ficha").attr('title','Generar Cotización');
+                              $("#facturaproforma").attr('style','cursor:pointer,display:block');
+                            }
+
                             $("#modal-default").iziModal({zindex: 9999});
                             $("#modal-default").iziModal('open');
                         } else {

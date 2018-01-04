@@ -304,6 +304,11 @@ class Gestion_Uso(Entidad):
 
 
 class Gestion(models.Model):
+    numero            = models.CharField(max_length=65, null=True, verbose_name="Número", blank=True)
+    factura           = models.BooleanField(default=False,verbose_name="Factura")
+    fecha_facturacion = models.DateField(null=True, blank=True)
+    cancelada         = models.BooleanField(default=False,verbose_name="Cancelada")
+    fecha_cancelacion = models.DateField(null=True, blank=True)
     fecha = models.DateField(null=True, blank=True,
                              verbose_name="fecha de solicitud")  # fecha en que se recepciona la solicitud del avaluo
     barra = models.CharField(max_length=65, null=True, verbose_name="Código de avaluo",

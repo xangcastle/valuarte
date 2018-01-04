@@ -198,7 +198,7 @@
            x="0"
            y="0"
            sodipodi:role="line"
-           id="tspan4566">{{ o.barra }}</tspan></text>
+           id="tspan4566">{% if o.factura %} Factura  {% else %} Cotización  {% endif %}  {{ o.barra }}</tspan></text>
 </g><g
        id="g4570"
        transform="scale(0.05)"><path
@@ -213,7 +213,7 @@
            x="0 141.91408 283.82816 391.97256 533.88666 675.80072 783.94513 925.85919 1067.7733 1209.6874"
            y="0"
            sodipodi:role="line"
-           id="tspan4576">{{ o.fecha|date:"d/m/y" }}</tspan></text>
+           id="tspan4576"> {% if o.factura %} {{ o.fecha_facturacion|date:"d/m/y" }}  {% else %} {% now "d/m/Y" %}  {% endif %}  </tspan></text>
 </g><g
        id="g4580"
        transform="matrix(0.05,0,0,0.05,53.850002,195.89708)"><text
