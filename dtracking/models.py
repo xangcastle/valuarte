@@ -378,6 +378,23 @@ class Gestion(models.Model):
     dias = models.IntegerField(default=0, null=True, verbose_name="dias extras para el armado", blank=True)
 
     priority = models.BooleanField(default=False, verbose_name="prioridad")
+
+    def asignarFechaFacturacion(self,request):
+        f = request.POST.get('text_fecha',None)
+        if f and not self.fecha_facturacion :
+            try :
+                date = datetime.strptime(f, "%Y-%m-%d").date()
+                self.factura           = True
+                self.fecha_facturacion = date
+                self.save()
+            except Exception as e :
+                return {"result": e.message,"code":500}
+            return {"result": "Fecha de facturación asignada con exito","code":200}
+        else :
+            return {"result": "Debe asignar una fecha", "code":500}
+
+
+
     def terminarControl(self):
         print "terminando"
         self.control = True

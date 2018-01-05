@@ -7,9 +7,13 @@
   input[type="text"], input[type="password"], input[type="number"], .vDateField, .vTimeField, .vIntegerField, .vPositiveSmallIntegerField, .vManyToManyRawIdAdminField, .vForeignKeyRawIdAdminField {
     width: 100%;
   }
+  .datepicker
+  {
+    position: absolute;
+    cursor: default;
+    z-index: 10000 !important;
+  }
   </style>
-
-
     <h1 id="grp-admin-title"><strong>Valuarte</strong> <span><div id="search" class="">
         <style>
             input[type=text].grp-search-field-navbar {
@@ -37,6 +41,7 @@
                     style="margin-left: -25px;"></button>
         </form>
     </div></span></h1>
+
     <div id="modal-default"
          data-izimodal-fullscreen="true"
          data-izimodal-title="Estado de su gestion"
@@ -60,13 +65,10 @@
                            class="btn btn-primary btn-circle" target="_blank">
                             <i class="ion-pie-graph"></i>
                         </a>
-
-                        <a id="facturaproforma" title="" style="cursor:pointer;display:none"
-                           class="btn btn-primary btn-circle" target="_blank">
+                        <a id="facturaproforma" style="cursor:pointer;display:none"
+                           class="btn btn-primary btn-circle" target="_blank"  onclick="finalizarEvent()">
                             <i class="ion-social-buffer-outline"></i>
                         </a>
-
-
                         <a id="proforma" title="Generar Ficha" href="#"
                            class="btn btn-primary btn-circle" target="_blank">
                             <i class="ion-android-desktop"></i>
@@ -80,6 +82,14 @@
                             <i class="ion-edit"></i>
                         </a>
                     </div>
+                </div>
+                <div class="row" id="div_fecha" style="display:none;background-color:#e3f7fc; color:#555; border:.1em solid;border-color: #8ed9f6;border-radius:10px;font-family:Tahoma,Geneva,Arial,sans-serif;font-size:1.1em;padding:10px 10px 10px 10px;margin:10px;cursor: default;">
+                   <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Fecha Facturación :</h4></div>
+                   <div class="col-sm-8 col-xs-12">
+                     <input type="date" class="form-control" name="text_fecha"  id="text_fecha" lang="es" >
+                     </br>
+                     <button id="btn_gestion_fecha" onclick="finalizarFecha()" style="width:100%;height:50%;  background-color: #008CBA;font-size: 10px;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;" >Registrar</button>
+                   </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;"># Gestion :</h4></div>
@@ -113,6 +123,7 @@
     </div>
 
 
+
     <div id="modal-edit"
          data-izimodal-fullscreen="true"
          data-izimodal-title="Estado de su gestion"
@@ -141,8 +152,34 @@
     <script type="text/javascript" src='{% static '/jquery-ui/jquery-ui.min.js' %}'></script>
     <script type="text/javascript" src='{% static '/izimodal/js/iziModal.min.js' %}'></script>
 
+    <link href=" {% static '/pnotify/dist/pnotify.css' %}" rel="stylesheet">
+    <link href=" {% static '/pnotify/dist/pnotify.buttons.css' %}" rel="stylesheet">
+    <link href=" {% static '/pnotify/dist/pnotify.nonblock.css' %}" rel="stylesheet">
+    <script type="text/javascript" src='{% static "/pnotify/dist/pnotify.js" %}'></script>
+    <script type="text/javascript" src='{% static "/pnotify/dist/pnotify.buttons.js" %}'></script>
+    <script type="text/javascript" src='{% static "/pnotify/dist/pnotify.nonblock.js" %}'></script>
+
     <script>
+        function finalizarFecha()
+        {
+          var id = $('#btn_gestion_fecha').attr('data-event');
+          $.ajax("/admin/ajax/object_execute/", {
+              method: "post",
+              data: { text_fecha:$('#text_fecha').val(), app_label: "dtracking", model: "gestion", id: id, method: "asignarFechaFacturacion"},
+              success: function(result){
+                  if(result.result.code =="200")
+                   {
+                     $("#ficha").attr('title','Generar Factura');
+                     $("#facturaproforma").attr('style','cursor:pointer;display:none');
+                     $("#div_fecha").toggle();
+                   }
+                   alert(result.result.result);
+              }
+          })
+        }
         $(document).ready(function () {
+
+
             var atachments_info = function () {
                 window.open(
                     $(this).data('url'),
@@ -190,6 +227,7 @@
 {% block extrahead %}
     {{ block.super }}
     <script type="text/javascript">
+
         var editEvent = function () {
             var id = $("#editar").data("event");
             var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-destinatario-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion&id=" + id;
@@ -204,9 +242,10 @@
                 }
             });
         }
-        var finalizarEvent = function () {
-
+      function finalizarEvent () {
+          $("#div_fecha").toggle();
         }
+
 
         function ver_gestion(gestion) {
             var u = "{% url "get_log_gestion" %}?gestion=" + gestion + "";
@@ -228,7 +267,7 @@
                             $("#examen").attr('href', u_examen);
                             $("#editar").attr('data-event', result.id_gestion);
                             $('#editar').on('click', editEvent);
-                            $("#facturaproforma").on('click', finalizarEvent);
+                            $("#btn_gestion_fecha").attr('data-event', result.id_gestion);
 
                             if(result.status_gestion ==="LEVANTAMIENTO REALIZADO"){
                                 $("#editar").css('visibility', 'hidden');
@@ -236,13 +275,12 @@
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);
                             $("#tipo_gestion").html(result.tipo_gestion);
-                            console.log(result.factura_gestion);
                             if(result.factura_gestion)
                                $("#ficha").attr('title','Generar Factura');
                             else
                             {
                               $("#ficha").attr('title','Generar Cotización');
-                              $("#facturaproforma").attr('style','cursor:pointer,display:block');
+                              $("#facturaproforma").attr('style','cursor:pointer;display:block');
                             }
 
                             $("#modal-default").iziModal({zindex: 9999});
