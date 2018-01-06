@@ -59,14 +59,16 @@
                  display: None; height: 459px;">
         <div class="iziModal-content">
             <div style="padding: 20px">
-                <div class="row">
+                <div  class="row" id="gestion_cancelada">
+                </div>
+                <div class="row" style="display:none" id="menu_gestion">
                     <div class="col-sm-12 col-xs-12">
                         <a id="ficha" title="" href="#"
                            class="btn btn-primary btn-circle" target="_blank">
                             <i class="ion-pie-graph"></i>
                         </a>
                         <a id="facturaproforma" style="cursor:pointer;display:none"
-                           class="btn btn-primary btn-circle" target="_blank"  onclick="finalizarEvent()">
+                           class="btn btn-primary btn-circle" target="_blank"  >
                             <i class="ion-social-buffer-outline"></i>
                         </a>
                         <a id="proforma" title="Generar Ficha" href="#"
@@ -81,6 +83,10 @@
                            class="btn btn-primary btn-circle" onclick="editEvent()">
                             <i class="ion-edit"></i>
                         </a>
+                        <a id="cancelar" title="Cancelar Avaluo" href="javascript:void(0)"
+                           class="btn btn-primary btn-circle" target="_blank">
+                            <i class="ion-ios-close-outline"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="row" id="div_fecha" style="display:none;background-color:#e3f7fc; color:#555; border:.1em solid;border-color: #8ed9f6;border-radius:10px;font-family:Tahoma,Geneva,Arial,sans-serif;font-size:1.1em;padding:10px 10px 10px 10px;margin:10px;cursor: default;">
@@ -88,7 +94,14 @@
                    <div class="col-sm-8 col-xs-12">
                      <input type="date" class="form-control" name="text_fecha"  id="text_fecha" lang="es" >
                      </br>
-                     <button id="btn_gestion_fecha" onclick="finalizarFecha()" style="width:100%;height:50%;  background-color: #008CBA;font-size: 10px;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;" >Registrar</button>
+                     <button id="btn_gestion_fecha" onclick="" style="width:100%;height:50%;  background-color: #008CBA;font-size: 10px;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;" >Registrar</button>
+                   </div>
+                </div>
+                <div class="row" id="div_cancelar" style="display:none;background-color:#ff3f3f; color:#000000; border:.1em solid;border-color: #8ed9f6;border-radius:10px;font-family:Tahoma,Geneva,Arial,sans-serif;font-size:1.1em;padding:10px 10px 10px 10px;margin:10px;cursor: default;">
+                   <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Está seguro que quiere eliminar Este avalúo  ?</h4></div>
+                   <div class="col-sm-8 col-xs-12">
+                     <button id="btn_gestion_cancelar" style="width:40%;height:70%;  background-color: #008CBA;font-size: 10px;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;" >SI</button>
+                     <button id="btn_gestion_anular"   style="width:40%;height:70%;  background-color: #d80000;font-size: 10px;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;" >NO</button>
                    </div>
                 </div>
                 <div class="row">
@@ -160,7 +173,8 @@
     <script type="text/javascript" src='{% static "/pnotify/dist/pnotify.nonblock.js" %}'></script>
 
     <script>
-        function finalizarFecha()
+
+      var finalizarFechaEvent =   function ()
         {
           var id = $('#btn_gestion_fecha').attr('data-event');
           $.ajax("/admin/ajax/object_execute/", {
@@ -177,6 +191,19 @@
               }
           })
         }
+      var cancelarEvent = function()
+      {
+        var id = $('#btn_gestion_cancelar').attr('data-event');
+        $.ajax("/admin/ajax/object_execute/", {
+            method: "post",
+            data: {  app_label: "dtracking", model: "gestion", id: id, method: "cancelarGestion"},
+            success: function(result){
+                 alert(result.result.result);
+                 if(result.result.code =="200")
+                    $("#modal-default").iziModal('close');
+            }
+        })
+      }
         $(document).ready(function () {
 
 
@@ -195,6 +222,15 @@
                     minLength: 2,
                     source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario,barra",
                     select: function (i, o) {
+                        if(o.item.obj.cancelada)
+                        {
+                          $("#menu_gestion").hide();
+                          $("#gestion_cancelada").html('<b>GESTIÓN CANCELADA</b>');
+                        }
+                        else
+                        {
+                          $("#menu_gestion").show();
+                        }
                         ver_gestion(o.item.obj.barra);
                     },
                     error: function (error) {
@@ -242,12 +278,16 @@
                 }
             });
         }
-      function finalizarEvent () {
+        var anularEvent = function () {
+              $("#div_cancelar").toggle();
+        }
+       var finalizarEvent =  function () {
           $("#div_fecha").toggle();
         }
 
-
         function ver_gestion(gestion) {
+          $("#div_fecha").hide();
+          $("#div_cancelar").hide();
             var u = "{% url "get_log_gestion" %}?gestion=" + gestion + "";
                 $.ajax({
                     url: u,
@@ -267,10 +307,19 @@
                             $("#examen").attr('href', u_examen);
                             $("#editar").attr('data-event', result.id_gestion);
                             $('#editar').on('click', editEvent);
+                            $(document).on("click","#cancelar",anularEvent);
+                            $(document).on("click","#btn_gestion_anular",anularEvent);
+                            $(document).on("click","#facturaproforma",finalizarEvent);
+                            $(document).on("click","#btn_gestion_fecha",finalizarFechaEvent);
+                            $(document).on("click","#btn_gestion_cancelar",cancelarEvent);
+
+
                             $("#btn_gestion_fecha").attr('data-event', result.id_gestion);
+                            $("#btn_gestion_cancelar").attr('data-event', result.id_gestion);
 
                             if(result.status_gestion ==="LEVANTAMIENTO REALIZADO"){
                                 $("#editar").css('visibility', 'hidden');
+                                $("#cancelar").css('visibility', 'hidden');
                             }
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);

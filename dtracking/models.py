@@ -68,7 +68,10 @@ ESTADOS_LOG_GESTION = (('RECEPCIONADO', 'RECEPCIONADO'),  # 0 0
                        ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'),  # 2 0
                        ('CONTROL DE CALIDAD', 'CONTROL DE CALIDAD'),  # 3 0
                        ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'),  # 4 0
-                       ('TERMINADO', 'TERMINADO'))  # 5 0
+                       ('TERMINADO', 'TERMINADO'), # 5 0
+                       ('CANCELADO', 'CANCELADO'))  # 6 0
+
+
 
 
 class Gestor(models.Model):
@@ -480,19 +483,22 @@ class Gestion(models.Model):
 
     def get_status_gestion(self):
         actual = ESTADOS_LOG_GESTION[0][0]
-        if not self.user and not self.fecha_asignacion: #Recepcion
-            actual = ESTADOS_LOG_GESTION[0][0]
-        if self.user and self.fecha_asignacion: #Logistica
-            actual = ESTADOS_LOG_GESTION[1][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion: # operaciones
-            actual = ESTADOS_LOG_GESTION[2][0]
-        if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada: #control de calidad
-            actual = ESTADOS_LOG_GESTION[3][0]
-        if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
-                    self.control):#firma
-            actual = ESTADOS_LOG_GESTION[4][0]
-        if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (self.control and self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
-            actual = ESTADOS_LOG_GESTION[5][0]
+        if self.cancelada :
+            actual = ESTADOS_LOG_GESTION[6][0]
+        else :
+            if not self.user and not self.fecha_asignacion: #Recepcion
+                actual = ESTADOS_LOG_GESTION[0][0]
+            if self.user and self.fecha_asignacion: #Logistica
+                actual = ESTADOS_LOG_GESTION[1][0]
+            if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion: # operaciones
+                actual = ESTADOS_LOG_GESTION[2][0]
+            if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada: #control de calidad
+                actual = ESTADOS_LOG_GESTION[3][0]
+            if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
+                        self.control):#firma
+                actual = ESTADOS_LOG_GESTION[4][0]
+            if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (self.control and self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
+                actual = ESTADOS_LOG_GESTION[5][0]
         return actual
 
     def log(self, usuario, fecha, estado):
@@ -616,6 +622,16 @@ class Gestion(models.Model):
             return self.user.username
         else:
             return None
+    def cancelarGestion(self):
+        estado = self.get_status_gestion()
+        if estado == 'RECEPCIONADO' or estado =='ASIGNADO A EVALUADOR' or estado =='CONTROL DE CALIDAD':
+          self.cancelada =True
+          self.save()
+          return {"result": "Cancelada Con Exito","code":200}
+        else :
+          return {"result": "Nose debe cancelar", "code":500}
+
+
 
     @staticmethod
     def datos_facturacion():
@@ -764,6 +780,7 @@ class Gestion(models.Model):
         o['banco_ejecutivo'] = self.banco_ejecutivo
         o['barra'] = self.barra
         o['titulo'] = self.destinatario
+        o['cancelada'] = self.cancelada
         o['descripcion'] = self.direccion
         o['inicio'] = str(ifnull(self.render_calendar_inicio(), ''))
         o['fin'] = str(ifnull(self.render_calendar_fin(), ''))
