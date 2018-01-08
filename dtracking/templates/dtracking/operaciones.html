@@ -69,8 +69,18 @@
                                   </small>
                               </div>
                           </ul>
-                          <h3>No Asignados</h3>
-                          <ul class="grp-listing-small" id="external-events-listing"></ul>
+                          <h3>Pendientes de Prearmado</h3>
+                          <ul class="grp-listing-small" id="external-events-listing">
+                                {% for g in pendientes %}
+                                    <li class="grp-row fc-draggable ui-draggable ui-draggable-handle">
+                                        <a href="/admin/dtracking/gestion/804/change/">2140-FA-2017</a>
+                                        <img src="{{ g.get_estrella }}" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">
+                                        <span class="grp-font-color-quiet destinatario">{{ g.destinatario }}</span>
+                                        <span class="grp-font-color-quiet telefono">{{ g.telefono }}</span>
+                                        <span class="grp-font-color-quiet direccion">{{ g.direccion }}</span>
+                                    </li>
+                                {% endfor %}
+                          </ul>
                       </div>
                   </div>
               </div>

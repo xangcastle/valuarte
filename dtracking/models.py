@@ -363,7 +363,9 @@ class Gestion(models.Model):
     json = JSONField(null=True, blank=True)
 
     # operaciones
-    fecha_recepcion = models.DateField(null=True, blank=True)
+    fecha_recepcion = models.DateField(null=True, blank=True)  ###
+    prearmado = models.BooleanField(default=False, verbose_name="prearmado")###
+    fecha_prearmado = models.DateTimeField(null=True, blank=True)  # fecha de prearmado incluye hora
     fecha_vence = models.DateField(null=True, blank=True)
     armador = models.ForeignKey('Operaciones', null=True, blank=True,
                                 related_name="gestion_armador")  # armador de campo al que se le asigna el avaluo

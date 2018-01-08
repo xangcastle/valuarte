@@ -479,16 +479,12 @@ class operaciones(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(operaciones, self).get_context_data(**kwargs)
-        context['pendientes'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0])
-        context['peritos'] = Gestor.objects.all()
-        asignadas = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0])
-        context['programadas'] = asignadas
+        ## al calendario
+        context['pendientes'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True)
 
-        context['total_vigentes'] = asignadas.filter(fecha_asignacion__gt=datetime.now()).count()
-        context['total_vencidas'] = asignadas.filter(fecha_asignacion__lt=datetime.now()).count()
-        context['total_hoy'] = asignadas.filter(fecha_asignacion__year=datetime.now().year,
-                                                fecha_asignacion__month=datetime.now().month,
-                                                fecha_asignacion__day=datetime.now().day).count()
+        context['lista'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=False)
+        context['peritos'] = Gestor.objects.all()
+
         return super(operaciones, self).render_to_response(context)
 
     def post(self, request, *args, **kwargs):
