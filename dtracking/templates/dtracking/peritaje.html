@@ -214,6 +214,10 @@
                     $("#div_id_ficha_inspeccion").css("display", "none");
                     $("#div_id_fecha_recepcion").css("display", "none");
                     $("#div_id_armador").css("display", "none");
+                    modal.find('input[type=submit]').after('<button  gestion="'+$("#ges_aval_id").val()+'" class="btn btn-danger cancelar" style="float:left;width:40%">Cancelar</button>')
+
+                    $("#parrafo1").after("<p>Este párrafo tiene que salir entre el párrafo 1 y 2</p>");
+
                     $("#id_realizada").on('change', function () {
                         if ($(this).is(':checked')) {
                             $("#div_id_ficha_inspeccion").css("display", "block");
