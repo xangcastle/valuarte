@@ -684,7 +684,7 @@ class Gestion(models.Model):
                     entiempo.append(g)
 
         enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0])
-        ventas  = Gestion.objects.filter(
+        ventas  = Gestion.objects.filter(fecha__month=today.month,
             valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
                                                      ESTADOS_LOG_GESTION[1][0],
                                                      ESTADOS_LOG_GESTION[2][0],
