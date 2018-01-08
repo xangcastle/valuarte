@@ -469,7 +469,7 @@ class Gestion(models.Model):
 
     def get_user_log(self, status):
         if status == ESTADOS_LOG_GESTION[1][0]:# 1 , 0
-            return self.userESTADOS_LOG_GESTION
+            return self.user
         elif status == ESTADOS_LOG_GESTION[2][0]:# 2,0
             return self.armador
         else:
@@ -626,6 +626,7 @@ class Gestion(models.Model):
         estado = self.get_status_gestion()
         if estado == 'RECEPCIONADO' or estado =='ASIGNADO A EVALUADOR' or estado =='CONTROL DE CALIDAD':
           self.cancelada =True
+          self.status_gestion =ESTADOS_LOG_GESTION[6][0]
           self.save()
           return {"result": "Cancelada Con Exito","code":200}
         else :

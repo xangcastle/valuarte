@@ -347,7 +347,7 @@
                 '<span class="grp-font-color-quiet direccion">' + v.direccion + '</span>' +
                 '<span class="btn btn-sm btn-info cotizar" ' +
                 'data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion=' + v.id +
-                '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cotizar</span></li>';
+                '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cotizar</span><span class="btn btn-sm btn-danger cancelar" gestion="' + v.id +'" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cancelar</span></li>' ;
 
             row = $(row).data('event', v);
             row = $(row).draggable({
@@ -475,6 +475,24 @@
                 }
             });
         }
+        var cancelarEvent = function()
+        {
+          var id = $(this).attr('gestion');
+          if(id!=""&& id != undefined)
+            {
+              var r = confirm("Desea Cancelar este Avalúo!");
+              if (r == true) {
+                $.ajax("/admin/ajax/object_execute/", {
+                    method: "post",
+                    data: {  app_label: "dtracking", model: "gestion", id: id, method: "cancelarGestion"},
+                    success: function(result){
+                         alert(result.result.result);
+                    }
+                })
+              }
+            }
+
+        }
 
         var onclosemodal = function () {
             var id = $(this).find('input[name="id"]').val();
@@ -551,6 +569,8 @@
             $("body").on('click', '.fc-draggable', editEvent);
 
             $("body").on('click', '.cotizar', cotizar);
+            $("body").on('click', '.cancelar', cancelarEvent);
+
 
 
             $("#nav-search").click(function () {
