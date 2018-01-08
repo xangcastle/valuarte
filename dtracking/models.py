@@ -569,7 +569,7 @@ class Gestion(models.Model):
         if self.fecha and self.tipo_gestion:
             numero = ""
             try:
-                numero = int(type(self).objects.filter(fecha__year=datetime.now().year).order_by('-barra')[0].barra[0:4]) + 1
+                numero = int(type(self).objects.filter(fecha__year=datetime.now().year, barra__isnull=False).order_by('-barra')[0].barra[0:4]) + 1
             except:
                 numero = 1
             code = "%s-%s-%s" % (str(numero).zfill(4), self.tipo_gestion.prefijo, str(self.fecha.year))
