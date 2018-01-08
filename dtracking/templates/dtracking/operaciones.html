@@ -19,50 +19,64 @@
     }
     </style>
     <div class="row">
-{% comment %}        <div class="col-xs-12 col-sm-3">
-            <div id='external-events'>
-                <h4>Avaluos sin Asignar!</h4>
-
-                <div id="external-events-listing">
-                </div>
-            </div>
-            <div id='external-events'>
-                <div class="form-group">
-                    <label for="peritos">Peritos</label>
-                    <select class="form-control" id="peritos" aria-describedby="PeritosHelp"
-                            onchange="refreshCalender()">
-                        <option value="0">Todos</option>
-                        {% for perito in peritos %}
-                            <option value="{{ perito.user.id }}">{{ perito.user }}</option>
-                        {% endfor %}
-                    </select>
-                    <small id="PeritosHelp" class="form-text text-muted">Filtre aqui por perito asignado.</small>
-                </div>
-
-            </div>
-            <div id='external-events'>
-                <div>
-                    <h4>Leyenda</h4>
-                    <div style="background-color: #991957; color: white;">Vencidas <span
-                            style="float: right">{{ total_vencidas }}</span></div>
-                    <br>
-                    <div style="background-color: #4d0a54; color: white;">Para Hoy <span
-                            style="float: right">{{ total_hoy }}</span></div>
-                    <br>
-                    <div style="background-color: #46991a; color: white;">Vigentes <span
-                            style="float: right">{{ total_vigentes }}</span></div>
-                    <br>
-                </div>
-            </div>
-            <div id='external-events'>
-                <div>
-                    <h4>Reportes</h4>
-                    <div class="btn btn-info">Reporte 1 </div>
-                    <br>
-                </div>
-            </div>
-        </div>{% endcomment %}
-        <div class="col-xs-12 col-sm-12">
+      <div class="col-md-3 col-xs-3 col-sm-3">
+          <div>
+              <div>
+                  <div class="grp-module">
+                      <h2>
+                          <a title="Reporte de Recepción" href="#"
+                             class="btn btn-primary btn-circle show_atachments have-info"
+                             data-des="{% url 'reporte' %}?status=0"
+                             data-name="Reporte de Recepción">
+                              <i class="ion-happy"></i>
+                          </a>
+                          <a title="Reporte de Logística" href="#"
+                             class="btn btn-primary btn-circle show_atachments have-info"
+                             data-des="{% url 'reporte' %}?status=1"
+                             data-name="Reporte de Logística">
+                              <i class="ion-android-car"></i>
+                          </a>
+                          <a title="Reporte de Operaciones" href="#"
+                             class="btn btn-primary btn-circle show_atachments have-info"
+                             data-des="{% url 'reporte' %}?status=2"
+                             data-name="Reporte de Operaciones">
+                              <i class="ion-person-stalker"></i>
+                          </a>
+                          <a title="Reporte de Gerencia" href="#"
+                             class="btn btn-primary btn-circle show_atachments have-info"
+                             data-des="{% url 'reporte' %}?status=3"
+                             data-name="Reporte de Gerencia">
+                              <i class="ion-android-contact"></i>
+                          </a>
+                          <a title="Nuevo Avaluo" href="javascript:void(0)" id="new-event"
+                             class="btn btn-primary btn-circle">
+                              <i class="ion-plus-round"></i>
+                          </a>
+                      </h2>
+                      <div class="grp-module">
+                          <ul class="grp-listing-small">
+                              <div class="form-group">
+                                  <label for="peritos">Peritos</label>
+                                  <select class="form-control" id="peritos" aria-describedby="PeritosHelp"
+                                          onchange="refreshCalender()">
+                                      <option value="0">Todos</option>
+                                      {% for perito in peritos %}
+                                          <option value="{{ perito.user.id }}">{{ perito.user }}</option>
+                                      {% endfor %}
+                                  </select>
+                                  <small id="PeritosHelp" class="form-text text-muted">Filtre aqui por perito
+                                      asignado.
+                                  </small>
+                              </div>
+                          </ul>
+                          <h3>No Asignados</h3>
+                          <ul class="grp-listing-small" id="external-events-listing"></ul>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+        <div class="col-md-9 col-xs-9 col-sm-9">
             <div id="calender"></div>
             <div id="myModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
