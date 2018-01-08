@@ -395,7 +395,8 @@ def obtener_citas_peritaje(request):
     return obtener_citas(request)
 
 def obtener_citas_operaciones(request):
-    return obtener_citas(request, status1=ESTADOS_LOG_GESTION[2][0], status2=ESTADOS_LOG_GESTION[3][0])
+    data = Gestion.datosOperacion({})
+    return HttpResponse(json.dumps({'programadas': data['programadas'], 'pendientes':data['pendientes'] , 'lista':data['lista'] }) , content_type='application/json')
 
 def programar_gestion(request):
     obj_json = {}
@@ -479,12 +480,7 @@ class operaciones(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(operaciones, self).get_context_data(**kwargs)
-        ## al calendario
-        context['pendientes'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True)
-
-        context['lista'] = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=False)
-        context['peritos'] = Gestor.objects.all()
-
+        context = Gestion.datosOperacion(context)
         return super(operaciones, self).render_to_response(context)
 
     def post(self, request, *args, **kwargs):

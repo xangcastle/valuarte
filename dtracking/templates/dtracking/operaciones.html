@@ -23,36 +23,7 @@
           <div>
               <div>
                   <div class="grp-module">
-                      <h2>
-                          <a title="Reporte de Recepción" href="#"
-                             class="btn btn-primary btn-circle show_atachments have-info"
-                             data-des="{% url 'reporte' %}?status=0"
-                             data-name="Reporte de Recepción">
-                              <i class="ion-happy"></i>
-                          </a>
-                          <a title="Reporte de Logística" href="#"
-                             class="btn btn-primary btn-circle show_atachments have-info"
-                             data-des="{% url 'reporte' %}?status=1"
-                             data-name="Reporte de Logística">
-                              <i class="ion-android-car"></i>
-                          </a>
-                          <a title="Reporte de Operaciones" href="#"
-                             class="btn btn-primary btn-circle show_atachments have-info"
-                             data-des="{% url 'reporte' %}?status=2"
-                             data-name="Reporte de Operaciones">
-                              <i class="ion-person-stalker"></i>
-                          </a>
-                          <a title="Reporte de Gerencia" href="#"
-                             class="btn btn-primary btn-circle show_atachments have-info"
-                             data-des="{% url 'reporte' %}?status=3"
-                             data-name="Reporte de Gerencia">
-                              <i class="ion-android-contact"></i>
-                          </a>
-                          <a title="Nuevo Avaluo" href="javascript:void(0)" id="new-event"
-                             class="btn btn-primary btn-circle">
-                              <i class="ion-plus-round"></i>
-                          </a>
-                      </h2>
+
                       <div class="grp-module">
                           <ul class="grp-listing-small">
                               <div class="form-group">
@@ -71,8 +42,8 @@
                           </ul>
                           <h3>Pendientes de Prearmado</h3>
                           <ul class="grp-listing-small" id="external-events-listing">
-                                {% for g in pendientes %}
-                                    <li class="grp-row fc-draggable ui-draggable ui-draggable-handle">
+                                {% for g in lista %}
+                                    <li class="grp-row fc-draggable ui-draggable ui-draggable-handle gestion_event_aval" gestion="{{g.id}}">
                                         <a href="/admin/dtracking/gestion/804/change/">2140-FA-2017</a>
                                         <img src="{{ g.get_estrella }}" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">
                                         <span class="grp-font-color-quiet destinatario">{{ g.destinatario }}</span>
@@ -145,6 +116,24 @@
                 }
             });
         }
+        var prearmadoEvent =function()
+        {
+          var id = $(this).attr('gestion');
+
+          var params = "action=/admin/ajax/get_html_form/&fields=prearmado&app_label=dtracking&model=gestion&id=" + id;
+          modal = $("#myModal");
+          tools = modal.find("#extra-tools").empty();
+          body = modal.find(".modal-body").empty();
+          $.ajax("/admin/ajax/get_html_form/?" + params, {
+              method: "GET",
+              success: function (response) {
+                  body.html(response);
+                  modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
+                  $(".form_entrada").attr('enctype',"multipart/form-data");
+              }
+          });
+        }
+        $(document).on('click','.gestion_event_aval',prearmadoEvent)
         function refreshCalender() {
             var events = [];
             var data = {'id_perito': $('#peritos').val()};
@@ -155,6 +144,7 @@
                 success: function (response) {
                     console.log(response);
                     $.each(response.programadas, function (i, v) {
+
                         events.push({
                             eventID: v.id,
                             title: v.titulo,
@@ -172,9 +162,11 @@
                             valor: v.valor,
                             prioridad: v.prioridad,
                         });
+
                     });
                     console.log(events);
                     $.each(response.pendientes, function (i, v) {
+                      $(document).find('li[gestion='+v.id+']').remove();
                         events.push({
                             eventID: v.id,
                             title: v.titulo,

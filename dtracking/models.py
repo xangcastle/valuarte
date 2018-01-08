@@ -516,6 +516,8 @@ class Gestion(models.Model):
             self.fecha = datetime.now()
         if not self.barra:
             self.barra = self.get_code()
+        if self.prearmado :
+           self.fecha_prearmado =  datetime.now()
         self.categoria = self.get_categoria()
         self.status_gestion = self.get_status_gestion()
         self.fecha_vence = self.get_fecha_vence()
@@ -629,11 +631,21 @@ class Gestion(models.Model):
         estado = self.get_status_gestion()
         if estado == 'RECEPCIONADO' or estado =='ASIGNADO A EVALUADOR' or estado =='CONTROL DE CALIDAD':
           self.cancelada =True
+          self.fecha_cancelacion = datetime.now()
           self.status_gestion =ESTADOS_LOG_GESTION[6][0]
+          self.valor = 0.0
           self.save()
           return {"result": "Cancelada Con Exito","code":200}
         else :
           return {"result": "Nose debe cancelar", "code":500}
+    @staticmethod
+    def datosOperacion(context):
+        gestiones = Gestion.objects.all()
+        context['pendientes']  = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True)]
+        context['programadas'] = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])]
+        context['lista']       = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=False)]
+        context['peritos'] = Gestor.objects.all()
+        return context
 
 
 
