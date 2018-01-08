@@ -307,7 +307,8 @@ class Gestion_Uso(Entidad):
 
 
 class Gestion(models.Model):
-    numero            = models.CharField(max_length=65, null=True, verbose_name="Número", blank=True)
+    numero            = models.CharField(max_length=65, null=True, verbose_name="Número Registro",
+                                         blank=True, help_text="Numero registro catastro, para el caso de vehiculos el número de chasis")
     factura           = models.BooleanField(default=False,verbose_name="Factura")
     fecha_facturacion = models.DateField(null=True, blank=True)
     cancelada         = models.BooleanField(default=False,verbose_name="Cancelada")
@@ -568,7 +569,7 @@ class Gestion(models.Model):
         if self.fecha and self.tipo_gestion:
             numero = ""
             try:
-                numero = int(type(self).objects.all().order_by('-barra')[0].barra[0:4]) + 1
+                numero = int(type(self).objects.filter(fecha__year=datetime.now().year).order_by('-barra')[0].barra[0:4]) + 1
             except:
                 numero = 1
             code = "%s-%s-%s" % (str(numero).zfill(4), self.tipo_gestion.prefijo, str(self.fecha.year))
@@ -636,10 +637,10 @@ class Gestion(models.Model):
 
     @staticmethod
     def datos_facturacion():
-        h = datetime.now() - timedelta(days=1)
-        gs = Gestion.objects.filter(realizada=True, fecha_recepcion__day=h.day,
-                                    fecha_recepcion__month=h.month,
-                                    fecha_recepcion__year=h.year)
+        h = datetime.now()
+        gs = Gestion.objects.filter(fecha_facturacion__day=h.day,
+                                    fecha_facturacion__month=h.month,
+                                    fecha_facturacion__year=h.year)
         return gs
 
     @staticmethod

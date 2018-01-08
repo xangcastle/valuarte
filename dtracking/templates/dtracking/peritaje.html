@@ -288,7 +288,7 @@
             });
         }
         var newEvent = function () {
-            var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-descuento-destinatario-identificacion-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-banco_sucursal-departamento-direccion-observaciones-priority&app_label=dtracking&model=gestion";
+            var params = "fields=barra-tipo_gestion-fin_gestion-uso_gestion-valor-descuento-destinatario-identificacion-telefono-contacto-contacto_telefono-banco-banco_ejecutivo-banco_sucursal-departamento-direccion-observaciones-numero-priority&app_label=dtracking&model=gestion";
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
