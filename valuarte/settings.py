@@ -91,7 +91,7 @@ DATABASES = {
         'PASSWORD': 'ABC123#$',
         'HOST': 'localhost',
         # 'HOST': 'www.valuarte.com.ni',
-        'PORT': '7777',
+        'PORT': '5432',
     },
 }
 
