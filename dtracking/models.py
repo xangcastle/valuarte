@@ -396,8 +396,10 @@ class Gestion(models.Model):
             except Exception as e :
                 return {"result": e.message,"code":500}
             return {"result": "Fecha de facturación asignada con exito","code":200}
-        else :
+        elif not f:
             return {"result": "Debe asignar una fecha", "code":500}
+        elif self.fecha_facturacion:
+            return {"result": "La fecha ya fue asignada", "code":500}
 
 
 

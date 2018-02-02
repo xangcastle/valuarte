@@ -271,6 +271,7 @@ def get_log_gestion(request):
                 jresponse['tipo_gestion'] = gestion.tipo_gestion.name
                 jresponse['status_gestion'] = gestion.status_gestion
                 jresponse['factura_gestion'] = gestion.factura
+                jresponse['fecha_facturacion'] = str(gestion.fecha_facturacion)
                 jresponse['mensaje'] = "OK"
                 jresponse['code'] = 200
                 jresponse['logs'] = jlogs

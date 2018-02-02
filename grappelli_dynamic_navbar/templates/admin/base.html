@@ -325,12 +325,14 @@
                             $("#cliente_gestion").html(result.cliente_gestion);
                             $("#tipo_gestion").html(result.tipo_gestion);
                             if(result.factura_gestion)
-                               $("#ficha").attr('title','Generar Factura');
+                              $("#ficha").attr('title','Generar Factura');
                             else
-                            {
                               $("#ficha").attr('title','Generar Cotización');
+
+                            if(result.fecha_facturacion != "" && result.fecha_facturacion != undefined && result.fecha_facturacion != "None") 
+                              $("#facturaproforma").attr('style','cursor:pointer;display:none');
+                            else
                               $("#facturaproforma").attr('style','cursor:pointer');
-                            }
 
                             $("#modal-default").iziModal({zindex: 9999});
                             $("#modal-default").iziModal('open');
