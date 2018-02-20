@@ -509,6 +509,8 @@ class Gestion(models.Model):
     def log(self, usuario, fecha, estado):
         return Log_Gestion(gestion=self, usuario=usuario, fecha=fecha, estado=estado).save()
 
+    def delete(self, *args, **kwargs):
+        pass
     def save(self, *args, **kwargs):
         if self.revizada and not self.fecha_revision:
             self.fecha_revision = datetime.now()
