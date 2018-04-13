@@ -22,6 +22,11 @@
 {% block content_title %}
     {% if title %}
         <header><h1>Sitio Administrativo Valuarte</h1></header>
+        {% if user.is_staff %}
+          <ul class="grp-object-tools" >
+                <li><a href="//{{ request.get_host }}/admin/dtracking/gestion/" class="grp-state-focus" >Ver avaluos</a></li>
+          </ul>
+        {% endif %}
     {% endif %}
 {% endblock content_title %}
 
