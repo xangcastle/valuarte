@@ -762,7 +762,7 @@ class Gestion(models.Model):
     @staticmethod
     def notificar_facturacion():
         asunto = "Reporte diario - Avalúos para Facturación "+datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        Gestion.send_email(asunto, render_to_string('emails/email8.html'), settings.EMAILS_REPORTE_DIARIO)
+        Gestion.send_email(asunto, render_to_string('emails/email8.html'), settings.EMAILS_FACTURACION)
 
     @staticmethod
     def send_email(asunto="", texto="", correo=""):
