@@ -34,6 +34,15 @@
                         Generar Cotizacion
                     </a>
                 </li>
+                {% if  original.cancelada %}
+                <li>
+                    <a id="anular" href="#" class="addlink show_atachments"
+                       data-url="{% url "anular_cancelacion" %}?documento={{ original.pk }}"
+                       data-name="Anular cancelación">
+                        Anular cancelación
+                    </a>
+                </li>
+                {% endif %}
             {% endif %}
             {{ block.super }}
         {% endblock %}

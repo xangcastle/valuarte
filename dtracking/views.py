@@ -520,3 +520,9 @@ class control(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(control, self).get_context_data(**kwargs)
         return super(control, self).render_to_response(context)
+
+def anular_cancelacion(request):
+    g = Gestion.objects.get(id=request.GET.get('documento', ''))
+    g.cancelada = False
+    g.fecha_cancelacion = None
+    g.save()

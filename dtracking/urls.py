@@ -67,5 +67,6 @@ urlpatterns = [
         name='gerencia'),
     url(r'^obtenercitasoperaciones/', obtener_citas_operaciones,
             name='obtenercitasoperaciones'),
-
+    url(r'^anular_cancelacion/', anular_cancelacion,
+            name='anular_cancelacion'),
 ]

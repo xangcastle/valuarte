@@ -120,6 +120,14 @@
                     <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Tipo de Avaluo:</h4></div>
                     <div class="col-sm-8 col-xs-12"><strong id="tipo_gestion">Avaluo de Automovil</strong></div>
                 </div>
+
+                <div class="row" id="_fecha_facturacion" >
+                    <div class="col-sm-4 col-xs-12"><h4 style="margin-top: 0px;">Fecha facturación :</h4></div>
+                    <div class="col-sm-8 col-xs-12">
+                        <strong id="fecha_facturacion"></strong>
+                    </div>
+                </div>
+
                 <table class="table table-responsive table-bordered table-striped">
                     <thead>
                     <tr>
@@ -324,15 +332,24 @@
                             $("#codigo_gestion").html(result.codigo_gestion);
                             $("#cliente_gestion").html(result.cliente_gestion);
                             $("#tipo_gestion").html(result.tipo_gestion);
+                            $("#tipo_gestion").html(result.fecha_facturacion);
+
                             if(result.factura_gestion)
                               $("#ficha").attr('title','Generar Factura');
                             else
                               $("#ficha").attr('title','Generar Cotización');
 
-                            if(result.fecha_facturacion != "" && result.fecha_facturacion != undefined && result.fecha_facturacion != "None") 
-                              $("#facturaproforma").attr('style','cursor:pointer;display:none');
+                            if(result.fecha_facturacion != "" && result.fecha_facturacion != undefined && result.fecha_facturacion != "None")
+                            {
+                                $("#facturaproforma").attr('style','cursor:pointer;display:none');
+                                $("#_fecha_facturacion").attr('style','cursor:pointer;display:none');
+                            }
                             else
+                            {
                               $("#facturaproforma").attr('style','cursor:pointer');
+                              $("#_fecha_facturacion").attr('style','cursor:pointer');    
+                            }
+
 
                             $("#modal-default").iziModal({zindex: 9999});
                             $("#modal-default").iziModal('open');
