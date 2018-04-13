@@ -288,6 +288,8 @@
                     })
                     $(".form_entrada").attr('enctype', "multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
+                    $('#id_observaciones_cotizacion').prop('disabled',true);
+                    $('#id_observaciones').prop('disabled',true);
                 }
             });
         }

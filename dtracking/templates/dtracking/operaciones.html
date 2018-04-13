@@ -119,8 +119,9 @@
                   }
               });
       };
+
       var showEvent = function (id) {
-          var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-valor-armador-revizada&app_label=dtracking&model=gestion&id=" + id;
+          var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-valor-armador-revizada-observaciones-observaciones_cotizacion&app_label=dtracking&model=gestion&id=" + id;
           modal = $("#myModal");
           tools = modal.find("#extra-tools").empty();
           tools.append('<a href="/dtracking/examen_previo/?gestion=' + id + '" target="_blank" class="boton">Datos</a>');
@@ -135,6 +136,8 @@
                   $('#id_fin_gestion').on('change', cargar_usos_gestion);
                   $('#id_armador').prop('required', true);
                   $('#ficha_inspeccion').attr('required', 'true');
+                  $('#id_observaciones_cotizacion').prop('disabled',true);
+                  $('#id_observaciones').prop('disabled',true);
               }
           });
       };
