@@ -202,7 +202,7 @@
         }
         var showEvent = function (id, fecha) {
             fecha || ( fecha = undefined );
-            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-direccion-valor-descuento-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify&app_label=dtracking&model=gestion&id=" + id;
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-direccion-valor-descuento-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify-observaciones-observaciones_cotizacion&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
