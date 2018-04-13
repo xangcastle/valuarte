@@ -121,7 +121,7 @@
       };
 
       var showEvent = function (id) {
-          var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-valor-armador-revizada-observaciones-observaciones_cotizacion&app_label=dtracking&model=gestion&id=" + id;
+          var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-valor-armador-revizada-observaciones-observaciones_cotizacion-retenida-fecha_retenida-observaciones_retenida&app_label=dtracking&model=gestion&id=" + id;
           modal = $("#myModal");
           tools = modal.find("#extra-tools").empty();
           tools.append('<a href="/dtracking/examen_previo/?gestion=' + id + '" target="_blank" class="boton">Datos</a>');
@@ -138,6 +138,42 @@
                   $('#ficha_inspeccion').attr('required', 'true');
                   $('#id_observaciones_cotizacion').prop('disabled',true);
                   $('#id_observaciones').prop('disabled',true);
+                  $("#div_id_fecha_retenida").css("display", "none");
+                  $("#div_id_observaciones_retenida").css("display", "none");
+                  $("#id_retenida").on('change', function()
+                  {
+                    if ($(this).is(':checked')) {
+                      $("#div_id_fecha_retenida").css("display", "block");
+                      $("#div_id_observaciones_retenida").css("display", "block");
+                    }
+                    else
+                    {
+                      $("#div_id_fecha_retenida").css("display", "none");
+                      $("#div_id_observaciones_retenida").css("display", "none");
+                    }
+                  })
+                  $("#id_fecha_retenida").datetimepickerByGiro({
+                      style: 'popup', // / inline / popup
+                      autoclose: true, // autoclose the popup on date / date range selected
+                      uiTarget: false, // the UI target to contain the datetime value
+                      firstDay: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
+                      minView: 'times', // times / days / months / years
+                      maxView: 'years', // times / days / months / years
+                      startView: 'days', // times / days / months / years
+                      min: null, // starting date to allow selection
+                      max: null, // ending date to allow selection
+                      //today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
+                      showDaysNotInMonth: false,
+                      showDisabledTimes: true,
+                      calendars: 1,
+                      format: 'd/m/Y H:i:s', // PHP standard format
+                      uiFormat: 'd/m/Y H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
+                      separator: ' | ', // this will be the separator for multiple dates or date range
+                      mode: 'single', // single / multiple / range
+                      timeFormat: 12, // 12 / 24
+                      minuteStep: 60,
+                      specialDates: []
+                  });
               }
           });
       };
@@ -157,6 +193,7 @@
               }
           });
       }
+
       $(document).on('click', '.gestion_event_aval', prearmadoEvent);
 
       function refreshCalender() {
@@ -315,6 +352,7 @@
               $(this).select();
           });
 
+
       });//end ready
 
 
@@ -345,5 +383,12 @@
           }
 
       };
+
+
   </script>
+
+
+
+
+
 {% endblock %}

@@ -202,7 +202,7 @@
         }
         var showEvent = function (id, fecha) {
             fecha || ( fecha = undefined );
-            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-direccion-valor-descuento-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify-observaciones-observaciones_cotizacion&app_label=dtracking&model=gestion&id=" + id;
+            var params = "action=/dtracking/programar_gestion/&fields=fecha_asignacion-fin_gestion-uso_gestion-direccion-valor-descuento-user-realizada-fecha_recepcion-armador-ficha_inspeccion-notify-observaciones-observaciones_cotizacion-retenida-fecha_retenida-observaciones_retenida&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             body = modal.find(".modal-body").empty();
             $.ajax("/admin/ajax/get_html_form/?" + params, {
@@ -214,10 +214,24 @@
                     $("#div_id_ficha_inspeccion").css("display", "none");
                     $("#div_id_fecha_recepcion").css("display", "none");
                     $("#div_id_armador").css("display", "none");
+                    $("#div_id_fecha_retenida").css("display", "none");
+                    $("#div_id_observaciones_retenida").css("display", "none");
                     modal.find('input[type=submit]').after('<button  gestion="'+$("#ges_aval_id").val()+'" class="btn btn-danger cancelar" style="float:left;width:40%">Cancelar</button>')
 
                     $("#parrafo1").after("<p>Este párrafo tiene que salir entre el párrafo 1 y 2</p>");
 
+                    $("#id_retenida").on('change', function()
+                    {
+                      if ($(this).is(':checked')) {
+                        $("#div_id_fecha_retenida").css("display", "block");
+                        $("#div_id_observaciones_retenida").css("display", "block");
+                      }
+                      else
+                      {
+                        $("#div_id_fecha_retenida").css("display", "none");
+                        $("#div_id_observaciones_retenida").css("display", "none");
+                      }
+                    })
                     $("#id_realizada").on('change', function () {
                         if ($(this).is(':checked')) {
                             $("#div_id_ficha_inspeccion").css("display", "block");
@@ -242,6 +256,28 @@
                     if (fecha != undefined) {
                         $("#id_fecha_asignacion").val(fecha.format('D/M/Y'));
                     }
+                    $("#id_fecha_retenida").datetimepickerByGiro({
+                        style: 'popup', // / inline / popup
+                        autoclose: true, // autoclose the popup on date / date range selected
+                        uiTarget: false, // the UI target to contain the datetime value
+                        firstDay: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
+                        minView: 'times', // times / days / months / years
+                        maxView: 'years', // times / days / months / years
+                        startView: 'days', // times / days / months / years
+                        min: null, // starting date to allow selection
+                        max: null, // ending date to allow selection
+                        //today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
+                        showDaysNotInMonth: false,
+                        showDisabledTimes: true,
+                        calendars: 1,
+                        format: 'd/m/Y H:i:s', // PHP standard format
+                        uiFormat: 'd/m/Y H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
+                        separator: ' | ', // this will be the separator for multiple dates or date range
+                        mode: 'single', // single / multiple / range
+                        timeFormat: 12, // 12 / 24
+                        minuteStep: 60,
+                        specialDates: []
+                    });
                     $("#id_fecha_asignacion").datetimepickerByGiro({
                         style: 'popup', // / inline / popup
                         autoclose: true, // autoclose the popup on date / date range selected
