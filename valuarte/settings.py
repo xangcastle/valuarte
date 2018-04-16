@@ -96,13 +96,6 @@ DATABASES = {
     },
 }
 
-DBBACKUP_CONNECTORS = {
-'default': {
-'USER': 'postgres',
-'PASSWORD': 'ABC123#$',
-'HOST': 'localhost'
-}
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -197,3 +190,10 @@ EMAILS_REPORTE_DIARIO ="sistema@valuarte.com.ni,mario.rojas@valuarte@valuarte.co
 EMAILS_FACTURACION = "mario.rojas@valuarte.com.ni,gerencia@valuarte.com.ni"
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backups/valuarte'}
+DBBACKUP_CONNECTORS = {
+'default': {
+'USER': 'postgres',
+'PASSWORD': 'ABC123#$',
+'HOST': 'localhost'
+}
+}
