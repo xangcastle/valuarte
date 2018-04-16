@@ -96,6 +96,14 @@ DATABASES = {
     },
 }
 
+DBBACKUP_CONNECTORS = {
+'default': {
+'USER': 'postgres',
+'PASSWORD': 'ABC123#$',
+'HOST': 'localhost'
+}
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -175,6 +183,7 @@ BOWER_INSTALLED_APPS = [
      'pnotify#3.2.1',
      'popper.js#1.12.5'
 ]
+
 
 
 WKHTMLTOPDF_CMD_OPTIONS = {
