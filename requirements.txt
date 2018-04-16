@@ -37,7 +37,6 @@ django-celery==3.1.17
 django-celery-email==1.0.3
 django-classy-tags==0.8.0
 django-colorfield==0.1.12
-django-compat==1.0.15
 django-crispy-forms==1.6.1
 django-dbbackup==3.0.1
 django-debug-toolbar==1.4
