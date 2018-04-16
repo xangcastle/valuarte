@@ -547,3 +547,4 @@ def anular_cancelacion(request):
     g.cancelada = False
     g.fecha_cancelacion = None
     g.save()
+    return render(request, 'dtracking/anulacion.html')
