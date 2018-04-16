@@ -38,7 +38,6 @@ django-celery-email==1.0.3
 django-classy-tags==0.8.0
 django-colorfield==0.1.12
 django-compat==1.0.15
-django-cors-headers==2.1.0
 django-countries==3.4.1
 django-crispy-forms==1.6.1
 -e git+https://github.com/javierwilson/django-csvimport.git@0e82702c26cbf8f96aa3e678a1b075c08664b2d7#egg=django_csvimport
