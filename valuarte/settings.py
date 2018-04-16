@@ -29,10 +29,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'dbbackup',
     'dtracking',
     'background_task',
     'base',
-    'dbbackup',
     'geoposition',
     'grappelli_dynamic_navbar',
     'import_export',
@@ -188,8 +188,14 @@ CRISPY_TEMPLATE_PACK = "bootstrap3"
 # reporte diario
 EMAILS_REPORTE_DIARIO ="sistema@valuarte.com.ni,mario.rojas@valuarte@valuarte.com.ni,gerardo.calderon@valuarte.com.ni,paola.ubeda@valuarte.com.ni,elvis.rivera@segdel.com,gerencia@segdel.com,mario.rojas@valuarte.com.ni,gerencia@valuarte.com.ni"
 EMAILS_FACTURACION = "mario.rojas@valuarte.com.ni,gerencia@valuarte.com.ni"
-DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backups/valuarte'}
+#DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+#DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backups/valuarte'}
+
+DBBACKUP_STORAGE = 'storages.backends.ftp.FTPStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'location': 'ftp://ftp_@geosaldana.com:Delta2017@ftp.geosaldana.com:21'
+}
+
 DBBACKUP_CONNECTORS = {
 'default': {
 'USER': 'postgres',
