@@ -324,9 +324,6 @@ class Gestion(models.Model):
     observaciones_cotizacion = models.TextField(max_length=255, null=True, blank=True,
                                                 verbose_name="observaciones en la cotización")
     retenida         = models.BooleanField(default=False,verbose_name="Retenida")
-    fecha_retenida = models.DateField(null=True, blank=True)
-    observaciones_retenida = models.TextField(max_length=255, null=True, blank=True,
-                                                verbose_name="observaciones por la cual se encuentra retenido el proceso del avaluo" ,help_text="observaciones por la cual se encuentra retenido el proceso del avaluo")
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
     valor = models.FloatField(null=True, blank=True, verbose_name="precio del avaluo ya con iva")
     descuento = models.IntegerField(default=0, verbose_name="% descuento")

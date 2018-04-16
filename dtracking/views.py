@@ -419,20 +419,6 @@ def programar_gestion(request):
     retenida = request.POST.get('retenida', None)
     if retenida == 'on':
            gestion.retenida = True
-           gestion.observaciones_retenida =request.POST.get('observaciones_retenida', None)
-           try:
-               gestion.fecha_retenida = timezone.make_aware(
-                       datetime.strptime(request.POST.get('fecha_retenida', None)[0:16], '%Y-%m-%dT%H:%M'),
-                       timezone.get_default_timezone())
-           except:
-               try:
-                   gestion.fecha_retenida = timezone.make_aware(
-                       datetime.strptime(request.POST.get('fecha_retenida', None)[0:16], '%Y/%m/%d %H:%M'),
-                       timezone.get_default_timezone())
-               except:
-                   gestion.fecha_retenida = timezone.make_aware(
-                       datetime.strptime(request.POST.get('fecha_retenida', None)[0:16], '%d/%m/%Y %H:%M'),
-                       timezone.get_default_timezone())
     else:
            gestion.retenida = False
 
