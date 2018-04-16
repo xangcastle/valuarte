@@ -446,7 +446,8 @@
                     GenerateCalender(events);
                 },
                 error: function (error) {
-                    alert(JSON.stringify(error.d));
+                   alert('refrescalendar')
+                  //  alert(JSON.stringify(error.d));
                 }
             })//ajax
         }
@@ -528,7 +529,8 @@
                     method: "post",
                     data: {  app_label: "dtracking", model: "gestion", id: id, method: "cancelarGestion"},
                     success: function(result){
-                         alert(result.result.result);
+                         //alert(result.result.result);
+                         alert('event calendar')
                     }
                 })
               }
