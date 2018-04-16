@@ -783,6 +783,12 @@ class Gestion(models.Model):
         else:
             return "/static/dtracking/img/no_estrella.png"
 
+    def get_retenida(self):
+        if self.retenida:
+            return "/static/dtracking/img/warnning.png"
+        else:
+            return "/static/dtracking/img/no_estrella.png"
+
     def get_priority(self):
         if self.priority:
             return "prioridad"
@@ -814,6 +820,7 @@ class Gestion(models.Model):
         o['user'] = ifnull(self.render_user(), '')
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
         o['strella'] = self.get_estrella()
+        o['retenida'] = self.get_retenida()
         if (self.fin_gestion):
             o['fin_gestion'] = self.fin_gestion.name
         else:

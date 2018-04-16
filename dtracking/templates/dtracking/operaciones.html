@@ -53,6 +53,8 @@
                     <a href="/admin/dtracking/gestion/{{ g.id }}/change/">2140-FA-2017</a>
                     <img src="{{ g.get_estrella }}" height="15" width="15"
                          style="float:right;padding-right=15px;margin-top: -6px;">
+                    <img src="{{ g.get_retenida }}" height="15" width="15"
+                        style="float:right;padding-right=15px;margin-top: -6px;">
                     <span class="grp-font-color-quiet destinatario">{{ g.destinatario }}</span>
                     <span class="grp-font-color-quiet telefono">{{ g.telefono }}</span>
                     <span class="grp-font-color-quiet direccion">{{ g.direccion }}</span>
@@ -218,6 +220,7 @@
                           allDay: false,
                           barra: v.barra,
                           strella: v.strella,
+                          retenida:v.retenida,
                           user: v.user,
                           armador: v.armador,
                           dias: v.dias,
@@ -240,6 +243,7 @@
                           allDay: false,
                           barra: v.barra,
                           strella: v.strella,
+                          retenida:v.retenida,
                           user: v.user,
                           armador: v.armador,
                           dias: v.dias,
@@ -277,7 +281,7 @@
               eventRender: function (event, element, view) {
                   return $(
                       '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                      event.barra + '<br> ' + '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                      event.barra + '<br> ' + '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;"><img class="' + event.prioridad + '" src="' + event.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
                       '<div>' + event.title + '</div>' +
                       '<strong> U$ ' + event.valor + '</strong><br> ' +
                       '<strong>' + event.armador + '</strong><br>' +
