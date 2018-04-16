@@ -345,6 +345,8 @@
         function GenerateCalendar(url, div) {
             var events = [];
             var data = {};
+            var url_ = url ;
+            var div_ = div ;
             $.ajax({
                 type: "GET",
                 data: data,
@@ -458,7 +460,9 @@
                     $(div).fullCalendar('option', 'timezone', 'UTC');
                 },
                 error: function (error) {
-                    alert(JSON.stringify(error.d));
+                    console(error);
+                    GenerateCalendar(url_,div_);
+                    //alert(JSON.stringify(error.d));
                 }
             })
         }
