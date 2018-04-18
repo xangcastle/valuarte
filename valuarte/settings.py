@@ -205,3 +205,4 @@ DBBACKUP_CONNECTORS = {
 'HOST': 'localhost'
 }
 }
+GRAPPELLI_SWITCH_USER = "True"
