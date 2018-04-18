@@ -53,7 +53,7 @@
                             onchange="refreshCalender()">
                       <option value="0">Todos</option>
                       {% for armador in armadores %}
-                        <option value="{{ armador.id }}">{{ armador.user }}</option>
+                        <option value="{{ armador.user.id }}">{{ armador.user }}</option>
                       {% endfor %}
                     </select>
                     <small id="ArmadoresHelp" class="form-text text-muted">Filtre aqui por armador
