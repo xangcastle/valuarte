@@ -646,10 +646,34 @@ class Gestion(models.Model):
     @staticmethod
     def datosOperacion(context):
         gestiones = Gestion.objects.all()
-        context['pendientes']  = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True)]
-        context['programadas'] = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])]
-        context['lista']       = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=False)]
-        context['peritos'] = Gestor.objects.all()
+        perito  = None
+        armador = None
+
+        if 'perito' in context :
+          perito = context['perito']
+        if 'armador' in context :
+          armador = context['armador']
+        programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+        pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True)
+
+        if perito  and not armador  :
+               programadas = programadas.filter(user__id=perito)
+               pendientes  = pendientes.filter(user__id=perito)
+        if armador  and not perito  :
+                armador = Operaciones.objects.get(id=armador)
+                programadas = programadas.filter(armador=armador)
+                pendientes = pendientes.filter(armador=armador)
+        if armador and perito :
+                armador = Operaciones.objects.get(id=armador)
+                programadas = programadas.filter(user__id=perito,armador=armador)
+                pendientes = pendientes.filter(user__id=perito,armador=armador)
+
+
+        context['pendientes']  = [x.to_json() for x in pendientes]
+        context['programadas'] = [x.to_json() for x in programadas]
+        context['lista']       = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=False) ]
+        context['peritos']     = Gestor.objects.all()
+        context['armadores']   = Armador.objects.all()
         return context
 
 
@@ -840,6 +864,10 @@ class Gestion(models.Model):
             o['armador'] = self.armador.username
         else:
             o['armador'] = ""
+        if (self.user):
+            o['perito'] = self.user.username
+        else:
+            o['perito'] = ""
 
         # if self.position and self.position.latitude:
         #     o['latitude'] = str(self.position.latitude)

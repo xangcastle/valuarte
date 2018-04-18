@@ -31,6 +31,7 @@
             </h2>
             <div class="grp-module">
               <ul class="grp-listing-small">
+               <li>
                 <div class="form-group">
                   <label for="peritos">Peritos</label>
                   <select class="form-control" id="peritos" aria-describedby="PeritosHelp"
@@ -44,13 +45,29 @@
                     asignado.
                   </small>
                 </div>
+               </li>
+                <li>
+                  <div class="form-group">
+                    <label for="armador">Armador</label>
+                    <select class="form-control" id="armadores" aria-describedby="ArmadoresHelp"
+                            onchange="refreshCalender()">
+                      <option value="0">Todos</option>
+                      {% for armador in armadores %}
+                        <option value="{{ armador.id }}">{{ armador.user }}</option>
+                      {% endfor %}
+                    </select>
+                    <small id="ArmadoresHelp" class="form-text text-muted">Filtre aqui por armador
+                      asignado.
+                    </small>
+                  </div>
+                </li>
               </ul>
               <h3>Pendientes de Prearmado</h3>
               <ul class="grp-listing-small" id="external-events-listing">
                 {% for g in lista %}
                   <li class="grp-row fc-draggable ui-draggable ui-draggable-handle gestion_event_aval"
                       gestion="{{ g.id }}">
-                    <a href="/admin/dtracking/gestion/{{ g.id }}/change/">2140-FA-2017</a>
+                    <a href="/admin/dtracking/gestion/{{ g.id }}/change/">{{g.numero}}-{{g.fecha}}</a>
                     <img src="{{ g.get_estrella }}" height="15" width="15"
                          style="float:right;padding-right=15px;margin-top: -6px;">
                     <img src="{{ g.get_retenida }}" height="15" width="15"
@@ -62,7 +79,7 @@
                     <div class="row">
                       {% if g.user %}
                         <div class="col-sm-6">
-                          <h5><i class="ion ion-ios-body"></i> Perito: <span class="nameperito">{{ g.user }}</span></h5>
+                          <h5><i class="ion ion-ios-body"></i> Perito: <span class="nameperito">{{ g.perito }}</span></h5>
                         </div>
                       {% endif %}
                       {% if g.armador %}
@@ -164,8 +181,13 @@
 
       function refreshCalender() {
           var events = [];
-          var data = {'id_perito': $('#peritos').val()};
-          $.ajax({
+          var data = {}
+           if ($('#peritos').val()!= 0)
+               data['id_perito'] =  $('#peritos').val()
+           if ($('#armadores').val()!= 0)
+               data['id_armador'] =  $('#armadores').val()
+
+           $.ajax({
               type: "GET",
               data: data,
               url: "{% url 'obtenercitasoperaciones' %}",
@@ -325,12 +347,14 @@
 
 
       $(document).on('change', '#peritos', filtrarLista);
+      $(document).on('change', '#armadores', filtrarLista);
       function filtrarLista() {
           var filter, ul, li, a, i;
           filter = $("#peritos option:selected").text().toUpperCase();
+          armador = $("#armadores option:selected").text().toUpperCase();
           ul = $("#external-events-listing");
           li = ul.find("li");
-          if(filter==="TODOS"){
+          if(filter==="TODOS" && armador ==="TODOS"){
               for (i = 0; i < li.length; i++) {
                 li[i].style.display = "";
               }
@@ -338,12 +362,15 @@
           }else {
               var contadorfiltro=0;
               for (i = 0; i < li.length; i++) {
-                  console.log($(li[i]).find($("span.nameperito")).innerHTML);
+
                   a = $(li[i]).find($("span.nameperito"))[0];
-                  if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                      li[i].style.display = "";
-                      contadorfiltro++;
-                  } else {
+                  ar = $(li[i]).find($("span.namearmador"))[0];
+                  if((filter==="TODOS"&& armador!=="TODOS"&& ar.innerHTML.toUpperCase() ==armador) ||(armador==="TODOS"&& filter!=="TODOS"&& a.innerHTML.toUpperCase() ==filter) || (a.innerHTML.toUpperCase() ==filter && ar.innerHTML.toUpperCase() ==armador))
+                  {
+                    li[i].style.display = "";
+                    contadorfiltro++;
+                  }
+                   else {
                       li[i].style.display = "none";
                   }
               }

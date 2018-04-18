@@ -396,7 +396,7 @@ def obtener_citas_peritaje(request):
     return obtener_citas(request)
 
 def obtener_citas_operaciones(request):
-    data = Gestion.datosOperacion({})
+    data = Gestion.datosOperacion({'armador': request.GET.get('id_armador', None), 'perito':request.GET.get('id_perito', None)})
     return HttpResponse(json.dumps({'programadas': data['programadas'], 'pendientes':data['pendientes'] , 'lista':data['lista'] }) , content_type='application/json')
 
 def programar_gestion(request):
