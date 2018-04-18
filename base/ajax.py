@@ -25,8 +25,16 @@ def get_collection(request):
 @csrf_exempt
 def autocomplete(request):
     result = []
+    type_search = '{}__like'
+    type_ = request.GET.get('type_search',None)
+    if type_ :
+       if type_ == "1" :
+        type_search = '{}__startswith'
+       elif type_ == "2" :
+        type_search = '{}__endswith'
+
     columns = request.GET.get('column_name').split(",")
-    columns = [('{}__like'.format(column), request.GET.get('term')) for column in columns]
+    columns = [(type_search.format(column), request.GET.get('term')) for column in columns]
     queryset = Filter(app_label=request.GET.get('app_label'),
                       model_name=request.GET.get('model')
                       ).filter_by_list(columns, operator.or_)

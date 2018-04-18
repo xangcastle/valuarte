@@ -67,7 +67,7 @@
                 {% for g in lista %}
                   <li class="grp-row fc-draggable ui-draggable ui-draggable-handle gestion_event_aval"
                       gestion="{{ g.id }}">
-                    <a href="/admin/dtracking/gestion/{{ g.id }}/change/">{{g.numero}}-{{g.fecha}}</a>
+                    <a href="/admin/dtracking/gestion/{{ g.id }}/change/">{{g.barra}}</a>
                     <img src="{{ g.get_estrella }}" height="15" width="15"
                          style="float:right;padding-right=15px;margin-top: -6px;">
                     <img src="{{ g.get_retenida }}" height="15" width="15"

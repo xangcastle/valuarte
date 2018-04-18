@@ -23,7 +23,10 @@
                 -moz-border-radius: 20px;
                 -webkit-border-radius: 20px;
                 border-radius: 20px;
-                min-width: 271px;
+                min-width: 150px;
+                max-width: 200px;
+                left:200px;
+                position: absolute;
             }
 
             form#grp-changelist-search-form {
@@ -35,11 +38,17 @@
             }
         </style>
         <!-- Search Form -->
-        <form id="grp-changelist-search-form" action="" method="get" novalidate="">
-            <input type="text" name="consulta" id="id_consulta" class="grp-search-field-navbar" value="">
-            <button type="button" value="" class="grp-search-button" id="search_btn"
-                    style="margin-left: -25px;"></button>
-        </form>
+          <form id="grp-changelist-search-form" action="" method="get" novalidate="">
+
+              <input type="text" name="consulta" id="id_consulta" class="grp-search-field-navbar" value="">
+              <select id="type_search" name="type_search" style="position:absolute;left:50px;border-top-left-radius:15px;border-bottom-left-radius:15px " />
+                 <option value="*">TODO</option>
+                 <option value="1">QUE COMIENCE CON</option>
+                 <option value="2">QUE FINALICE CON</option>
+              </select>
+              <button type="button" value="" class="grp-search-button" id="search_btn"
+                      style="margin-left: 275px;"></button>
+          </form>
     </div></span></h1>
 
     <div id="modal-default"
@@ -226,9 +235,13 @@
 
 
             var completeEvent = function () {
+                var type_search = "";
+                if ($("#type_search option:selected").val() !== '*')
+                     type_search = '&type_search='+$("#type_search option:selected").val()
+
                 $(this).autocomplete({
                     minLength: 2,
-                    source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario,barra",
+                    source: "/admin/ajax/autocomplete/?app_label=dtracking&model=gestion&column_name=destinatario,barra"+type_search,
                     select: function (i, o) {
                         if(o.item.obj.cancelada)
                         {
@@ -347,7 +360,7 @@
                             else
                             {
                               $("#facturaproforma").attr('style','cursor:pointer');
-                              $("#_fecha_facturacion").attr('style','cursor:pointer;display:none');  
+                              $("#_fecha_facturacion").attr('style','cursor:pointer;display:none');
                             }
 
 
