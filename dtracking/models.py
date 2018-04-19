@@ -653,8 +653,14 @@ class Gestion(models.Model):
           perito = context['perito']
         if 'armador' in context :
           armador = context['armador']
-        programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
-        pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True)
+        print(context)
+
+        if 'fecha_inicio' in  context and 'fecha_fin' in context :
+            programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0],fecha_recepcion__gte=context['fecha_inicio'] ,fecha_recepcion__lte = context['fecha_fin']  )
+            pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True,fecha_recepcion__gte=context['fecha_inicio'] ,fecha_recepcion__lte = context['fecha_fin']  )
+        else :
+            programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0] )
+            pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0] )
 
         if perito  and not armador  :
                programadas = programadas.filter(user__id=perito)

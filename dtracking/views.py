@@ -382,7 +382,14 @@ class peritaje(TemplateView):
 
 
 def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LOG_GESTION[1][0]):
-    gestiones = Gestion.objects.all()
+    fecha_inicio = request.GET.get('fecha_inicio', None)
+    fecha_fin    = request.GET.get('fecha_fin', None)
+    if fecha_inicio  and fecha_fin :
+        gestiones = Gestion.objects.filter(fecha_recepcion__gte=fecha_inicio ,fecha_recepcion__lte = fecha_fin)
+    else :
+        gestiones = Gestion.objects.all()
+
+
     id_perito = request.GET.get("id_perito", None)
     if id_perito and int(id_perito) > 0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
@@ -396,7 +403,7 @@ def obtener_citas_peritaje(request):
     return obtener_citas(request)
 
 def obtener_citas_operaciones(request):
-    data = Gestion.datosOperacion({'armador': request.GET.get('id_armador', None), 'perito':request.GET.get('id_perito', None)})
+    data = Gestion.datosOperacion({'fecha_inicio':request.GET.get('fecha_inicio', None),'fecha_fin':request.GET.get('fecha_fin', None),'armador': request.GET.get('id_armador', None), 'perito':request.GET.get('id_perito', None)})
     return HttpResponse(json.dumps({'programadas': data['programadas'], 'pendientes':data['pendientes'] , 'lista':data['lista'] }) , content_type='application/json')
 
 def programar_gestion(request):

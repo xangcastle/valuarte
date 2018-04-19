@@ -395,31 +395,10 @@
         }
 
         function refreshCalender() {
-            var events = [];
-            var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
-            $.ajax({
-                type: "GET",
-                data: data,
-                url: "{% url 'obtenercitasperitaje' %}",
-                success: function (response) {
-                    $.each(response.programadas, function (i, v) {
-                        events.push(gestion_to_event(v));
-                    });
-                    $('#external-events-listing').empty();
-                    $.each(response.pendientes, function (i, v) {
-                        var r = createRow(v);
-                        $('#external-events-listing').append(r);
-                    });
-                    GenerateCalender(events);
-                },
-                error: function (error) {
-                   alert('refrescalendar')
-                  //  alert(JSON.stringify(error.d));
-                }
-            })//ajax
+            GenerateCalender();
         }
 
-        function GenerateCalender(events) {
+        function GenerateCalender() {
 
             $('#calender').fullCalendar('destroy');
             var calendar = $('#calender').fullCalendar({
@@ -429,7 +408,31 @@
                     right: 'month,agendaWeek,agendaDay,listMonth'
                 },
                 lang: 'es',
-                events: events,
+                events: function (start, end, timezone, callback) {
+                   var events = [];
+                   var data = {'busqueda': $('#nav-search').val(), 'id_perito': $('#peritos').val()};
+                   data['fecha_inicio'] = start.format('Y-M-D')
+                   data['fecha_fin']    = end.format('Y-M-D')
+                   $.ajax({
+                       type: "GET",
+                       data: data,
+                       url: "{% url 'obtenercitasperitaje' %}",
+                       success: function (response) {
+                           $.each(response.programadas, function (i, v) {
+                               events.push(gestion_to_event(v));
+                           });
+                           $('#external-events-listing').empty();
+                           $.each(response.pendientes, function (i, v) {
+                               var r = createRow(v);
+                               $('#external-events-listing').append(r);
+                           });
+                           callback(events);
+                       },
+                       error: function (error) {
+
+                       }
+                   })//ajax
+                },
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar
                 dragRevertDuration: 0,

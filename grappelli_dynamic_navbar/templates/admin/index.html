@@ -343,81 +343,6 @@
         $(".small-box").on('click',irPortal);
 
         function GenerateCalendar(url, div) {
-            var events = [];
-            var data = {};
-            var url_ = url ;
-            var div_ = div ;
-            $.ajax({
-                type: "GET",
-                data: data,
-                url: url,
-                success: function (response) {
-                    if (div == "#agenda-operaciones") {
-                        $.each(response.programadas, function (i, v) {
-                            events.push({
-                                eventID: v.id,
-                                title: v.titulo,
-                                description: v.descripcion + '. ' + v.departamento,
-                                start: moment(v.inicio),
-                                end: moment(v.fin),
-                                color: v.color,
-                                textColor: 'black',
-                                allDay: false,
-                                dias: v.dias,
-                                barra: v.barra,
-                                user: v.user,
-                                armador: v.armador,
-                                tipo_gestion: v.tipo_gestion,
-                                strella: v.strella,
-                                retenida: v.retenida,
-                                prioridad: v.prioridad,
-                                banco_ejecutivo: v.banco_ejecutivo
-                            });
-                        });
-                        $.each(response.pendientes, function (i, v) {
-                            events.push({
-                                eventID: v.id,
-                                title: v.titulo,
-                                description: v.descripcion + '. ' + v.departamento,
-                                start: moment(v.inicio),
-                                end: moment(v.fin),
-                                color: v.color,
-                                textColor: 'black',
-                                allDay: false,
-                                dias: v.dias,
-                                barra: v.barra,
-                                user: v.user,
-                                armador: v.armador,
-                                tipo_gestion: v.tipo_gestion,
-                                strella: v.strella,
-                                retenida: v.retenida,
-                                prioridad: v.prioridad,
-                                banco_ejecutivo: v.banco_ejecutivo
-                            });
-                        });
-                    } else {
-                        $.each(response.programadas, function (i, v) {
-                            events.push({
-                                eventID: v.id,
-                                title: v.titulo,
-                                description: v.descripcion + '. ' + v.departamento,
-                                start: moment(v.inicio),
-                                end: moment(v.fin),
-                                color: v.color,
-                                textColor: 'black',
-                                allDay: false,
-                                dias: v.dias,
-                                barra: v.barra,
-                                user: v.user,
-                                armador: v.armador,
-                                tipo_gestion: v.tipo_gestion,
-                                strella: v.strella,
-                                retenida: v.retenida,
-                                prioridad: v.prioridad,
-                                banco_ejecutivo: v.banco_ejecutivo
-                            });
-                        });
-                    }
                     $(div).fullCalendar('destroy');
                     $(div).fullCalendar({
                         header: {
@@ -427,7 +352,95 @@
                         },
                         defaultView: 'listMonth',
                         lang: 'es',
-                        events: events,
+                        events: function (start, end, timezone, callback) {
+                                  var events = [];
+                                  var data = {};
+                                  data['fecha_inicio'] = start.format('Y-M-D')
+                                  data['fecha_fin']    = end.format('Y-M-D')
+                                  $.ajax({
+                                      type: "GET",
+                                      data: data,
+                                      url: url,
+                                      success: function (response) {
+                                          if (div == "#agenda-operaciones") {
+                                              $.each(response.programadas, function (i, v) {
+                                                  events.push({
+                                                      eventID: v.id,
+                                                      title: v.titulo,
+                                                      description: v.descripcion + '. ' + v.departamento,
+                                                      start: moment(v.inicio),
+                                                      end: moment(v.fin),
+                                                      color: v.color,
+                                                      textColor: 'black',
+                                                      allDay: false,
+                                                      dias: v.dias,
+                                                      barra: v.barra,
+                                                      user: v.user,
+                                                      armador: v.armador,
+                                                      tipo_gestion: v.tipo_gestion,
+                                                      strella: v.strella,
+                                                      retenida: v.retenida,
+                                                      prioridad: v.prioridad,
+                                                      banco_ejecutivo: v.banco_ejecutivo
+                                                  });
+                                              });
+                                              $.each(response.pendientes, function (i, v) {
+                                                  events.push({
+                                                      eventID: v.id,
+                                                      title: v.titulo,
+                                                      description: v.descripcion + '. ' + v.departamento,
+                                                      start: moment(v.inicio),
+                                                      end: moment(v.fin),
+                                                      color: v.color,
+                                                      textColor: 'black',
+                                                      allDay: false,
+                                                      dias: v.dias,
+                                                      barra: v.barra,
+                                                      user: v.user,
+                                                      armador: v.armador,
+                                                      tipo_gestion: v.tipo_gestion,
+                                                      strella: v.strella,
+                                                      retenida: v.retenida,
+                                                      prioridad: v.prioridad,
+                                                      banco_ejecutivo: v.banco_ejecutivo
+                                                  });
+                                              });
+                                          } else {
+                                              $.each(response.programadas, function (i, v) {
+                                                  events.push({
+                                                      eventID: v.id,
+                                                      title: v.titulo,
+                                                      description: v.descripcion + '. ' + v.departamento,
+                                                      start: moment(v.inicio),
+                                                      end: moment(v.fin),
+                                                      color: v.color,
+                                                      textColor: 'black',
+                                                      allDay: false,
+                                                      dias: v.dias,
+                                                      barra: v.barra,
+                                                      user: v.user,
+                                                      armador: v.armador,
+                                                      tipo_gestion: v.tipo_gestion,
+                                                      strella: v.strella,
+                                                      retenida: v.retenida,
+                                                      prioridad: v.prioridad,
+                                                      banco_ejecutivo: v.banco_ejecutivo
+                                                  });
+                                              });
+                                          }
+                                      callback(events);
+
+                              },
+                              error: function (error) {
+                                //  GenerateCalendar(url_,div_);
+                                  //alert(JSON.stringify(error.d));
+                              }
+                          })
+
+
+
+
+                        },
                         editable: false,
                         droppable: true, // this allows things to be dropped onto the calendar
                         dragRevertDuration: 0,
@@ -462,14 +475,9 @@
                             ver_gestion(calEvent.barra);
                         }
                     });
+
                     $(div).fullCalendar('option', 'timezone', 'UTC');
-                },
-                error: function (error) {
-                    console(error);
-                    GenerateCalendar(url_,div_);
-                    //alert(JSON.stringify(error.d));
-                }
-            })
+
         }
 
         GenerateCalendar('/dtracking/obtenercitasperitaje/', '#agenda-peritaje');

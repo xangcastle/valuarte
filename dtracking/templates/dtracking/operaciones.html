@@ -179,76 +179,10 @@
       $(document).on('click', '.gestion_event_aval', prearmadoEvent);
 
       function refreshCalender() {
-          var events = [];
-          var data = {}
-           if ($('#peritos').val()!= 0)
-               data['id_perito'] =  $('#peritos').val()
-           if ($('#armadores').val()!= 0)
-               data['id_armador'] =  $('#armadores').val()
-
-           $.ajax({
-              type: "GET",
-              data: data,
-              url: "{% url 'obtenercitasoperaciones' %}",
-              success: function (response) {
-                  console.log(response);
-                  $.each(response.programadas, function (i, v) {
-
-                      events.push({
-                          eventID: v.id,
-                          title: v.titulo,
-                          description: v.descripcion,
-                          start: moment(v.inicio),
-                          end: moment(v.fin),
-                          color: v.color,
-                          textColor: 'white',
-                          allDay: false,
-                          barra: v.barra,
-                          strella: v.strella,
-                          retenida:v.retenida,
-                          user: v.user,
-                          armador: v.armador,
-                          dias: v.dias,
-                          valor: v.valor,
-                          prioridad: v.prioridad
-                      });
-
-                  });
-                  console.log(events);
-                  $.each(response.pendientes, function (i, v) {
-                      $(document).find('li[gestion=' + v.id + ']').remove();
-                      events.push({
-                          eventID: v.id,
-                          title: v.titulo,
-                          description: v.descripcion,
-                          start: moment(v.inicio),
-                          end: moment(v.fin),
-                          color: v.color,
-                          textColor: 'white',
-                          allDay: false,
-                          barra: v.barra,
-                          strella: v.strella,
-                          retenida:v.retenida,
-                          user: v.user,
-                          armador: v.armador,
-                          dias: v.dias,
-                          valor: v.valor,
-                          prioridad: v.prioridad,
-                      });
-                  });
-                  console.log(events);
-
-                  GenerateCalender(events);
-              },
-              error: function (error) {
-                  alert(JSON.stringify(error.d));
-                  console.log(error);
-              }
-          });
-
+        GenerateCalender()
       }
 
-      function GenerateCalender(events) {
+      function GenerateCalender() {
 
           $('#calender').fullCalendar('destroy');
           var calendar = $('#calender').fullCalendar({
@@ -258,7 +192,79 @@
                   right: 'month,agendaWeek,agendaDay,listMonth'
               },
               lang: 'es',
-              events: events,
+              events: function (start, end, timezone, callback) {
+                var events = [];
+                var data = {}
+                 if ($('#peritos').val()!= 0)
+                     data['id_perito'] =  $('#peritos').val()
+                 if ($('#armadores').val()!= 0)
+                     data['id_armador'] =  $('#armadores').val()
+
+                 data['fecha_inicio'] = start.format('Y-M-D')
+                 data['fecha_fin']    = end.format('Y-M-D')
+
+
+                 $.ajax({
+                    type: "GET",
+                    data: data,
+                    url: "{% url 'obtenercitasoperaciones' %}",
+                    success: function (response) {
+                        console.log(response);
+                        $.each(response.programadas, function (i, v) {
+
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'white',
+                                allDay: false,
+                                barra: v.barra,
+                                strella: v.strella,
+                                retenida:v.retenida,
+                                user: v.user,
+                                armador: v.armador,
+                                dias: v.dias,
+                                valor: v.valor,
+                                prioridad: v.prioridad
+                            });
+
+                        });
+                        $.each(response.pendientes, function (i, v) {
+                            $(document).find('li[gestion=' + v.id + ']').remove();
+                            events.push({
+                                eventID: v.id,
+                                title: v.titulo,
+                                description: v.descripcion,
+                                start: moment(v.inicio),
+                                end: moment(v.fin),
+                                color: v.color,
+                                textColor: 'white',
+                                allDay: false,
+                                barra: v.barra,
+                                strella: v.strella,
+                                retenida:v.retenida,
+                                user: v.user,
+                                armador: v.armador,
+                                dias: v.dias,
+                                valor: v.valor,
+                                prioridad: v.prioridad,
+                            });
+                        });
+                        callback(events);
+                    },
+                    error: function (error) {
+                        alert(JSON.stringify(error.d));
+                        console.log(error);
+                    }
+                });
+
+
+
+
+              },
               editable: false,
               droppable: true, // this allows things to be dropped onto the calendar
               dragRevertDuration: 0,
