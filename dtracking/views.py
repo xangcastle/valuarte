@@ -382,19 +382,19 @@ class peritaje(TemplateView):
 
 
 def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LOG_GESTION[1][0]):
-    fecha_inicio = request.GET.get('fecha_inicio', None)
+    gestiones = Gestion.objects.all()
+    gestiones2=Gestion.objects.filter(status_gestion=status1)
+    """fecha_inicio = request.GET.get('fecha_inicio', None)
     fecha_fin    = request.GET.get('fecha_fin', None)
     if fecha_inicio  and fecha_fin :
         gestiones = Gestion.objects.filter(fecha_recepcion__gte=fecha_inicio ,fecha_recepcion__lte = fecha_fin)
-    else :
-        gestiones = Gestion.objects.all()
-
-
+        gestiones2= Gestion.objects.filter(status_gestion=status1,fecha_recepcion__gte=fecha_inicio ,fecha_recepcion__lte = fecha_fin)
+    else :"""
     id_perito = request.GET.get("id_perito", None)
     if id_perito and int(id_perito) > 0:
         gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
 
-    pendientes = [x.to_json() for x in Gestion.objects.filter(status_gestion=status1)]
+    pendientes = [x.to_json() for x in gestiones2]
     programadas = [x.to_json() for x in gestiones.filter(status_gestion=status2)]
     return HttpResponse(json.dumps({'programadas': programadas, 'pendientes':pendientes}) , content_type='application/json')
 
