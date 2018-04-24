@@ -989,8 +989,13 @@ class Archivo(models.Model):
         return "%s %s" % (self.gestion, self.archivo)
 
     def to_json(self):
-        return {'variable': self.variable,
-                'archivo': self.archivo.url}
+        o = {}
+        o['variable'] = self.variable
+        if self.archivo :
+          o['archivo']  = self.archivo.url
+        else :
+          o['archivo']  = ""
+        return o
 
     class Meta:
         verbose_name_plural = "Archivos Media"
@@ -1002,13 +1007,21 @@ class Position(models.Model):
     fecha = models.DateTimeField()
 
     def to_json(self):
-        return {
-            'label': self.user.username[0].upper(),
-            'usuario': self.user.username,
-            'latitude': self.position.latitude,
-            'longitude': self.position.longitude,
-            'fecha': str(self.fecha),
-        }
+        o = {}
+        if self.user :
+          o['label'] =  self.user.username[0].upper()
+          o['usuario'] = self.user.username
+        else :
+          o['label'] = ""
+          o['usuario'] =""
+        if self.position :
+          o['latitude']= self.position.latitude
+          o['longitude']= self.position.longitude
+        else :
+           o['latitude']= ""
+           o['longitude']= ""
+        o['fecha']=str(self.fecha)
+        return o
 
     class Meta:
         verbose_name = 'posicion'
