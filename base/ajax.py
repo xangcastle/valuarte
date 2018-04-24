@@ -29,9 +29,9 @@ def autocomplete(request):
     type_ = request.GET.get('type_search',None)
     if type_ :
        if type_ == "1" :
-        type_search = '{}__startswith'
+        type_search = '{}__istartswith'
        elif type_ == "2" :
-        type_search = '{}__endswith'
+        type_search = '{}__iendswith'
 
     columns = request.GET.get('column_name').split(",")
     columns = [(type_search.format(column), request.GET.get('term')) for column in columns]
