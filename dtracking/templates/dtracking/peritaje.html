@@ -132,7 +132,7 @@
             <div>
                 <div>
                     <div class="grp-module" id="grp-recent-actions-module">
-                        <h2>Agenda de Operaciones</h2>
+                        <h2>Agenda de Logistica</h2>
                         <div class="grp-module">
                             <h3>En Proceso</h3>
                             <div id="calender"></div>
@@ -147,8 +147,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-
                     <h7 class="modal-title"><span id="eventTitle"></span></h7>
+                    <div id="extra-tools"></div>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -219,6 +219,8 @@
 
                     $("#parrafo1").after("<p>Este párrafo tiene que salir entre el párrafo 1 y 2</p>");
 
+                    tools = modal.find("#extra-tools").empty();
+                    tools.append('<a href="/dtracking/gestion_adjuntos/?pk=' + id + '"s target="_blank">Drive</a>');
 
                     $("#id_realizada").on('change', function () {
                         if ($(this).is(':checked')) {
@@ -291,7 +293,6 @@
                     })
                     $(".form_entrada").attr('enctype', "multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
-                    $('#id_observaciones').prop('disabled',true);
                 }
             });
         }
