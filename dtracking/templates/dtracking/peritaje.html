@@ -330,7 +330,7 @@
                         timeFormat: 12, // 12 / 24
                         minuteStep: 60,
                         specialDates: []
-                    })
+                    });
                     $(".form_entrada").attr('enctype', "multipart/form-data");
                     $('#id_fin_gestion').on('change', cargar_usos_gestion);
                 }
@@ -428,11 +428,10 @@
         };
 
         function generateCalendar() {
+            var filters = "{'status_gestion': 'ASIGNADO A EVALUADOR', ";
             var p = parseFloat($("#peritos").val());
-            if (p>0){
-                var filters = "{'status_gestion': 'ASIGNADO A EVALUADOR', 'user': "+ p +", ";
-            }else{
-                var filters = "{'status_gestion': 'ASIGNADO A EVALUADOR', ";
+            if (p>0) {
+                filters += "'user': " + p + ", ";
             }
             $('#calender').fullCalendar('destroy');
             var calendar = $('#calender').fullCalendar({
@@ -450,10 +449,8 @@
                     var events = [];
                     $.ajax("/admin/ajax/get_collection/", {
                         type: "POST",
-                        data: {
-                            app_label: 'dtracking', model: 'gestion',
-                            filters: filters + "'fecha_asignacion__gte': '" + start.format('Y-MM-DD') + "', 'fecha_asignacion__lte': '" + end.format('Y-MM-DD') + "'}"
-                        },
+                        data: {app_label: 'dtracking', model: 'gestion',
+                            filters: filters + "'fecha_asignacion__gte': '" + start.format('Y-MM-DD') + "', 'fecha_asignacion__lte': '" + end.format('Y-MM-DD') + "'}"},
                         success: function (response) {
                             $.each(response, function (i, o) {
                                 events.push(gestion_to_event(o));
@@ -525,7 +522,7 @@
                     }
                 });
             }
-        }
+        };
         $(document).on("submit", ".form_entrada", function (e) {
             var btn_form;
             e.preventDefault();

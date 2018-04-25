@@ -7,14 +7,6 @@ import operator
 
 
 @csrf_exempt
-def get_object(request):
-    instance = Filter(app_label=request.POST.get('app_label'),
-                      model_name=request.POST.get('model')
-                      ).get_instance(int(request.POST.get('id')))
-    return HttpResponse(json.dumps(instance.to_json(), cls=Codec), content_type='application/json')
-
-
-@csrf_exempt
 def get_collection(request):
     queryset = Filter(app_label=request.POST.get('app_label'),
                       model_name=request.POST.get('model')).filter_by_json(request.POST.get('filters', None))
@@ -23,26 +15,11 @@ def get_collection(request):
 
 
 @csrf_exempt
-def autocomplete(request):
-    result = []
-    type_search = '{}__like'
-    type_ = request.GET.get('type_search',None)
-    if type_ :
-       if type_ == "1" :
-        type_search = '{}__istartswith'
-       elif type_ == "2" :
-        type_search = '{}__iendswith'
-
-    columns = request.GET.get('column_name').split(",")
-    columns = [(type_search.format(column), request.GET.get('term')) for column in columns]
-    queryset = Filter(app_label=request.GET.get('app_label'),
-                      model_name=request.GET.get('model')
-                      ).filter_by_list(columns, operator.or_)
-    for q in queryset:
-        result.append({'obj': q.to_json(),
-                       'label': str(q),
-                       'value': q.to_json()[column]})
-    return HttpResponse(json.dumps(result, cls=Codec), content_type="application/json")
+def get_object(request):
+    instance = Filter(app_label=request.POST.get('app_label'),
+                      model_name=request.POST.get('model')
+                      ).get_instance(int(request.POST.get('id')))
+    return HttpResponse(json.dumps(instance.to_json(), cls=Codec), content_type='application/json')
 
 
 @csrf_exempt
@@ -73,6 +50,29 @@ def object_execute(request):
         except:
             result = str(getattr(instance, request.POST.get('method')))
     return HttpResponse(json.dumps({'result': result}, cls=Codec), content_type='application/json')
+
+
+@csrf_exempt
+def autocomplete(request):
+    result = []
+    type_search = '{}__like'
+    type_ = request.GET.get('type_search',None)
+    if type_ :
+       if type_ == "1" :
+        type_search = '{}__istartswith'
+       elif type_ == "2" :
+        type_search = '{}__iendswith'
+
+    columns = request.GET.get('column_name').split(",")
+    columns = [(type_search.format(column), request.GET.get('term')) for column in columns]
+    queryset = Filter(app_label=request.GET.get('app_label'),
+                      model_name=request.GET.get('model')
+                      ).filter_by_list(columns, operator.or_)
+    for q in queryset:
+        result.append({'obj': q.to_json(),
+                       'label': str(q),
+                       'value': q.to_json()[column]})
+    return HttpResponse(json.dumps(result, cls=Codec), content_type="application/json")
 
 
 @csrf_exempt

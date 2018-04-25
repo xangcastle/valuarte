@@ -61,6 +61,4 @@ urlpatterns = [
         name='control'),
     url(r'^gerencia/', gerencia.as_view(),
         name='gerencia'),
-    url(r'^obtenercitasoperaciones/', obtener_citas_operaciones,
-            name='obtenercitasoperaciones'),
 ]

@@ -365,7 +365,7 @@ class Gestion(models.Model):
     json = JSONField(null=True, blank=True)
 
     # operaciones
-    fecha_recepcion = models.DateField(null=True, blank=True)  ###
+    fecha_recepcion = models.DateTimeField(null=True, blank=True)  ###
     prearmado = models.BooleanField(default=False, verbose_name="prearmado")###
     fecha_prearmado = models.DateTimeField(null=True, blank=True)  # fecha de prearmado incluye hora
     fecha_vence = models.DateField(null=True, blank=True)
@@ -654,46 +654,6 @@ class Gestion(models.Model):
         messages.info(request, "Avaluo restablecido con exito!")
 
     @staticmethod
-    def datosOperacion(context):
-        gestiones = Gestion.objects.all()
-        perito  = None
-        armador = None
-
-        if 'perito' in context :
-          perito = context['perito']
-        if 'armador' in context :
-          armador = context['armador']
-        print(context)
-
-        if 'fecha_inicio' in  context and 'fecha_fin' in context :
-            programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0],fecha_recepcion__gte=context['fecha_inicio'] ,fecha_recepcion__lte = context['fecha_fin']  )
-            pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True,fecha_recepcion__gte=context['fecha_inicio'] ,fecha_recepcion__lte = context['fecha_fin']  )
-        else :
-            programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
-            pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0])
-
-        if perito and not armador:
-               programadas = programadas.filter(user__id=perito)
-               pendientes  = pendientes.filter(user__id=perito)
-        if armador and not perito:
-                armador = Operaciones.objects.get(id=armador)
-                programadas = programadas.filter(armador=armador)
-                pendientes = pendientes.filter(armador=armador)
-        if armador and perito:
-                armador = Operaciones.objects.get(id=armador)
-                programadas = programadas.filter(user__id=perito,armador=armador)
-                pendientes = pendientes.filter(user__id=perito,armador=armador)
-
-        context['pendientes']  = [x.to_json() for x in pendientes]
-        context['programadas'] = [x.to_json() for x in programadas]
-        context['lista']       = [x.to_json() for x in gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=False) ]
-        context['peritos']     = Gestor.objects.all()
-        context['armadores']   = Armador.objects.all()
-        return context
-
-
-
-    @staticmethod
     def datos_facturacion():
         h = datetime.now()
         gs = Gestion.objects.filter(fecha_facturacion__day=h.day,
@@ -856,6 +816,7 @@ class Gestion(models.Model):
         o['dias'] = "%s dias de retrazo" % self.dias_retrazo()
         o['strella'] = self.get_estrella()
         o['retenida'] = self.get_retenida()
+        o['prearmado'] = self.prearmado
         if (self.fin_gestion):
             o['fin_gestion'] = self.fin_gestion.name
         else:

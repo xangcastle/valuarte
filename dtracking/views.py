@@ -382,15 +382,6 @@ class peritaje(TemplateView):
         return super(peritaje, self).render_to_response(context)
 
 
-def obtener_citas_operaciones(request):
-    data = Gestion.datosOperacion(
-        {'fecha_inicio': request.GET.get('fecha_inicio', None), 'fecha_fin': request.GET.get('fecha_fin', None),
-         'armador': request.GET.get('id_armador', None), 'perito': request.GET.get('id_perito', None)})
-    return HttpResponse(
-        json.dumps({'programadas': data['programadas'], 'pendientes': data['pendientes'], 'lista': data['lista']}),
-        content_type='application/json')
-
-
 def reporte(request):
     status = int(request.GET.get('status', request.POST.get('status')))
     if ESTADOS_LOG_GESTION[status][0] == ESTADOS_LOG_GESTION[0][0]:
@@ -412,11 +403,8 @@ class operaciones(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(operaciones, self).get_context_data(**kwargs)
-        context = Gestion.datosOperacion(context)
-        return super(operaciones, self).render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        context = super(operaciones, self).get_context_data(**kwargs)
+        context['peritos'] = Gestor.objects.all()
+        context['armadores'] = Armador.objects.all()
         return super(operaciones, self).render_to_response(context)
 
 
