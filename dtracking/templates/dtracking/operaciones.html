@@ -124,7 +124,7 @@
             return event
         };
         var editEvent = function (id) {
-            var params = "action=/admin/ajax/get_html_form/&fields=ficha_inspeccion-valor-armador-revizada-observaciones-retenida&app_label=dtracking&model=gestion&id=" + id;
+            var params = "&fields=prearmado-ficha_inspeccion-valor-armador-revizada-observaciones-retenida&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             tools = modal.find("#extra-tools").empty();
             tools.append('<a href="/dtracking/examen_previo/?gestion=' + id + '" target="_blank" class="boton">Datos</a>');
@@ -168,7 +168,7 @@
         var editDraft = function () {
             var id = $(this).data('event').id;
             console.log($(this).data());
-            var params = "fields=prearmado-observaciones-armador&app_label=dtracking&model=gestion&id=" + id;
+            var params = "fields=prearmado-observaciones-armador-retenida&app_label=dtracking&model=gestion&id=" + id;
             modal = $("#myModal");
             tools = modal.find("#extra-tools").empty();
             body = modal.find(".modal-body").empty();
@@ -198,7 +198,6 @@
                 console.log(gestion);
             }
         };
-
 
         function GenerateCalender() {
             var filters = "{'status_gestion': 'LEVANTAMIENTO REALIZADO', 'prearmado': 'True'";
