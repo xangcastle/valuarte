@@ -38,7 +38,7 @@ class gestion_admin(ImportExportModelAdmin):
     change_form_template = "dtracking/gestion.html"
     date_hierarchy = "fecha"
     list_display = ('barra', 'banco', 'destinatario', 'tipo_gestion', 'valor', 'categoria',
-                    'banco_ejecutivo', 'user', 'armador', 'status_gestion', 'dias_retrazo','fecha_facturacion','cancelada','fecha_cancelacion')
+                    'banco_ejecutivo', 'user', 'armador', 'status_gestion', 'dias_retrazo', 'fecha_vence', 'fecha_facturacion','cancelada','fecha_cancelacion')
     list_filter = ('banco', 'tipo_gestion', 'categoria', 'user', 'armador', 'status_gestion','cancelada')
     search_fields = ('destinatario', 'departamento__name',
     'municipio__name', 'barrio__name', 'zona__name')
@@ -70,6 +70,7 @@ class gestion_admin(ImportExportModelAdmin):
                 ('fecha_recepcion', 'armador', 'fecha_vence'),
                 ('realizada', 'ficha_inspeccion'),
                 ('revizada', 'fecha_revision',),
+                ('prearmado', 'fecha_prearmado',),
                 ('terminada', 'informe_final', 'fecha_entrega_efectiva'),
                 'position', 'json'
             )

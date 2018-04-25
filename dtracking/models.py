@@ -621,7 +621,7 @@ class Gestion(models.Model):
         if self.status_gestion == ESTADOS_LOG_GESTION[1][0]:
             return self.fecha_asignacion
         elif self.status_gestion == ESTADOS_LOG_GESTION[2][0]:
-            return self.get_fecha_vence()
+            return self.fecha_vence
         else:
             return None
 
@@ -659,21 +659,20 @@ class Gestion(models.Model):
             programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0],fecha_recepcion__gte=context['fecha_inicio'] ,fecha_recepcion__lte = context['fecha_fin']  )
             pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], prearmado=True,fecha_recepcion__gte=context['fecha_inicio'] ,fecha_recepcion__lte = context['fecha_fin']  )
         else :
-            programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0] )
-            pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0] )
+            programadas = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
+            pendientes  = gestiones.filter(status_gestion=ESTADOS_LOG_GESTION[2][0])
 
-        if perito  and not armador  :
+        if perito and not armador:
                programadas = programadas.filter(user__id=perito)
                pendientes  = pendientes.filter(user__id=perito)
-        if armador  and not perito  :
+        if armador and not perito:
                 armador = Operaciones.objects.get(id=armador)
                 programadas = programadas.filter(armador=armador)
                 pendientes = pendientes.filter(armador=armador)
-        if armador and perito :
+        if armador and perito:
                 armador = Operaciones.objects.get(id=armador)
                 programadas = programadas.filter(user__id=perito,armador=armador)
                 pendientes = pendientes.filter(user__id=perito,armador=armador)
-
 
         context['pendientes']  = [x.to_json() for x in pendientes]
         context['programadas'] = [x.to_json() for x in programadas]
@@ -825,7 +824,6 @@ class Gestion(models.Model):
     def to_json(self):
         o = {}
         o['id'] = self.id
-        o['idEvent'] = self.id
         o['destinatario'] = self.destinatario
         o['direccion'] = self.direccion
         o['telefono'] = self.telefono
@@ -991,10 +989,10 @@ class Archivo(models.Model):
     def to_json(self):
         o = {}
         o['variable'] = self.variable
-        if self.archivo :
+        if self.archivo:
           o['archivo']  = self.archivo.url
         else :
-          o['archivo']  = ""
+          o['archivo']  = "#"
         return o
 
     class Meta:

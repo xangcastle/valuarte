@@ -46,6 +46,23 @@ def autocomplete(request):
 
 
 @csrf_exempt
+def object_update(request):
+    result = ""
+    instance = Filter(app_label=request.POST.get('app_label'),
+                      model_name=request.POST.get('model')
+                      ).get_instance(int(request.POST.get('id')))
+    data = request.POST.get('data', None)
+    if data:
+        for k, v in json.loads(str(data).replace("'", "\"")).items():
+            print k, v
+            setattr(instance, k, v)
+            print getattr(instance, k, "Nada")
+        instance.save()
+    return HttpResponse(json.dumps({'result': result, 'intance': instance.to_json()}, cls=Codec),
+                        content_type='application/json')
+
+
+@csrf_exempt
 def object_execute(request):
     instance = Filter(app_label=request.POST.get('app_label'),
                       model_name=request.POST.get('model')
@@ -68,9 +85,9 @@ def get_html_form(request, form=None):
         filter = Filter(app_label=request.GET.get('app_label'),
                         model_name=request.GET.get('model'))
         data['fields'] = request.GET.get('fields')
-        actions = request.GET.get('action')
-        if actions:
-            data['action'] = actions
+        action = request.GET.get('action')
+        if action:
+            data['action'] = action
         else:
             data['action'] = '/admin/ajax/get_html_form/'
         data['app_label'] = filter.app_label
