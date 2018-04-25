@@ -134,7 +134,6 @@
                     <div class="grp-module" id="grp-recent-actions-module">
                         <h2>Agenda de Logistica</h2>
                         <div class="grp-module">
-                            <h3>En Proceso</h3>
                             <div id="calender"></div>
                         </div>
                     </div>
@@ -201,7 +200,7 @@
                     }
                 });
         };
-        var cotizar = function () {
+        var cotizar = function (e) {
             window.open(
                 $(this).data('url'),
                 $(this).data('name'),
@@ -296,7 +295,7 @@
                         minView: 'times', // times / days / months / years
                         maxView: 'years', // times / days / months / years
                         startView: 'days', // times / days / months / years
-                        min: null, // starting date to allow selection
+                        min: new Date(), // starting date to allow selection
                         max: null, // ending date to allow selection
                         //today: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
                         showDaysNotInMonth: false,
@@ -428,6 +427,93 @@
             });
         };
 
+        function generateCalendar() {
+            var p = parseFloat($("#peritos").val());
+            if (p>0){
+                var filters = "{'status_gestion': 'ASIGNADO A EVALUADOR', 'user': "+ p +", ";
+            }else{
+                var filters = "{'status_gestion': 'ASIGNADO A EVALUADOR', ";
+            }
+            $('#calender').fullCalendar('destroy');
+            var calendar = $('#calender').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay,listMonth'
+                },
+                lang: 'es',
+                height: 750,
+                navLinks: true,
+                minTime: "08:00:00",
+                maxTime: "18:00:00",
+                events: function (start, end, timezone, callback) {
+                    var events = [];
+                    $.ajax("/admin/ajax/get_collection/", {
+                        type: "POST",
+                        data: {
+                            app_label: 'dtracking', model: 'gestion',
+                            filters: filters + "'fecha_asignacion__gte': '" + start.format('Y-MM-DD') + "', 'fecha_asignacion__lte': '" + end.format('Y-MM-DD') + "'}"
+                        },
+                        success: function (response) {
+                            $.each(response, function (i, o) {
+                                events.push(gestion_to_event(o));
+                            });
+                            callback(events);
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    })
+                },
+                editable: true,
+                droppable: true,
+                dragRevertDuration: 0,
+                timeFormat: 'h(:mm)a',
+                drop: function (date, jsEvent, ui, resourceId) {
+                    showEvent($(this).data().event.id, date);
+                },
+                eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
+                    var data = {fecha_asignacion: event.start.format("Y-MM-DD hh:mm:ss")};
+                    data = JSON.to_string(data);
+                    saveEvent(event.id, data);
+                    new PNotify({
+                        title: 'Reprogramación !',
+                        text: 'Visita reprogramada para ' + event.start.format("Y-MM-DD hh:mm:ss") + '. Perito de campo ' + event.user,
+                        type: 'warning',
+                        styling: 'bootstrap3'
+                    });
+                },
+                eventRender: function (event, element, view) {
+                    return $(
+                        '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
+                        event.barra + '<br> ' + '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                        '<br> ' + '<img class="' + event.prioridad + '" src="' + event.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
+                        '<div>' + event.destinatario + '</div>' +
+                        '<small>' + event.direccion + '</small><br> ' +
+                        '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
+                        '</div>');
+                },
+                eventClick: function (calEvent, jsEvent, view) {
+                    var id = ((calEvent.eventID == undefined) ? calEvent.id : calEvent.eventID);
+                    showEvent(id);
+                }
+            });
+            calendar.fullCalendar('option', 'timezone', 'UTC');
+
+            $.ajax("/admin/ajax/get_collection/", {
+                method: "POST",
+                data: {app_label: "dtracking", model: "gestion", filters: "{'status_gestion': 'RECEPCIONADO'}"},
+                success: function (response) {
+                    $('#external-events-listing').empty();
+                    $.each(response, function (i, v) {
+                        var r = createDraft(v);
+                        $('#external-events-listing').append(r);
+                    });
+                }
+            });
+        }
+
+
         var onclosemodal = function () {
             var id = $(this).find('input[name="id"]').val();
             if (id != undefined && id != "") {
@@ -496,79 +582,7 @@
 
         $(document).ready(function () {
 
-            $('#calender').fullCalendar('destroy');
-            var calendar = $('#calender').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay,listMonth'
-                },
-                lang: 'es',
-                events: function (start, end, timezone, callback) {
-                    var events = [];
-                    $.ajax("/admin/ajax/get_collection/", {
-                        type: "POST",
-                        data: {
-                            app_label: 'dtracking', model: 'gestion',
-                            filters: "{'status_gestion': 'ASIGNADO A EVALUADOR', 'fecha_asignacion__gte': '" + start.format('Y-MM-DD') + "', 'fecha_asignacion__lte': '" + end.format('Y-MM-DD') + "'}"
-                        },
-                        success: function (response) {
-                            $.each(response, function (i, o) {
-                                events.push(gestion_to_event(o));
-                            });
-                            callback(events);
-                        },
-                        error: function (error) {
-                            alert(error);
-                        }
-                    })
-                },
-                editable: true,
-                droppable: true,
-                dragRevertDuration: 0,
-                timeFormat: 'h(:mm)a',
-                drop: function (date, jsEvent, ui, resourceId) {
-                    showEvent($(this).data().event.id, date);
-                },
-                eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
-                    var data = {fecha_asignacion: event.start.format("Y-MM-DD hh:mm:ss")};
-                    data = JSON.to_string(data);
-                    saveEvent(event.id, data);
-                    new PNotify({
-                        title: 'Reprogramación !',
-                        text: 'Visita reprogramada para ' + event.start.format("Y-MM-DD hh:mm:ss") + '. Perito de campo ' + event.user,
-                        type: 'warning',
-                        styling: 'bootstrap3'
-                    });
-                },
-                eventRender: function (event, element, view) {
-                    return $(
-                        '<div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                        event.barra + '<br> ' + '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
-                        '<br> ' + '<img class="' + event.prioridad + '" src="' + event.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -14px;">' +
-                        '<div>' + event.destinatario + '</div>' +
-                        '<small>' + event.direccion + '</small><br> ' +
-                        '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
-                        '</div>');
-                },
-                eventClick: function (calEvent, jsEvent, view) {
-                    var id = ((calEvent.eventID == undefined) ? calEvent.id : calEvent.eventID);
-                    showEvent(id);
-                }
-            });
-            calendar.fullCalendar('option', 'timezone', 'UTC');
-
-            $.ajax("/admin/ajax/get_collection/", {
-                method: "POST",
-                data: {app_label: "dtracking", model: "gestion", filters: "{'status_gestion': 'RECEPCIONADO'}"},
-                success: function (response) {
-                    $('#external-events-listing').empty();
-                    $.each(response, function (i, v) {
-                        var r = createDraft(v);
-                        $('#external-events-listing').append(r);
-                    });
-                }
-            });
+            generateCalendar();
 
             $('#new-event').click(newEvent);
 
@@ -588,6 +602,8 @@
                 window.open($(this).data('des'), "ExamenPrevio", "width=900, height=900,  status=no, scrollbars=no, toolbars=no, menubar=no, location=no");
             }
             $('.have-info').on('click', have_info);
+
+            $("#peritos").on('change', generateCalendar);
 
         });
 
