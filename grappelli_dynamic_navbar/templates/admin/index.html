@@ -23,9 +23,10 @@
     {% if title %}
         <header><h1>Sitio Administrativo Valuarte</h1></header>
         {% if user.is_staff %}
-          <ul class="grp-object-tools" >
-                <li><a href="//{{ request.get_host }}/admin/dtracking/gestion/" class="grp-state-focus" >Ver avaluos</a></li>
-          </ul>
+            <ul class="grp-object-tools">
+                <li><a href="//{{ request.get_host }}/admin/dtracking/gestion/" class="grp-state-focus">Ver avaluos</a>
+                </li>
+            </ul>
         {% endif %}
     {% endif %}
 {% endblock content_title %}
@@ -162,327 +163,175 @@
             fill: blue;
             fill-opacity: .165;
         }
-        .bg-purple{
-          background-color: #793eb7 !important;
+
+        .bg-purple {
+            background-color: #793eb7 !important;
         }
 
     </style>
     {% get_totales as t %}
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+    <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
 
-            <div class="row">
-                <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-teal">
-                        <div class="inner">
-                            <h3 id="recepcion-panel" style="cursor: no-drop;">Recepción</h3>
-                            <h6><i class="ion ion-email-unread"> </i> Registros
-                                Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
-                            <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
-                            <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-happy">{{ t.recepcion.total }}</i>
-                        </div>
-                        <a title="Reporte de Recepción" href="#"
-                           class="small-box-footer show_info"
-                           data-url="{% url 'reporte' %}?status=0"
-                           data-name="Reporte de Recepción">Mas info
-                        </a>
+        <div class="row">
+            <div class="col-lg-6 col-xs-6">
+                <div class="small-box bg-teal">
+                    <div class="inner">
+                        <h3 id="recepcion-panel" style="cursor: no-drop;">Recepción</h3>
+                        <h6><i class="ion ion-email-unread"> </i> Registros
+                            Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                        <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
+                        <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
                     </div>
-                </div>
-                <div class="clearfix visible-sm-block"></div>
-
-                <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3 id="logistica-panel" style="cursor: no-drop;">Logística</h3>
-                            <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
-                                <strong> {{ t.logistica.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
-                                <strong> {{ t.logistica.incumplidas }}</strong></h6>
-                            <h6><i class="ion ion-clipboard"> </i> En Agenda:
-                                <strong> {{ t.logistica.programadas }}</strong></h6>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-android-car">{{ t.logistica.total }}</i>
-                        </div>
-                        <a title="Reporte de Logística" href="#"
-                           class="small-box-footer show_info"
-                           data-url="{% url 'reporte' %}?status=1"
-                           data-name="Reporte de Lógistica">Mas info
-                        </a>
+                    <div class="icon">
+                        <i class="ion ion-happy">{{ t.recepcion.total }}</i>
                     </div>
+                    <a title="Reporte de Recepción" href="#"
+                       class="small-box-footer show_info"
+                       data-url="{% url 'reporte' %}?status=0"
+                       data-name="Reporte de Recepción">Mas info
+                    </a>
                 </div>
-                <div class="clearfix visible-sm-block"></div>
-
             </div>
+            <div class="clearfix visible-sm-block"></div>
 
-            <div class="row">
-
-                <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-red" url="{% url 'operaciones' %}" >
-                        <div class="inner">
-                            <h3 id="operaciones-panel" style="cursor: no-drop;">Operaciones</h3>
-                            <h6><i class="ion ion-android-notifications"> </i> Para hoy:
-                                <strong> {{ t.operaciones.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
-                                <strong> {{ t.operaciones.vencidas }}</strong></h6>
-                            <h6><i class="ion ion-ios-time"> </i> En tiempo:
-                                <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
-                        </div>
-                        <a title="Reporte de Operaciones" href="#"
-                           class="small-box-footer show_info"
-                           data-url="{% url 'reporte' %}?status=2"
-                           data-name="Reporte de Operaciones">Mas info
-                        </a>
+            <div class="col-lg-6 col-xs-6">
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3 id="logistica-panel" style="cursor: no-drop;">Logística</h3>
+                        <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
+                            <strong> {{ t.logistica.para_hoy }}</strong></h6>
+                        <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
+                            <strong> {{ t.logistica.incumplidas }}</strong></h6>
+                        <h6><i class="ion ion-clipboard"> </i> En Agenda:
+                            <strong> {{ t.logistica.programadas }}</strong></h6>
                     </div>
-                </div>
-                <div class="clearfix visible-sm-block"></div>
-
-                <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-purple" url="{% url 'control' %}">
-                        <div class="inner">
-                            <h3 id="gerencia-panel" style="cursor: no-drop;">Control Calidad</h3>
-                            <h6><i class="ion ion-android-notifications"> </i> Para hoy:
-                                <strong> {{ t.control.para_hoy }}</strong></h6>
-                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
-                                <strong> {{ t.control.vencidas }}</strong></h6>
-                            <h6><i class="ion ion-ios-time"> </i> En tiempo:
-                                <strong> {{ t.control.en_tiempo }}</strong></h6>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-android-contact">{{ t.control.total }}</i>
-                        </div>
-
-                        <a title="Reporte de Gerencia" href="#"
-                           class="small-box-footer show_info"
-                           data-url="{% url 'reporte' %}?status=4"
-                           data-name="Reporte de Gerencia">Mas info
-                        </a>
+                    <div class="icon">
+                        <i class="ion ion-android-car">{{ t.logistica.total }}</i>
                     </div>
+                    <a title="Reporte de Logística" href="#"
+                       class="small-box-footer show_info"
+                       data-url="{% url 'reporte' %}?status=1"
+                       data-name="Reporte de Lógistica">Mas info
+                    </a>
                 </div>
-                <div class="clearfix visible-sm-block"></div>
-
             </div>
-
-            <div class="row">
-
-                <div class="col-lg-6 col-xs-6">
-                    <div class="small-box bg-blue" url="{% url 'gerencia' %}">
-                        <div class="inner">
-                            <h3 id="gerencia-panel" style="cursor: no-drop;">Gerencia</h3>
-                            <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
-                            <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
-                                <strong> {{ t.gerencia.total }}</strong></h6>
-                            <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
-                                $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
-                        </div>
-
-                        <a title="Reporte de Gerencia" href="#"
-                           class="small-box-footer show_info"
-                           data-url="{% url 'reporte' %}?status=4"
-                           data-name="Reporte de Gerencia">Mas info
-                        </a>
-                    </div>
-                </div>
-                <div class="clearfix visible-sm-block"></div>
-
-            </div>
+            <div class="clearfix visible-sm-block"></div>
 
         </div>
-        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <div id="barras"></div>
-                </div>
 
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                    <div id="pie"></div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                    <div id="tabla"></div>
+        <div class="row">
+
+            <div class="col-lg-6 col-xs-6">
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3 id="operaciones-panel" style="cursor: no-drop;">Operaciones</h3>
+                        <h6><i class="ion ion-android-notifications"> </i> Para hoy:
+                            <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                        <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
+                            <strong> {{ t.operaciones.vencidas }}</strong></h6>
+                        <h6><i class="ion ion-ios-time"> </i> En tiempo:
+                            <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
+                    </div>
+                    <a title="Reporte de Operaciones" href="#"
+                       class="small-box-footer show_info"
+                       data-url="{% url 'reporte' %}?status=2"
+                       data-name="Reporte de Operaciones">Mas info
+                    </a>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="clearfix visible-sm-block"></div>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
-                <h3><a href="{% url 'peritaje' %}">Agenda de Logistica</a></h3>
-                <div id="agenda-peritaje"></div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-            <div class="container container-fluid" style="padding: 25px;background-color: light-gray;">
-                <h3><a href="{% url 'operaciones' %}">Agenda de Operaciones</a></h3>
-                <div id="agenda-operaciones"></div>
-            </div>
-        </div>
-    </div>
+            <div class="col-lg-6 col-xs-6">
+                <div class="small-box bg-purple" url="{% url 'control' %}">
+                    <div class="inner">
+                        <h3 id="calidad-panel" style="cursor: no-drop;">Control Calidad</h3>
+                        <h6><i class="ion ion-android-notifications"> </i> Para hoy:
+                            <strong> {{ t.control.para_hoy }}</strong></h6>
+                        <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
+                            <strong> {{ t.control.vencidas }}</strong></h6>
+                        <h6><i class="ion ion-ios-time"> </i> En tiempo:
+                            <strong> {{ t.control.en_tiempo }}</strong></h6>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-android-contact">{{ t.control.total }}</i>
+                    </div>
 
-    <div class="row">
-        <div id="timeline"></div>
+                    <a title="Reporte de Gerencia" href="#"
+                       class="small-box-footer show_info"
+                       data-url="{% url 'reporte' %}?status=4"
+                       data-name="Reporte de Gerencia">Mas info
+                    </a>
+                </div>
+            </div>
+            <div class="clearfix visible-sm-block"></div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-6 col-xs-6">
+                <div class="small-box bg-blue" url="{% url 'gerencia' %}">
+                    <div class="inner">
+                        <h3 id="gerencia-panel" style="cursor: no-drop;">Gerencia</h3>
+                        <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
+                        <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
+                            <strong> {{ t.gerencia.total }}</strong></h6>
+                        <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
+                            $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
+                    </div>
+
+                    <a title="Reporte de Gerencia" href="#"
+                       class="small-box-footer show_info"
+                       data-url="{% url 'reporte' %}?status=4"
+                       data-name="Reporte de Gerencia">Mas info
+                    </a>
+                </div>
+            </div>
+            <div class="clearfix visible-sm-block"></div>
+
+        </div>
+
     </div>
     <script type="text/javascript">
-
-        var irPortal = function()
-        {
-            var url = $(this).attr('url');
-            if(url != undefined)
-               window.location =  url ;
-        }
-        $(".small-box").on('click',irPortal);
-
-        function GenerateCalendar(url, div) {
-                    $(div).fullCalendar('destroy');
-                    $(div).fullCalendar({
-                        header: {
-                            left: 'prev,next',
-                            center: 'title',
-                            right: 'month'
-                        },
-                        defaultView: 'listMonth',
-                        lang: 'es',
-                        events: function (start, end, timezone, callback) {
-                                  var events = [];
-                                  var data = {};
-                                  data['fecha_inicio'] = start.format('Y-M-D')
-                                  data['fecha_fin']    = end.format('Y-M-D')
-                                  $.ajax({
-                                      type: "GET",
-                                      data: data,
-                                      url: url,
-                                      success: function (response) {
-                                          if (div == "#agenda-operaciones") {
-                                              $.each(response.programadas, function (i, v) {
-                                                  events.push({
-                                                      eventID: v.id,
-                                                      title: v.titulo,
-                                                      description: v.descripcion + '. ' + v.departamento,
-                                                      start: moment(v.inicio),
-                                                      end: moment(v.fin),
-                                                      color: v.color,
-                                                      textColor: 'black',
-                                                      allDay: false,
-                                                      dias: v.dias,
-                                                      barra: v.barra,
-                                                      user: v.user,
-                                                      armador: v.armador,
-                                                      tipo_gestion: v.tipo_gestion,
-                                                      strella: v.strella,
-                                                      retenida: v.retenida,
-                                                      prioridad: v.prioridad,
-                                                      banco_ejecutivo: v.banco_ejecutivo
-                                                  });
-                                              });
-                                              $.each(response.pendientes, function (i, v) {
-                                                  events.push({
-                                                      eventID: v.id,
-                                                      title: v.titulo,
-                                                      description: v.descripcion + '. ' + v.departamento,
-                                                      start: moment(v.inicio),
-                                                      end: moment(v.fin),
-                                                      color: v.color,
-                                                      textColor: 'black',
-                                                      allDay: false,
-                                                      dias: v.dias,
-                                                      barra: v.barra,
-                                                      user: v.user,
-                                                      armador: v.armador,
-                                                      tipo_gestion: v.tipo_gestion,
-                                                      strella: v.strella,
-                                                      retenida: v.retenida,
-                                                      prioridad: v.prioridad,
-                                                      banco_ejecutivo: v.banco_ejecutivo
-                                                  });
-                                              });
-                                          } else {
-                                              $.each(response.programadas, function (i, v) {
-                                                  events.push({
-                                                      eventID: v.id,
-                                                      title: v.titulo,
-                                                      description: v.descripcion + '. ' + v.departamento,
-                                                      start: moment(v.inicio),
-                                                      end: moment(v.fin),
-                                                      color: v.color,
-                                                      textColor: 'black',
-                                                      allDay: false,
-                                                      dias: v.dias,
-                                                      barra: v.barra,
-                                                      user: v.user,
-                                                      armador: v.armador,
-                                                      tipo_gestion: v.tipo_gestion,
-                                                      strella: v.strella,
-                                                      retenida: v.retenida,
-                                                      prioridad: v.prioridad,
-                                                      banco_ejecutivo: v.banco_ejecutivo
-                                                  });
-                                              });
-                                          }
-                                      callback(events);
-
-                              },
-                              error: function (error) {
-                                //  GenerateCalendar(url_,div_);
-                                  //alert(JSON.stringify(error.d));
-                              }
-                          })
-
-
-
-
-                        },
-                        editable: false,
-                        droppable: true, // this allows things to be dropped onto the calendar
-                        dragRevertDuration: 0,
-                        timeFormat: 'h(:mm)a',
-                        eventRender: function (event, element, view) {
-                            if (div == '#agenda-operaciones') {
-                                return $(
-                                    '<tr class="fc-list-item red fc-has-url"><td class="fc-list-item-time fc-widget-content" colspan="3"><div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.barra + ' - ' + event.title + '</div>' +
-                                    '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
-                                    '<img class="' + event.prioridad + '" src="' + event.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
-                                    '<div><small>' + event.tipo_gestion + '</small></div>' +
-                                    '<div><strong style="color: red;">' + event.armador + '</strong></div>' +
-                                    '<div><small><strong>Ejecutivo: </strong>' + event.banco_ejecutivo + '</small></div>' +
-                                    '<strong>' + event.dias + '</strong>' +
-                                    '</div></td></tr>');
-                            } else {
-                                return $(
-                                    '<tr class="fc-list-item red fc-has-url"><td class="fc-list-item-time fc-widget-content" colspan="3"><div id="event-' + event.eventID + '" class="fc-event" style="background-color:' + event.color + '; padding: 3px; color: black">' +
-                                    '<div>' + event.barra + ' - ' + event.title + '</div>' +
-                                    '<img class="' + event.prioridad + '" src="' + event.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
-                                    '<img class="' + event.prioridad + '" src="' + event.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
-                                    '<div><small>' + event.tipo_gestion + '</small></div>' +
-                                    '<div><small>' + event.description + '</small></div>' +
-                                    '<div><small><strong>Ejecutivo: </strong>' + event.banco_ejecutivo + '</small></div>' +
-                                    '<strong>' + event.user + ' - ' + event.start.format("h(:mm)a") + '</strong>' +
-                                    '</div></td></tr>');
-                            }
-                        },
-                        eventClick: function (calEvent, jsEvent, view) {
-
-                            ver_gestion(calEvent.barra);
-                        }
-                    });
-
-                    $(div).fullCalendar('option', 'timezone', 'UTC');
-
-        }
-
-        GenerateCalendar('/dtracking/obtenercitasperitaje/', '#agenda-peritaje');
-        GenerateCalendar('/dtracking/obtenercitasoperaciones/', '#agenda-operaciones');
+        $(document).ready(function () {
+            $("#logistica-panel").on("click", function () {
+                window.location.href = "{% url 'peritaje' %}";
+            });
+            $("#operaciones-panel").on("click", function () {
+                window.location.href = "{% url 'operaciones' %}";
+            });
+            $("#calidad-panel").on("click", function () {
+                window.location.href = "{% url 'control' %}";
+            });
+            $("#gerencia-panel").on("click", function () {
+                window.location.href = "{% url 'gerencia' %}";
+            });
+        });
     </script>
+
+
+    <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                <div id="barras"></div>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                <div id="pie"></div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                <div id="tabla"></div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
         {% get_data as data %}
         {% get_tipos_gestion as tipos %}
@@ -539,7 +388,7 @@
             }
 
             function histoGram(fD, id) {
-                var ancho = $('#agenda-peritaje').css('width').replace("px", '');
+                var ancho = 500;
                 var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
                 hGDim.w = ancho - hGDim.l - hGDim.r,
                     hGDim.h = 200 - hGDim.t - hGDim.b;

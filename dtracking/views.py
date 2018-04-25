@@ -382,29 +382,6 @@ class peritaje(TemplateView):
         return super(peritaje, self).render_to_response(context)
 
 
-def obtener_citas(request, status1=ESTADOS_LOG_GESTION[0][0], status2=ESTADOS_LOG_GESTION[1][0]):
-    gestiones = Gestion.objects.all()
-    gestiones2 = Gestion.objects.filter(status_gestion=status1)
-    """fecha_inicio = request.GET.get('fecha_inicio', None)
-    fecha_fin    = request.GET.get('fecha_fin', None)
-    if fecha_inicio  and fecha_fin :
-        gestiones = Gestion.objects.filter(fecha_recepcion__gte=fecha_inicio ,fecha_recepcion__lte = fecha_fin)
-        gestiones2= Gestion.objects.filter(status_gestion=status1,fecha_recepcion__gte=fecha_inicio ,fecha_recepcion__lte = fecha_fin)
-    else :"""
-    id_perito = request.GET.get("id_perito", None)
-    if id_perito and int(id_perito) > 0:
-        gestiones = gestiones.filter(user=User.objects.get(id=id_perito))
-
-    pendientes = [x.to_json() for x in gestiones2]
-    programadas = [x.to_json() for x in gestiones.filter(status_gestion=status2)]
-    return HttpResponse(json.dumps({'programadas': programadas, 'pendientes': pendientes}),
-                        content_type='application/json')
-
-
-def obtener_citas_peritaje(request):
-    return obtener_citas(request)
-
-
 def obtener_citas_operaciones(request):
     data = Gestion.datosOperacion(
         {'fecha_inicio': request.GET.get('fecha_inicio', None), 'fecha_fin': request.GET.get('fecha_fin', None),
@@ -412,74 +389,6 @@ def obtener_citas_operaciones(request):
     return HttpResponse(
         json.dumps({'programadas': data['programadas'], 'pendientes': data['pendientes'], 'lista': data['lista']}),
         content_type='application/json')
-
-
-def programar_gestion(request):
-    obj_json = {}
-    gestion = Gestion.objects.get(id=request.POST.get('id', None))
-    try:
-        gestion.fecha_asignacion = timezone.make_aware(
-            datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%Y-%m-%dT%H:%M'),
-            timezone.get_default_timezone())
-    except:
-        try:
-            gestion.fecha_asignacion = timezone.make_aware(
-                datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%Y/%m/%d %H:%M'),
-                timezone.get_default_timezone())
-        except:
-            gestion.fecha_asignacion = timezone.make_aware(
-                datetime.strptime(request.POST.get('fecha_asignacion', None)[0:16], '%d/%m/%Y %H:%M'),
-                timezone.get_default_timezone())
-        ######################################################
-    retenida = request.POST.get('retenida', None)
-    if retenida == 'on':
-        gestion.retenida = True
-    else:
-        gestion.retenida = False
-
-    id_usuario = request.POST.get('user', None)
-    id_armador = request.POST.get('armador', None)
-
-    if id_armador:
-        gestion.armador = User.objects.get(pk=int(id_armador))
-    if id_usuario:
-        gestion.user = User.objects.get(pk=int(id_usuario))
-
-    realizada = request.POST.get('realizada', None)
-    gestion.descuento = int(request.POST.get('descuento', '0'))
-
-    fecha_recepcion = request.POST.get('fecha_recepcion', None)
-    if fecha_recepcion:
-        gestion.fecha_recepcion = timezone.make_aware(
-            datetime.strptime(fecha_recepcion[0:16],
-                              '%d/%m/%Y %H:%M'), timezone.get_default_timezone())
-    fin_gestion = request.POST.get('fin_gestion', None)
-    notify = request.POST.get('notify', None)
-    if fin_gestion:
-        gestion.fin_gestion = Gestion_Fin.objects.get(id=int(fin_gestion))
-    uso_gestion = request.POST.get('uso_gestion', None)
-    if uso_gestion:
-        gestion.uso_gestion = Gestion_Uso.objects.get(id=int(uso_gestion))
-    valor = request.POST.get('valor', '')
-    if valor != '':
-        gestion.valor = valor
-    if realizada == 'on':
-        gestion.realizada = True
-    else:
-        gestion.realizada = False
-    try:
-        gestion.ficha_inspeccion = request.FILES['ficha_inspeccion']
-    except:
-        pass
-    gestion.save()
-
-    if notify:
-        gestion.notificar()
-    obj_json['object'] = gestion.to_json()
-    obj_json['code'] = 200
-    obj_json['result'] = "Gestion actualizada exitosamente"
-    data = json.dumps(obj_json)
-    return HttpResponse(data, content_type='application/json')
 
 
 def reporte(request):
@@ -539,11 +448,3 @@ class control(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(control, self).get_context_data(**kwargs)
         return super(control, self).render_to_response(context)
-
-
-def anular_cancelacion(request):
-    g = Gestion.objects.get(id=request.GET.get('documento', ''))
-    g.cancelada = False
-    g.fecha_cancelacion = None
-    g.save()
-    return render(request, 'dtracking/anulacion.html')

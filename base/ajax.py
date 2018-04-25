@@ -54,9 +54,7 @@ def object_update(request):
     data = request.POST.get('data', None)
     if data:
         for k, v in json.loads(str(data).replace("'", "\"")).items():
-            print k, v
             setattr(instance, k, v)
-            print getattr(instance, k, "Nada")
         instance.save()
     return HttpResponse(json.dumps({'result': result, 'intance': instance.to_json()}, cls=Codec),
                         content_type='application/json')

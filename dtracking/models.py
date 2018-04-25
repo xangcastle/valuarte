@@ -18,6 +18,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.db.models import Sum
 from django.conf import settings
+from django.contrib import messages
 
 
 def add_business_days(origin_date, add_days):
@@ -632,17 +633,26 @@ class Gestion(models.Model):
             return self.user.username
         else:
             return None
-    def cancelarGestion(self):
-        estado = self.get_status_gestion()
+
+    def anular(self):
+        estado = self.status_gestion
+        print estado
         if estado == 'RECEPCIONADO' or estado =='ASIGNADO A EVALUADOR' or estado =='CONTROL DE CALIDAD':
+          print "cancelando..."
           self.cancelada =True
           self.fecha_cancelacion = datetime.now()
-          self.status_gestion =ESTADOS_LOG_GESTION[6][0]
           self.valor = 0.0
           self.save()
           return {"result": "Cancelada Con Exito","code":200}
         else :
           return {"result": "Nose debe cancelar", "code":500}
+
+    def restablecer(self, request):
+        self.cancelada = False
+        self.fecha_cancelacion = None
+        self.save()
+        messages.info(request, "Avaluo restablecido con exito!")
+
     @staticmethod
     def datosOperacion(context):
         gestiones = Gestion.objects.all()

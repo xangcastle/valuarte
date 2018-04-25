@@ -188,19 +188,6 @@
             }
         };
 
-        var cargar_municipios = function () {
-            $.ajax('/dtracking/get_municipios/',
-                {
-                    type: 'POST',
-                    data: {'departamento': $(this).val()},
-                    success: function (result) {
-                        $('#id_municipio').empty();
-                        $.each(result, function (i, o) {
-                            $('#id_municipio').append("<option value=" + o.id + ">" + o.name + "</option>");
-                        });
-                    }
-                });
-        };
         var cargar_usos_gestion = function () {
             $.ajax('/dtracking/get_usos_gestion/',
                 {
@@ -219,6 +206,8 @@
                 $(this).data('url'),
                 $(this).data('name'),
                 "width=900mm, height=700mm,  status=no, menubar=no, location=no");
+
+            e.preventDefault();
         };
 
         var gestion_to_event = function (gestion, update) {
@@ -269,7 +258,7 @@
                     $("#div_id_fecha_recepcion").css("display", "none");
                     $("#div_id_armador").css("display", "none");
 
-                    modal.find('input[type=submit]').after('<button  gestion="' + $("#ges_aval_id").val() + '" class="btn btn-danger cancelar" style="float:left;width:40%">Cancelar</button>');
+                    modal.find('input[type=submit]').after('<button gestion="' + id + '" class="btn btn-danger cancelar" style="float:left;width:40%">Cancelar</button>');
 
                     tools = modal.find("#extra-tools").empty();
                     tools.append('<a href="/dtracking/gestion_adjuntos/?pk=' + id + '"s target="_blank">Drive</a>');
@@ -348,24 +337,24 @@
                 }
             });
         };
-        var cancelEvent = function () {
+        var cancelEvent = function (e) {
             var id = $(this).attr('gestion');
             if (id != "" && id != undefined) {
                 var r = confirm("Desea Cancelar este Avalúo!");
                 if (r == true) {
-                    $.ajax("/admin/ajax/object_execute/", {
+                    $.ajax("{% url 'ajax_objectExecute' %}", {
                         method: "post",
-                        data: {app_label: "dtracking", model: "gestion", id: id, method: "cancelarGestion"},
+                        data: {app_label: "dtracking", model: "gestion", id: id, method: "anular"},
                         success: function (result) {
-                            //alert(result.result.result);
-                            alert('event calendar')
+                            redrawEvent(id);
                         }
                     })
                 }
             }
-
+            e.preventDefault();
         };
         var redrawEvent = function (gestion) {
+            $("#myModal").modal('hide');
             var events = $('#calender').fullCalendar('clientEvents');
             $("#event-" + gestion.id).remove();
             $.each(events, function (i, e) {
@@ -439,7 +428,73 @@
             });
         };
 
-        function GenerateCalender() {
+        var onclosemodal = function () {
+            var id = $(this).find('input[name="id"]').val();
+            if (id != undefined && id != "") {
+                $.ajax('/admin/ajax/get_object/', {
+                    method: "POST",
+                    data: {app_label: 'dtracking', model: 'gestion', id: id},
+                    success: function (gestion) {
+                        redrawEvent(gestion);
+                    }
+                });
+            }
+        }
+        $(document).on("submit", ".form_entrada", function (e) {
+            var btn_form;
+            e.preventDefault();
+            var formu = $(this);
+            btn_form = formu.find('input[type=submit]');
+            var url = formu.attr('action');
+            var formData = new FormData($(formu)[0]);
+            var element = this;
+            btn_form.prop("disabled", true);
+            $.ajax({
+                type: "POST",
+                url: url,
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (e) {
+                    btn_form.prop("disabled", false);
+                    if (typeof(e.error) != "undefined" && e.error != "")
+                        new PNotify({
+                            title: 'Error!',
+                            text: e.error,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    else {
+                        new PNotify({
+                            title: 'Acción Exitosa !',
+                            text: e.result,
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    if (typeof(e.function) != "undefined") {
+                        var name = e.function;
+                        var param = "";
+                        if (typeof(e.param) != "undefined")
+                            param = e.param;
+                        window[name](e, element, param);
+                    }
+                    redrawEvent(e.object);
+
+                }, error: function (data) {
+                    btn_form.prop("disabled", false);
+                    new PNotify({
+                        title: 'Error!',
+                        text: data.responseText,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+            });
+        });
+
+        $(document).ready(function () {
 
             $('#calender').fullCalendar('destroy');
             var calendar = $('#calender').fullCalendar({
@@ -514,83 +569,6 @@
                     });
                 }
             });
-
-
-        }
-
-
-
-
-        var onclosemodal = function () {
-            var id = $(this).find('input[name="id"]').val();
-            if (id != undefined && id != "") {
-                $.ajax('/admin/ajax/get_object/', {
-                    method: "POST",
-                    data: {app_label: 'dtracking', model: 'gestion', id: id},
-                    success: function (gestion) {
-                        redrawEvent(gestion);
-                    }
-                });
-            }
-        }
-        var btn_form;
-        $(document).on("submit", ".form_entrada", function (e) {
-            e.preventDefault();
-            var formu = $(this);
-            btn_form = formu.find('input[type=submit]');
-            var url = formu.attr('action');
-            var formData = new FormData($(formu)[0]);
-            var element = this;
-            btn_form.prop("disabled", true);
-            $.ajax({
-                type: "POST",
-                url: url,
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function (e) {
-                    btn_form.prop("disabled", false);
-                    if (typeof(e.error) != "undefined" && e.error != "")
-                        new PNotify({
-                            title: 'Error!',
-                            text: e.error,
-                            type: 'error',
-                            styling: 'bootstrap3'
-                        });
-                    else {
-                        new PNotify({
-                            title: 'Acción Exitosa !',
-                            text: e.result,
-                            type: 'success',
-                            styling: 'bootstrap3'
-                        });
-                        $("#myModal").modal('hide');
-                    }
-                    if (typeof(e.function) != "undefined") {
-                        var name = e.function;
-                        var param = "";
-                        if (typeof(e.param) != "undefined")
-                            param = e.param;
-                        window[name](e, element, param);
-                    }
-                    redrawEvent(e.object);
-
-                }, error: function (data) {
-                    btn_form.prop("disabled", false);
-                    new PNotify({
-                        title: 'Error!',
-                        text: data.responseText,
-                        type: 'error',
-                        styling: 'bootstrap3'
-                    });
-                }
-            });
-        });
-
-        $(document).ready(function () {
-
-            GenerateCalender();
 
             $('#new-event').click(newEvent);
 

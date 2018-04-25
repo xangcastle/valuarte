@@ -35,13 +35,10 @@
                     </a>
                 </li>
                 {% if  original.cancelada %}
-                <li>
-                    <a id="anular" href="#" class="addlink show_atachments"
-                       data-url="{% url "anular_cancelacion" %}?documento={{ original.pk }}"
-                       data-name="Anular cancelación">
-                        Anular cancelación
-                    </a>
-                </li>
+                    <li><a class="object-execute" data-method="restablecer"
+                           data-app-label="{{ opts.app_label }}"
+                           data-model-name="{{ opts.model_name }}"
+                           data-id="{{ original.id }}">Restablecer</a></li>
                 {% endif %}
             {% endif %}
             {{ block.super }}
@@ -164,6 +161,22 @@
                 };
 
                 $('.show_atachments').on('click', atachments_info);
+
+                var execute = function () {
+                    $.ajax('{% url 'ajax_objectExecute' %}', {
+                        method: 'post',
+                        data: {
+                            app_label: $(this).data('app-label'),
+                            model: $(this).data('model-name'),
+                            id: $(this).data('id'),
+                            method: $(this).data('method')
+                        },
+                        success: function (o) {
+                            location.reload();
+                        }
+                    })
+                }
+                $(".object-execute").on("click", execute);
 
             });
         })(grp.jQuery)

@@ -53,10 +53,6 @@ urlpatterns = [
         name='generar_asignacion'),
     url(r'^peritaje/', peritaje.as_view(),
         name='peritaje'),
-    url(r'^obtenercitasperitaje/', obtener_citas_peritaje,
-        name='obtenercitasperitaje'),
-    url(r'^programar_gestion/', programar_gestion,
-        name='programar_gestion'),
     url(r'^reporte/', reporte,
         name='reporte'),
     url(r'^operaciones/', operaciones.as_view(),
@@ -67,6 +63,4 @@ urlpatterns = [
         name='gerencia'),
     url(r'^obtenercitasoperaciones/', obtener_citas_operaciones,
             name='obtenercitasoperaciones'),
-    url(r'^anular_cancelacion/', anular_cancelacion,
-            name='anular_cancelacion'),
 ]
