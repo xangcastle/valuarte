@@ -66,7 +66,8 @@ def gestion_borrar_adjunto(request):
     jresponse = {}
     a = Archivo.objects.filter(id=request.POST.get("id"))
     if a:
-        a.delete()
+        for ar in  a :
+            ar.delete()
         jresponse['mensaje'] = "OK"
         jresponse['code'] = 200
     else:
