@@ -44,8 +44,11 @@ class gestion_adjuntos(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(gestion_adjuntos, self).get_context_data(**kwargs)
         pk_gestion = request.POST.get("pk_gestion", None)
-        archivo = request.FILES['archivo']
-        if pk_gestion:
+        archivo= None
+        if request.FILES :
+            archivo = request.FILES['archivo']
+
+        if pk_gestion and archivo:
             gestion = Gestion.objects.get(pk=pk_gestion)
             a = Archivo.objects.create(gestion=gestion,
                                        variable="Documento Adjunto de Gestion")
