@@ -14,11 +14,6 @@
 
 {% block content %}
 
-    <style>
-        .boton {
-            padding: 10px;
-        }
-    </style>
     <div class="row">
         <div class="col-md-3 col-xs-3 col-sm-3">
             <div>
@@ -111,6 +106,15 @@
                     }
                 });
         };
+        var cotizar = function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            window.open(
+                $(this).data('url'),
+                $(this).data('name'),
+                "width=900mm, height=700mm,  status=no, menubar=no, location=no");
+
+        };
 
         var gestion_to_event = function (gestion, update) {
             var update = update || true;
@@ -142,44 +146,22 @@
                 }
             });
         };
-
-        var createDraft = function (v) {
-            var row = '<li class="grp-row fc-draggable" id ="event-' + v.id + '">' +
-                '<a href="/admin/dtracking/gestion/' + v.id + '/change/">' + v.barra + '</a>' +
-                '<img src="' + v.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
-                '<img src="' + v.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
-                '<span class="grp-font-color-quiet destinatario">' + v.destinatario + '</span>' +
-                '<span class="grp-font-color-quiet telefono">' + v.telefono + '</span>' +
-                '<span class="grp-font-color-quiet direccion">' + v.direccion + '</span>' +
-                '<span class="grp-font-color-quiet perito">' + v.perito + '</span>' +
-                '<span class="grp-font-color-quiet armador">' + v.armador + '</span>' +
-                '<span class="btn btn-sm btn-info cotizar" ' +
-                'data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion=' + v.id +
-                '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cotizar</span><span class="btn btn-sm btn-danger cancelar" gestion="' + v.id + '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cancelar</span></li>';
-
-            row = $(row).data('event', v);
-            row = $(row).draggable({
-                zIndex: 999,
-                revert: true,
-                revertDuration: 0
-            });
-            return row;
-        };
-        var editDraft = function () {
-            var id = $(this).data('event').id;
-            console.log($(this).data());
-            var params = "fields=prearmado-observaciones-armador-retenida&app_label=dtracking&model=gestion&id=" + id;
-            modal = $("#myModal");
-            tools = modal.find("#extra-tools").empty();
-            body = modal.find(".modal-body").empty();
-            $.ajax("/admin/ajax/get_html_form/?" + params, {
-                method: "GET",
-                success: function (response) {
-                    body.html(response);
-                    modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
-                    $(".form_entrada").attr('enctype', "multipart/form-data");
+        var cancelEvent = function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var id = $(this).attr('gestion');
+            if (id != "" && id != undefined) {
+                var r = confirm("¿Desea Cancelar este Avalúo?");
+                if (r == true) {
+                    $.ajax("{% url 'ajax_objectExecute' %}", {
+                        method: "post",
+                        data: {app_label: "dtracking", model: "gestion", id: id, method: "anular"},
+                        success: function (result) {
+                            redrawEvent(id);
+                        }
+                    })
                 }
-            });
+            }
         };
         var redrawEvent = function (gestion) {
             $("#myModal").modal('hide');
@@ -197,6 +179,41 @@
             } else {
                 console.log(gestion);
             }
+        };
+
+        var createDraft = function (v) {
+            var row = '<li class="grp-row fc-draggable" id ="event-' + v.id + '">' +
+                '<a href="/admin/dtracking/gestion/' + v.id + '/change/">' + v.barra + '</a>' +
+                '<img src="' + v.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
+                '<img src="' + v.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
+                '<span class="grp-font-color-quiet destinatario">' + v.destinatario + '</span>' +
+                '<span class="grp-font-color-quiet telefono">' + v.telefono + '</span>' +
+                '<span class="grp-font-color-quiet direccion">' + v.direccion + '</span>' +
+                '<span class="grp-font-color-quiet perito"> Perito: ' + v.perito + '</span>' +
+                '<span class="grp-font-color-quiet armador"> Armador: ' + v.armador + '</span>' +
+                '<span class="grp-font-color-quiet armador"> Fecha Levantamiento: ' + v.fecha_recepcion + '</span>' +
+                '<span class="btn btn-sm btn-info cotizar" ' +
+                'data-name="proforma" data-url="/dtracking/gestion_proforma/?gestion=' + v.id +
+                '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cotizar</span><span class="btn btn-sm btn-danger cancelar" gestion="' + v.id + '" style="position: relative;float: right;z-index: 999;cursor: context-menu;"> Cancelar</span></li>';
+
+            row = $(row).data('event', v);
+            return row;
+        };
+        var editDraft = function () {
+            var id = $(this).data('event').id;
+            console.log($(this).data());
+            var params = "fields=prearmado-observaciones-armador-retenida&app_label=dtracking&model=gestion&id=" + id;
+            modal = $("#myModal");
+            tools = modal.find("#extra-tools").empty();
+            body = modal.find(".modal-body").empty();
+            $.ajax("/admin/ajax/get_html_form/?" + params, {
+                method: "GET",
+                success: function (response) {
+                    body.html(response);
+                    modal.modal({backdrop: false, keyboard: false}, 'toggle', 'show');
+                    $(".form_entrada").attr('enctype', "multipart/form-data");
+                }
+            });
         };
 
         function GenerateCalender() {
@@ -334,6 +351,8 @@
             $("#nav-search").click(function () {
                 $(this).select();
             });
+            $("body").on('click', '.cotizar', cotizar);
+            $("body").on('click', '.cancelar', cancelEvent);
             $("#external-events-listing").on("click", ".fc-draggable", editDraft);
         });
 

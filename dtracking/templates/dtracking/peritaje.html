@@ -201,12 +201,13 @@
                 });
         };
         var cotizar = function (e) {
+            e.stopPropagation();
+            e.preventDefault();
             window.open(
                 $(this).data('url'),
                 $(this).data('name'),
                 "width=900mm, height=700mm,  status=no, menubar=no, location=no");
 
-            e.preventDefault();
         };
 
         var gestion_to_event = function (gestion, update) {
@@ -337,9 +338,11 @@
             });
         };
         var cancelEvent = function (e) {
+            e.stopPropagation();
+            e.preventDefault();
             var id = $(this).attr('gestion');
             if (id != "" && id != undefined) {
-                var r = confirm("Desea Cancelar este Avalúo!");
+                var r = confirm("¿Desea Cancelar este Avalúo?");
                 if (r == true) {
                     $.ajax("{% url 'ajax_objectExecute' %}", {
                         method: "post",
@@ -350,7 +353,6 @@
                     })
                 }
             }
-            e.preventDefault();
         };
         var redrawEvent = function (gestion) {
             $("#myModal").modal('hide');
@@ -371,7 +373,7 @@
         };
 
         var createDraft = function (v) {
-            var row = '<li class="grp-row fc-draggable" id ="event-' + v.id + '">' +
+            var row = '<li class="grp-row fc-draggable" id="event-' + v.id + '">' +
                 '<a href="/admin/dtracking/gestion/' + v.id + '/change/">' + v.barra + '</a>' +
                 '<img src="' + v.strella + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
                 '<img src="' + v.retenida + '" height="15" width="15" style="float:right;padding-right=15px;margin-top: -6px;">' +
@@ -583,22 +585,16 @@
 
             $('#new-event').click(newEvent);
 
-            $("body").on('click', '.fc-draggable', editDraft);
-
             $("body").on('click', '.cotizar', cotizar);
             $("body").on('click', '.cancelar', cancelEvent);
+
+            $("body").on('click', '.fc-draggable', editDraft);
 
 
             $("#nav-search").click(function () {
                 $(this).select();
             });
             $('#myModal').on('hide.bs.modal', onclosemodal);
-
-
-            var have_info = function () {
-                window.open($(this).data('des'), "ExamenPrevio", "width=900, height=900,  status=no, scrollbars=no, toolbars=no, menubar=no, location=no");
-            }
-            $('.have-info').on('click', have_info);
 
             $("#peritos").on('change', generateCalendar);
 

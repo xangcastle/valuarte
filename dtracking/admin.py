@@ -41,7 +41,7 @@ class gestion_admin(ImportExportModelAdmin):
                     'banco_ejecutivo', 'user', 'armador', 'status_gestion', 'dias_retrazo', 'fecha_vence', 'fecha_facturacion','cancelada','fecha_cancelacion')
     list_filter = ('banco', 'tipo_gestion', 'categoria', 'user', 'armador', 'status_gestion','cancelada')
     search_fields = ('destinatario', 'departamento__name',
-    'municipio__name', 'barrio__name', 'zona__name')
+    'municipio__name', 'barrio__name', 'zona__name', 'barra')
 
     fieldsets = (
         ('Informacion del cliente', {
