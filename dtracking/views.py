@@ -18,7 +18,7 @@ from datetime import timedelta
 from datetime import datetime
 from email.utils import parsedate_tz
 from django.utils import timezone
-
+import os
 
 class barrios_huerfanos(TemplateView):
     template_name = "dtracking/barrios_huerfanos.html"
@@ -64,7 +64,7 @@ class gestion_adjuntos(TemplateView):
 @csrf_exempt
 def gestion_borrar_adjunto(request):
     jresponse = {}
-    a = Archivo.objects.filter(id=request.POST.get("id"))
+    a = Archivo.objects.filter(id=request.GET.get("id"))
     if a:
         for ar in  a :
              if os.path.isfile(ar.archivo.path):
