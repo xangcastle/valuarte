@@ -64,7 +64,7 @@ class gestion_adjuntos(TemplateView):
 @csrf_exempt
 def gestion_borrar_adjunto(request):
     jresponse = {}
-    a = Archivo.objects.filter(id=request.GET.get("id"))
+    a = Archivo.objects.filter(id=request.POST.get("id"))
     if a:
         for ar in  a :
              if os.path.isfile(ar.archivo.path):
