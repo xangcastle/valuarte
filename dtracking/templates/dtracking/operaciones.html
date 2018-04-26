@@ -201,8 +201,8 @@
             return row;
         };
         var editDraft = function (e) {
-            if (e.target !== this)
-                return 
+            if ($(e.target).hasClass('btn-danger') || $(e.target).hasClass('btn-info'))
+                return
             var id = $(this).data('event').id;
             console.log($(this).data());
             var params = "fields=prearmado-observaciones-armador-retenida&app_label=dtracking&model=gestion&id=" + id;
