@@ -120,6 +120,7 @@
             var update = update || true;
             var event = gestion;
             event.eventID = gestion.id;
+            event.title = gestion.destinatario;
             event.start = moment(gestion.inicio);
             event.end = moment(gestion.fin);
             event.textColor = 'white';
