@@ -17,10 +17,9 @@ class data_Node(template.Node):
 
     def render(self, context):
         data = []
-        # gestiones = Gestion.objects.filter(
-        #     fecha__month=datetime.now().month,
-        #     fecha__year=datetime.now().year)
-        gestiones = Gestion.objects.all()
+        hoy = timezone.now()
+        gestiones = Gestion.objects.filter(fecha__year=hoy.year)
+        #gestiones = Gestion.objects.all()
         tipos = TipoGestion.objects.all()
 
         def get_total(gestions, tipo):
