@@ -670,8 +670,7 @@ class Gestion(models.Model):
 
         recepcionadas_de_hoy = recepcionadas.filter(fecha__year=today.year, fecha__month=today.month,
                                                     fecha__day=today.day).count()
-        recepcionadas_48h = recepcionadas.filter(fecha__year=after_tomorrow.year, fecha__month=after_tomorrow.month,
-                                                 fecha__day=after_tomorrow.day).count()
+        recepcionadas_48h = recepcionadas.filter(fecha__lte=after_tomorrow).count()
 
         incumplidas = []
         programadas = []
