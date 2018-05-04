@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'dbbackup',
     'dtracking',
+    'facturacion',
     'background_task',
     'base',
     'geoposition',

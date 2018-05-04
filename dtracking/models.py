@@ -310,8 +310,10 @@ class Gestion_Uso(Entidad):
 class Gestion(models.Model):
     numero            = models.CharField(max_length=65, null=True, verbose_name="Número Registro",
                                          blank=True, help_text="Numero registro catastro, para el caso de vehiculos el número de chasis")
+
     factura           = models.BooleanField(default=False,verbose_name="Factura")
     fecha_facturacion = models.DateField(null=True, blank=True)
+
     cancelada         = models.BooleanField(default=False,verbose_name="Cancelada")
     fecha_cancelacion = models.DateField(null=True, blank=True)
     fecha = models.DateField(null=True, blank=True,
@@ -402,6 +404,14 @@ class Gestion(models.Model):
             return {"result": "Debe asignar una fecha", "code":500}
         elif self.fecha_facturacion:
             return {"result": "La fecha ya fue asignada", "code":500}
+
+    def telefonos(self):
+        l = []
+        if self.telefono:
+            l.append(self.telefono)
+        if self.contacto_telefono:
+            l.append(self.contacto_telefono)
+        return ", ".join(l)
 
 
 
