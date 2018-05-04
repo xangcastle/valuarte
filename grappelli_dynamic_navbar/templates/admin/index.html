@@ -170,469 +170,648 @@
 
     </style>
     {% get_totales as t %}
-
     <div class="row">
-    <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
 
-        <div class="row">
-            <div class="col-lg-6 col-xs-6">
-                <div class="small-box bg-teal">
-                    <div class="inner">
-                        <h3 id="recepcion-panel" style="cursor: no-drop;">Recepción</h3>
-                        <h6><i class="ion ion-email-unread"> </i> Registros
-                            Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
-                        <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
-                        <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
+            <div class="row">
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-teal">
+                        <div class="inner">
+                            <h3 id="recepcion-panel" style="cursor: no-drop;">Recepción</h3>
+                            <h6><i class="ion ion-email-unread"> </i> Registros
+                                Nuevos<strong> {{ t.recepcion.de_hoy }}</strong></h6>
+                            <h6><i class="ion ion-help"> </i> Sin Asignar <strong> {{ t.recepcion.total }}</strong></h6>
+                            <h6><i class="ion ion-clock"> </i> + 48H <strong> {{ t.recepcion.a48h }}</strong></h6>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-happy">{{ t.recepcion.total }}</i>
+                        </div>
+                        <a title="Reporte de Recepción" href="#"
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=0"
+                           data-name="Reporte de Recepción">Mas info
+                        </a>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-happy">{{ t.recepcion.total }}</i>
-                    </div>
-                    <a title="Reporte de Recepción" href="#"
-                       class="small-box-footer show_info"
-                       data-url="{% url 'reporte' %}?status=0"
-                       data-name="Reporte de Recepción">Mas info
-                    </a>
                 </div>
-            </div>
-            <div class="clearfix visible-sm-block"></div>
+                <div class="clearfix visible-sm-block"></div>
 
-            <div class="col-lg-6 col-xs-6">
-                <div class="small-box bg-green">
-                    <div class="inner">
-                        <h3 id="logistica-panel" style="cursor: no-drop;">Logística</h3>
-                        <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
-                            <strong> {{ t.logistica.para_hoy }}</strong></h6>
-                        <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
-                            <strong> {{ t.logistica.incumplidas }}</strong></h6>
-                        <h6><i class="ion ion-clipboard"> </i> En Agenda:
-                            <strong> {{ t.logistica.programadas }}</strong></h6>
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3 id="logistica-panel" style="cursor: no-drop;">Logística</h3>
+                            <h6><i class="ion ion-android-notifications"> </i> Cítas de hoy:
+                                <strong> {{ t.logistica.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-android-cancel"> </i> Cítas Incumplidas:
+                                <strong> {{ t.logistica.incumplidas }}</strong></h6>
+                            <h6><i class="ion ion-clipboard"> </i> En Agenda:
+                                <strong> {{ t.logistica.programadas }}</strong></h6>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-car">{{ t.logistica.total }}</i>
+                        </div>
+                        <a title="Reporte de Logística" href="#"
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=1"
+                           data-name="Reporte de Lógistica">Mas info
+                        </a>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-android-car">{{ t.logistica.total }}</i>
-                    </div>
-                    <a title="Reporte de Logística" href="#"
-                       class="small-box-footer show_info"
-                       data-url="{% url 'reporte' %}?status=1"
-                       data-name="Reporte de Lógistica">Mas info
-                    </a>
                 </div>
+                <div class="clearfix visible-sm-block"></div>
+
             </div>
-            <div class="clearfix visible-sm-block"></div>
+
+            <div class="row">
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3 id="operaciones-panel" style="cursor: no-drop;">Operaciones</h3>
+                            <h6><i class="ion ion-android-notifications"> </i> Para hoy:
+                                <strong> {{ t.operaciones.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
+                                <strong> {{ t.operaciones.vencidas }}</strong></h6>
+                            <h6><i class="ion ion-ios-time"> </i> En tiempo:
+                                <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
+                        </div>
+                        <a title="Reporte de Operaciones" href="#"
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=2"
+                           data-name="Reporte de Operaciones">Mas info
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-purple" url="{% url 'control' %}">
+                        <div class="inner">
+                            <h3 id="calidad-panel" style="cursor: no-drop;">Control Calidad</h3>
+                            <h6><i class="ion ion-android-notifications"> </i> Para hoy:
+                                <strong> {{ t.control.para_hoy }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
+                                <strong> {{ t.control.vencidas }}</strong></h6>
+                            <h6><i class="ion ion-ios-time"> </i> En tiempo:
+                                <strong> {{ t.control.en_tiempo }}</strong></h6>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-contact">{{ t.control.total }}</i>
+                        </div>
+
+                        <a title="Reporte de Gerencia" href="#"
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=4"
+                           data-name="Reporte de Gerencia">Mas info
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-blue" url="{% url 'gerencia' %}">
+                        <div class="inner">
+                            <h3 id="gerencia-panel" style="cursor: no-drop;">Gerencia</h3>
+                            <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
+                            <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
+                                <strong> {{ t.gerencia.total }}</strong></h6>
+                            <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
+                                $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
+                        </div>
+
+                        <a title="Reporte de Gerencia" href="#"
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=4"
+                           data-name="Reporte de Gerencia">Mas info
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+                <div class="col-lg-6 col-xs-6">
+                    <div class="small-box bg-yellow" url="#">
+                        <div class="inner">
+                            <h3 id="gerencia-panel" style="cursor: no-drop;">Facturación</h3>
+                            <h6><i class="ion "> </i>
+                                <strong> </strong></h6>
+                            <h6><i class="ion ion-arrow-shrink"> </i> Facturado:
+                                <strong>$ </strong></h6>
+                            <h6><i class="ion ion-arrow-graph-up-right"> </i> Recuperado:
+                                <strong>$ </strong></h6>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-social-usd"> </i>
+                        </div>
+
+                        <a title="Reporte de Gerencia" href="#"
+                           class="small-box-footer show_info"
+                           data-url="{% url 'reporte' %}?status=4"
+                           data-name="Reporte de Gerencia">Mas info
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+
+            </div>
 
         </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#logistica-panel").on("click", function () {
+                    window.location.href = "{% url 'peritaje' %}";
+                });
+                $("#operaciones-panel").on("click", function () {
+                    window.location.href = "{% url 'operaciones' %}";
+                });
+                $("#calidad-panel").on("click", function () {
+                    window.location.href = "{% url 'control' %}";
+                });
+                $("#gerencia-panel").on("click", function () {
+                    window.location.href = "{% url 'gerencia' %}";
+                });
+            });
+        </script>
 
-        <div class="row">
 
-            <div class="col-lg-6 col-xs-6">
-                <div class="small-box bg-red">
-                    <div class="inner">
-                        <h3 id="operaciones-panel" style="cursor: no-drop;">Operaciones</h3>
-                        <h6><i class="ion ion-android-notifications"> </i> Para hoy:
-                            <strong> {{ t.operaciones.para_hoy }}</strong></h6>
-                        <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
-                            <strong> {{ t.operaciones.vencidas }}</strong></h6>
-                        <h6><i class="ion ion-ios-time"> </i> En tiempo:
-                            <strong> {{ t.operaciones.en_tiempo }}</strong></h6>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-person-stalker">{{ t.operaciones.total }}</i>
-                    </div>
-                    <a title="Reporte de Operaciones" href="#"
-                       class="small-box-footer show_info"
-                       data-url="{% url 'reporte' %}?status=2"
-                       data-name="Reporte de Operaciones">Mas info
-                    </a>
+        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                    <div id="barras"></div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <div id="pie"></div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                    <div id="tabla"></div>
                 </div>
             </div>
-            <div class="clearfix visible-sm-block"></div>
-
-            <div class="col-lg-6 col-xs-6">
-                <div class="small-box bg-purple" url="{% url 'control' %}">
-                    <div class="inner">
-                        <h3 id="calidad-panel" style="cursor: no-drop;">Control Calidad</h3>
-                        <h6><i class="ion ion-android-notifications"> </i> Para hoy:
-                            <strong> {{ t.control.para_hoy }}</strong></h6>
-                        <h6><i class="ion ion-arrow-graph-down-left"> </i> Atrasadas:
-                            <strong> {{ t.control.vencidas }}</strong></h6>
-                        <h6><i class="ion ion-ios-time"> </i> En tiempo:
-                            <strong> {{ t.control.en_tiempo }}</strong></h6>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-android-contact">{{ t.control.total }}</i>
-                    </div>
-
-                    <a title="Reporte de Gerencia" href="#"
-                       class="small-box-footer show_info"
-                       data-url="{% url 'reporte' %}?status=4"
-                       data-name="Reporte de Gerencia">Mas info
-                    </a>
-                </div>
-            </div>
-            <div class="clearfix visible-sm-block"></div>
-
         </div>
+        <script type="text/javascript">
+            {% get_data as data %}
+            {% get_tipos_gestion as tipos %}
+            var data = [
+                {% for d in data %}
+                    {
+                        status: '{{ d.status }}', total: {{ d.total }}, tipos: {
+                        {% for t in d.tipos %}
+                            "{{ t.tipo }}": {{ t.total }},
+                        {% endfor %}
+                    }
+                    },
+                {% endfor %}
+            ];
 
-        <div class="row">
+            var tipos = [
+                {% for t in tipos %}
+                    {prefijo: '{{ t.prefijo }}', color: '{{ t.color }}'},
+                {% endfor %}
+            ];
 
-            <div class="col-lg-6 col-xs-6">
-                <div class="small-box bg-blue" url="{% url 'gerencia' %}">
-                    <div class="inner">
-                        <h3 id="gerencia-panel" style="cursor: no-drop;">Gerencia</h3>
-                        <h6><i class="ion ion-edit"> </i> En firma: <strong> {{ t.gerencia.en_firma }}</strong></h6>
-                        <h6><i class="ion ion-arrow-shrink"> </i> Total Avaluos:
-                            <strong> {{ t.gerencia.total }}</strong></h6>
-                        <h6><i class="ion ion-arrow-graph-up-right"> </i> Proyección: <strong>
-                            $ {{ t.gerencia.ventas|intcomma }}</strong></h6>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-android-contact">{{ t.gerencia.en_firma }}</i>
-                    </div>
-
-                    <a title="Reporte de Gerencia" href="#"
-                       class="small-box-footer show_info"
-                       data-url="{% url 'reporte' %}?status=4"
-                       data-name="Reporte de Gerencia">Mas info
-                    </a>
-                </div>
-            </div>
-            <div class="clearfix visible-sm-block"></div>
-
-        </div>
-
-    </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#logistica-panel").on("click", function () {
-                window.location.href = "{% url 'peritaje' %}";
-            });
-            $("#operaciones-panel").on("click", function () {
-                window.location.href = "{% url 'operaciones' %}";
-            });
-            $("#calidad-panel").on("click", function () {
-                window.location.href = "{% url 'control' %}";
-            });
-            $("#gerencia-panel").on("click", function () {
-                window.location.href = "{% url 'gerencia' %}";
-            });
-        });
-    </script>
-
-
-    <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                <div id="barras"></div>
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <div id="pie"></div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <div id="tabla"></div>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
-        {% get_data as data %}
-        {% get_tipos_gestion as tipos %}
-        var data = [
-            {% for d in data %}
-                {
-                    status: '{{ d.status }}', total: {{ d.total }}, tipos: {
-                    {% for t in d.tipos %}
-                        "{{ t.tipo }}": {{ t.total }},
-                    {% endfor %}
-                }
-                },
-            {% endfor %}
-        ];
-
-        var tipos = [
-            {% for t in tipos %}
-                {prefijo: '{{ t.prefijo }}', color: '{{ t.color }}'},
-            {% endfor %}
-        ];
-
-        var por_tipo = tipos.map(function (d) {
-            return {
-                type: d.prefijo,
-                total: d3.sum(data.map(function (t) {
-                    return t.tipos[d.prefijo];
-                })),
-                color: d.color
-            };
-        });
-
-        function dashboard(data) {
-
-            function segColor(c) {
+            var por_tipo = tipos.map(function (d) {
                 return {
-                    "RECEPCIONADO": "#39cccc",
-                    "ASIGNADO A EVALUADOR": "#00a65a",
-                    "LEVANTAMIENTO REALIZADO": "#dd4b39",
-                    "EN REVISION FINAL DE INFORME": "#0073b7",
-                    "CONTROL DE CALIDAD": "#793eb7",
-                    "TERMINADO": "#3730b2",
-                }[c.status];
-            }
+                    type: d.prefijo,
+                    total: d3.sum(data.map(function (t) {
+                        return t.tipos[d.prefijo];
+                    })),
+                    color: d.color
+                };
+            });
 
-            function segText(status) {
-                return {
-                    "RECEPCIONADO": "RECEPCION",
-                    "ASIGNADO A EVALUADOR": "LOGISTICA",
-                    "LEVANTAMIENTO REALIZADO": "OPERACIONES",
-                    "EN REVISION FINAL DE INFORME": "GERENCIA",
-                    "CONTROL DE CALIDAD": "CONTROL DE CALIDAD",
-                    "TERMINADO": "TERMINADO",
-                }[status];
-            }
+            function dashboard(data) {
 
-            function histoGram(fD, id) {
-                var ancho = 500;
-                var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
-                hGDim.w = ancho - hGDim.l - hGDim.r,
-                    hGDim.h = 200 - hGDim.t - hGDim.b;
-
-                //create svg for histogram.
-                var hGsvg = d3.select(id).append("svg")
-                    .attr("width", hGDim.w + hGDim.l + hGDim.r)
-                    .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
-                    .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
-
-                // create function for x-axis mapping.
-                var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
-                    .domain(fD.map(function (d) {
-                        return d.type;
-                    }));
-
-                // Add x-axis to the histogram svg.
-                hGsvg.append("g").attr("class", "x axis")
-                    .attr("transform", "translate(0," + hGDim.h + ")")
-                    .call(d3.svg.axis().scale(x).orient("bottom"));
-
-                // Create function for y-axis map.
-                var y = d3.scale.linear().range([hGDim.h, 0])
-                    .domain([0, d3.max(fD, function (d) {
-                        return d.total;
-                    })]);
-
-                // Create bars for histogram to contain rectangles and freq labels.
-
-                var bars = hGsvg.selectAll(".bar").data(fD).enter()
-                    .append("g").attr("class", "bar");
-
-                //create the rectangles.
-                bars.append("rect")
-                    .attr("x", function (d) {
-                        return x(d.type);
-                    })
-                    .attr("y", function (d) {
-                        return y(d.total);
-                    })
-                    .attr("width", x.rangeBand())
-                    .attr("height", function (d) {
-                        return hGDim.h - y(d.total);
-                    })
-                    .attr('fill', function (d) {
-                        return d.color;
-                    })
-                    .on("mouseover", mouseover)// mouseover is defined below.
-                    .on("mouseout", mouseout);// mouseout is defined below.
-
-                //Create the frequency labels above the rectangles.
-                bars.append("text").text(function (d) {
-                    return d3.format(",")(d.total)
-                })
-                    .attr("x", function (d) {
-                        return x(d.type) + x.rangeBand() / 2;
-                    })
-                    .attr("y", function (d) {
-                        return y(d.total) - 5;
-                    })
-                    .attr("text-anchor", "middle");
-
-                function mouseover(d) {  // utility function to be called on mouseover.
-                    // filter for selected state.
-                    var nD = data.map(function (s) {
-                        return {type: s.status, total: s.tipos[d.type]};
-                    });
-                    // call update functions of pie-chart and legend.
-                    pC.update(nD);
-                    leg.update(nD);
+                function segColor(c) {
+                    return {
+                        "RECEPCIONADO": "#39cccc",
+                        "ASIGNADO A EVALUADOR": "#00a65a",
+                        "LEVANTAMIENTO REALIZADO": "#dd4b39",
+                        "EN REVISION FINAL DE INFORME": "#0073b7",
+                        "CONTROL DE CALIDAD": "#793eb7",
+                        "TERMINADO": "#3730b2",
+                    }[c.status];
                 }
 
-                function mouseout(d) {    // utility function to be called on mouseout.
-                    // reset the pie-chart and legend.
-                    pC.update(data);
-                    leg.update(data);
+                function segText(status) {
+                    return {
+                        "RECEPCIONADO": "RECEPCION",
+                        "ASIGNADO A EVALUADOR": "LOGISTICA",
+                        "LEVANTAMIENTO REALIZADO": "OPERACIONES",
+                        "EN REVISION FINAL DE INFORME": "GERENCIA",
+                        "CONTROL DE CALIDAD": "CONTROL DE CALIDAD",
+                        "TERMINADO": "TERMINADO",
+                    }[status];
                 }
 
-                // create function to update the bars. This will be used by pie-chart.
-                hG.update = function (nD, color) {
-                    color || ( color = undefined );
-                    //y.domain([0, d3.max(nD, function(d) { return d.total; })]);
+                function histoGram(fD, id) {
+                    var ancho = 500;
+                    var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
+                    hGDim.w = ancho - hGDim.l - hGDim.r,
+                        hGDim.h = 200 - hGDim.t - hGDim.b;
 
-                    // Attach the new data to the bars.
-                    var bars = hGsvg.selectAll(".bar").data(nD);
+                    //create svg for histogram.
+                    var hGsvg = d3.select(id).append("svg")
+                        .attr("width", hGDim.w + hGDim.l + hGDim.r)
+                        .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
+                        .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
 
-                    // transition the height and color of rectangles.
-                    bars.select("rect").transition().duration(500)
+                    // create function for x-axis mapping.
+                    var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
+                        .domain(fD.map(function (d) {
+                            return d.type;
+                        }));
+
+                    // Add x-axis to the histogram svg.
+                    hGsvg.append("g").attr("class", "x axis")
+                        .attr("transform", "translate(0," + hGDim.h + ")")
+                        .call(d3.svg.axis().scale(x).orient("bottom"));
+
+                    // Create function for y-axis map.
+                    var y = d3.scale.linear().range([hGDim.h, 0])
+                        .domain([0, d3.max(fD, function (d) {
+                            return d.total;
+                        })]);
+
+                    // Create bars for histogram to contain rectangles and freq labels.
+
+                    var bars = hGsvg.selectAll(".bar").data(fD).enter()
+                        .append("g").attr("class", "bar");
+
+                    //create the rectangles.
+                    bars.append("rect")
+                        .attr("x", function (d) {
+                            return x(d.type);
+                        })
                         .attr("y", function (d) {
                             return y(d.total);
                         })
+                        .attr("width", x.rangeBand())
                         .attr("height", function (d) {
                             return hGDim.h - y(d.total);
                         })
-                        .attr("fill", function (d) {
-                            if (color != undefined) {
-                                return color;
-                            } else {
-                                return d.color;
-                            }
-                        });
+                        .attr('fill', function (d) {
+                            return d.color;
+                        })
+                        .on("mouseover", mouseover)// mouseover is defined below.
+                        .on("mouseout", mouseout);// mouseout is defined below.
 
-                    // transition the frequency labels location and change value.
-                    bars.select("text").transition().duration(500)
-                        .text(function (d) {
-                            return d3.format(",")(d.total)
+                    //Create the frequency labels above the rectangles.
+                    bars.append("text").text(function (d) {
+                        return d3.format(",")(d.total)
+                    })
+                        .attr("x", function (d) {
+                            return x(d.type) + x.rangeBand() / 2;
                         })
                         .attr("y", function (d) {
                             return y(d.total) - 5;
+                        })
+                        .attr("text-anchor", "middle");
+
+                    function mouseover(d) {  // utility function to be called on mouseover.
+                        // filter for selected state.
+                        var nD = data.map(function (s) {
+                            return {type: s.status, total: s.tipos[d.type]};
                         });
+                        // call update functions of pie-chart and legend.
+                        pC.update(nD);
+                        leg.update(nD);
+                    }
+
+                    function mouseout(d) {    // utility function to be called on mouseout.
+                        // reset the pie-chart and legend.
+                        pC.update(data);
+                        leg.update(data);
+                    }
+
+                    // create function to update the bars. This will be used by pie-chart.
+                    hG.update = function (nD, color) {
+                        color || ( color = undefined );
+                        //y.domain([0, d3.max(nD, function(d) { return d.total; })]);
+
+                        // Attach the new data to the bars.
+                        var bars = hGsvg.selectAll(".bar").data(nD);
+
+                        // transition the height and color of rectangles.
+                        bars.select("rect").transition().duration(500)
+                            .attr("y", function (d) {
+                                return y(d.total);
+                            })
+                            .attr("height", function (d) {
+                                return hGDim.h - y(d.total);
+                            })
+                            .attr("fill", function (d) {
+                                if (color != undefined) {
+                                    return color;
+                                } else {
+                                    return d.color;
+                                }
+                            });
+
+                        // transition the frequency labels location and change value.
+                        bars.select("text").transition().duration(500)
+                            .text(function (d) {
+                                return d3.format(",")(d.total)
+                            })
+                            .attr("y", function (d) {
+                                return y(d.total) - 5;
+                            });
+                    }
+                    return hG;
                 }
-                return hG;
+
+
+                function pieChart(pD, id) {
+                    var pC = {}, pieDim = {w: 150, h: 150};
+                    pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
+
+                    // create svg for pie chart.
+                    var piesvg = d3.select(id).append("svg")
+                        .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
+                        .attr("transform", "translate(" + pieDim.w / 2 + "," + pieDim.h / 2 + ")");
+
+                    // create function to draw the arcs of the pie slices.
+                    var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
+
+                    // create a function to compute the pie slice angles.
+                    var pie = d3.layout.pie().sort(null).value(function (d) {
+                        return d.total;
+                    });
+
+                    // Draw the pie slices.
+                    piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
+                        .each(function (d) {
+                            this._current = d;
+                        })
+                        .style("fill", function (d) {
+                            return segColor(d.data);
+                        })
+                        .on("mouseover", mouseover).on("mouseout", mouseout);
+
+                    // create function to update pie-chart. This will be used by histogram.
+                    pC.update = function (nD) {
+                        piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
+                            .attrTween("d", arcTween);
+                    }
+
+                    // Utility function to be called on mouseover a pie slice.
+                    function mouseover(d) {
+                        var x = data.filter(function (f) {
+                            return d.data.status == f.status;
+                        })[0];
+                        var nd = d3.keys(x.tipos).map(function (s) {
+                            return {type: s.prefijo, total: x.tipos[s]};
+                        });
+                        hG.update(nd, segColor(d.data));
+                    }
+
+                    //Utility function to be called on mouseout a pie slice.
+                    function mouseout(d) {
+                        hG.update(por_tipo);
+
+                    }
+
+                    // Animating the pie-slice requiring a custom function which specifies
+                    // how the intermediate paths should be drawn.
+                    function arcTween(a) {
+                        var i = d3.interpolate(this._current, a);
+                        this._current = i(0);
+                        return function (t) {
+                            return arc(i(t));
+                        };
+                    }
+
+                    return pC;
+                }
+
+                function legend(lD, id) {
+                    var leg = {};
+
+                    // create table for legend.
+                    var legend = d3.select(id).append("table").attr('class', 'legend');
+
+                    // create one row per segment.
+                    var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
+
+                    // create the first column for each segment.
+                    tr.append("td").append("svg").attr("width", '15').attr("height", '15').append("rect")
+                        .attr("width", '15').attr("height", '15')
+                        .attr("fill", function (d) {
+                            return segColor(d);
+                        });
+
+                    // create the second column for each segment.
+                    tr.append("td").text(function (d) {
+                        return segText(d.status);
+                    });
+
+                    // create the third column for each segment.
+                    tr.append("td").attr("class", 'legendFreq')
+                        .text(function (d) {
+                            return d3.format(",")(d.total);
+                        });
+
+                    // create the fourth column for each segment.
+                    tr.append("td").attr("class", 'legendPerc')
+                        .text(function (d) {
+                            return getLegend(d, lD);
+                        });
+
+                    // Utility function to be used to update the legend.
+                    leg.update = function (nD) {
+                        // update the data attached to the row elements.
+                        var l = legend.select("tbody").selectAll("tr").data(nD);
+
+                        // update the frequencies.
+                        l.select(".legendFreq").text(function (d) {
+                            return d3.format(",")(d.total);
+                        });
+
+                        // update the percentage column.
+                        l.select(".legendPerc").text(function (d) {
+                            return getLegend(d, nD);
+                        });
+                    }
+
+                    function getLegend(d, aD) { // Utility function to compute percentage.
+                        return d3.format("%")(d.total / d3.sum(aD.map(function (v) {
+                            return v.total;
+                        })));
+                    }
+
+                    return leg;
+                }
+
+
+                var hG = histoGram(por_tipo, '#barras');
+                var pC = pieChart(data, '#pie');
+                var leg = legend(data, '#tabla');
             }
 
+            dashboard(data);
+        </script>
 
-            function pieChart(pD, id) {
-                var pC = {}, pieDim = {w: 150, h: 150};
-                pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
-
-                // create svg for pie chart.
-                var piesvg = d3.select(id).append("svg")
-                    .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
-                    .attr("transform", "translate(" + pieDim.w / 2 + "," + pieDim.h / 2 + ")");
-
-                // create function to draw the arcs of the pie slices.
-                var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
-
-                // create a function to compute the pie slice angles.
-                var pie = d3.layout.pie().sort(null).value(function (d) {
-                    return d.total;
-                });
-
-                // Draw the pie slices.
-                piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
-                    .each(function (d) {
-                        this._current = d;
-                    })
-                    .style("fill", function (d) {
-                        return segColor(d.data);
-                    })
-                    .on("mouseover", mouseover).on("mouseout", mouseout);
-
-                // create function to update pie-chart. This will be used by histogram.
-                pC.update = function (nD) {
-                    piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
-                        .attrTween("d", arcTween);
-                }
-
-                // Utility function to be called on mouseover a pie slice.
-                function mouseover(d) {
-                    var x = data.filter(function (f) {
-                        return d.data.status == f.status;
-                    })[0];
-                    var nd = d3.keys(x.tipos).map(function (s) {
-                        return {type: s.prefijo, total: x.tipos[s]};
-                    });
-                    hG.update(nd, segColor(d.data));
-                }
-
-                //Utility function to be called on mouseout a pie slice.
-                function mouseout(d) {
-                    hG.update(por_tipo);
-
-                }
-
-                // Animating the pie-slice requiring a custom function which specifies
-                // how the intermediate paths should be drawn.
-                function arcTween(a) {
-                    var i = d3.interpolate(this._current, a);
-                    this._current = i(0);
-                    return function (t) {
-                        return arc(i(t));
-                    };
-                }
-
-                return pC;
-            }
-
-            function legend(lD, id) {
-                var leg = {};
-
-                // create table for legend.
-                var legend = d3.select(id).append("table").attr('class', 'legend');
-
-                // create one row per segment.
-                var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
-
-                // create the first column for each segment.
-                tr.append("td").append("svg").attr("width", '15').attr("height", '15').append("rect")
-                    .attr("width", '15').attr("height", '15')
-                    .attr("fill", function (d) {
-                        return segColor(d);
-                    });
-
-                // create the second column for each segment.
-                tr.append("td").text(function (d) {
-                    return segText(d.status);
-                });
-
-                // create the third column for each segment.
-                tr.append("td").attr("class", 'legendFreq')
-                    .text(function (d) {
-                        return d3.format(",")(d.total);
-                    });
-
-                // create the fourth column for each segment.
-                tr.append("td").attr("class", 'legendPerc')
-                    .text(function (d) {
-                        return getLegend(d, lD);
-                    });
-
-                // Utility function to be used to update the legend.
-                leg.update = function (nD) {
-                    // update the data attached to the row elements.
-                    var l = legend.select("tbody").selectAll("tr").data(nD);
-
-                    // update the frequencies.
-                    l.select(".legendFreq").text(function (d) {
-                        return d3.format(",")(d.total);
-                    });
-
-                    // update the percentage column.
-                    l.select(".legendPerc").text(function (d) {
-                        return getLegend(d, nD);
-                    });
-                }
-
-                function getLegend(d, aD) { // Utility function to compute percentage.
-                    return d3.format("%")(d.total / d3.sum(aD.map(function (v) {
-                        return v.total;
-                    })));
-                }
-
-                return leg;
-            }
-
-
-            var hG = histoGram(por_tipo, '#barras');
-            var pC = pieChart(data, '#pie');
-            var leg = legend(data, '#tabla');
-        }
-
-        dashboard(data);
-    </script>
-
-
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title">Facturación y Cobranza</h3>
+                <ul class="list-inline text-right">
+                    <li>
+                        <h5><i class="fa fa-circle m-r-5 text-info"></i>Facturado</h5>
+                    </li>
+                    <li>
+                        <h5><i class="fa fa-circle m-r-5 text-danger"></i>Recuperado</h5>
+                    </li>
+                </ul>
+                <div id="ct-visits" style="height: 480px;">
+                    <div class="chartist-tooltip" style="top: 169.4px; left: 344px;"><span
+                            class="chartist-tooltip-value">7</span></div>
+                    <svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" width="100%" height="100%"
+                         class="ct-chart-line" style="width: 100%; height: 100%;">
+                        <g class="ct-grids">
+                            <line x1="50" x2="50" y1="15" y2="250" class="ct-grid ct-horizontal"></line>
+                            <line x1="169.28571428571428" x2="169.28571428571428" y1="15" y2="250"
+                                  class="ct-grid ct-horizontal"></line>
+                            <line x1="288.57142857142856" x2="288.57142857142856" y1="15" y2="250"
+                                  class="ct-grid ct-horizontal"></line>
+                            <line x1="407.8571428571429" x2="407.8571428571429" y1="15" y2="250"
+                                  class="ct-grid ct-horizontal"></line>
+                            <line x1="527.1428571428571" x2="527.1428571428571" y1="15" y2="250"
+                                  class="ct-grid ct-horizontal"></line>
+                            <line x1="646.4285714285714" x2="646.4285714285714" y1="15" y2="250"
+                                  class="ct-grid ct-horizontal"></line>
+                            <line x1="765.7142857142858" x2="765.7142857142858" y1="15" y2="250"
+                                  class="ct-grid ct-horizontal"></line>
+                            <line x1="885" x2="885" y1="15" y2="250" class="ct-grid ct-horizontal"></line>
+                            <line y1="250" y2="250" x1="50" x2="885" class="ct-grid ct-vertical"></line>
+                            <line y1="210.83333333333334" y2="210.83333333333334" x1="50" x2="885"
+                                  class="ct-grid ct-vertical"></line>
+                            <line y1="171.66666666666669" y2="171.66666666666669" x1="50" x2="885"
+                                  class="ct-grid ct-vertical"></line>
+                            <line y1="132.5" y2="132.5" x1="50" x2="885" class="ct-grid ct-vertical"></line>
+                            <line y1="93.33333333333334" y2="93.33333333333334" x1="50" x2="885"
+                                  class="ct-grid ct-vertical"></line>
+                            <line y1="54.16666666666666" y2="54.16666666666666" x1="50" x2="885"
+                                  class="ct-grid ct-vertical"></line>
+                            <line y1="15" y2="15" x1="50" x2="885" class="ct-grid ct-vertical"></line>
+                        </g>
+                        <g>
+                            <g class="ct-series ct-series-a">
+                                <path d="M50,250L50,93.333C69.881,112.917,129.524,223.889,169.286,210.833C209.048,197.778,248.81,28.056,288.571,15C328.333,1.944,368.095,119.444,407.857,132.5C447.619,145.556,487.381,86.806,527.143,93.333C566.905,99.861,606.667,171.667,646.429,171.667C686.19,171.667,725.952,99.861,765.714,93.333C805.476,86.806,865.119,125.972,885,132.5L885,250Z"
+                                      class="ct-area"></path>
+                                <path d="M50,93.333C69.881,112.917,129.524,223.889,169.286,210.833C209.048,197.778,248.81,28.056,288.571,15C328.333,1.944,368.095,119.444,407.857,132.5C447.619,145.556,487.381,86.806,527.143,93.333C566.905,99.861,606.667,171.667,646.429,171.667C686.19,171.667,725.952,99.861,765.714,93.333C805.476,86.806,865.119,125.972,885,132.5"
+                                      class="ct-line"></path>
+                                <line x1="50" y1="93.33333333333334" x2="50.01" y2="93.33333333333334" class="ct-point"
+                                      ct:value="5"></line>
+                                <line x1="169.28571428571428" y1="210.83333333333334" x2="169.29571428571427"
+                                      y2="210.83333333333334" class="ct-point" ct:value="2"></line>
+                                <line x1="288.57142857142856" y1="15" x2="288.58142857142855" y2="15" class="ct-point"
+                                      ct:value="7"></line>
+                                <line x1="407.8571428571429" y1="132.5" x2="407.8671428571429" y2="132.5"
+                                      class="ct-point" ct:value="4"></line>
+                                <line x1="527.1428571428571" y1="93.33333333333334" x2="527.1528571428571"
+                                      y2="93.33333333333334" class="ct-point" ct:value="5"></line>
+                                <line x1="646.4285714285714" y1="171.66666666666669" x2="646.4385714285714"
+                                      y2="171.66666666666669" class="ct-point" ct:value="3"></line>
+                                <line x1="765.7142857142858" y1="93.33333333333334" x2="765.7242857142858"
+                                      y2="93.33333333333334" class="ct-point" ct:value="5"></line>
+                                <line x1="885" y1="132.5" x2="885.01" y2="132.5" class="ct-point" ct:value="4"></line>
+                            </g>
+                            <g class="ct-series ct-series-b">
+                                <path d="M50,250L50,210.833C69.881,191.25,129.524,93.333,169.286,93.333C209.048,93.333,248.81,217.361,288.571,210.833C328.333,204.306,368.095,54.167,407.857,54.167C447.619,54.167,487.381,204.306,527.143,210.833C566.905,217.361,606.667,93.333,646.429,93.333C686.19,93.333,725.952,204.306,765.714,210.833C805.476,217.361,865.119,145.556,885,132.5L885,250Z"
+                                      class="ct-area"></path>
+                                <path d="M50,210.833C69.881,191.25,129.524,93.333,169.286,93.333C209.048,93.333,248.81,217.361,288.571,210.833C328.333,204.306,368.095,54.167,407.857,54.167C447.619,54.167,487.381,204.306,527.143,210.833C566.905,217.361,606.667,93.333,646.429,93.333C686.19,93.333,725.952,204.306,765.714,210.833C805.476,217.361,865.119,145.556,885,132.5"
+                                      class="ct-line"></path>
+                                <line x1="50" y1="210.83333333333334" x2="50.01" y2="210.83333333333334"
+                                      class="ct-point" ct:value="2"></line>
+                                <line x1="169.28571428571428" y1="93.33333333333334" x2="169.29571428571427"
+                                      y2="93.33333333333334" class="ct-point" ct:value="5"></line>
+                                <line x1="288.57142857142856" y1="210.83333333333334" x2="288.58142857142855"
+                                      y2="210.83333333333334" class="ct-point" ct:value="2"></line>
+                                <line x1="407.8571428571429" y1="54.16666666666666" x2="407.8671428571429"
+                                      y2="54.16666666666666" class="ct-point" ct:value="6"></line>
+                                <line x1="527.1428571428571" y1="210.83333333333334" x2="527.1528571428571"
+                                      y2="210.83333333333334" class="ct-point" ct:value="2"></line>
+                                <line x1="646.4285714285714" y1="93.33333333333334" x2="646.4385714285714"
+                                      y2="93.33333333333334" class="ct-point" ct:value="5"></line>
+                                <line x1="765.7142857142858" y1="210.83333333333334" x2="765.7242857142858"
+                                      y2="210.83333333333334" class="ct-point" ct:value="2"></line>
+                                <line x1="885" y1="132.5" x2="885.01" y2="132.5" class="ct-point" ct:value="4"></line>
+                            </g>
+                        </g>
+                        <g class="ct-labels">
+                            <foreignObject style="overflow: visible;" x="50" y="255" width="119.28571428571429"
+                                           height="20"><span class="ct-label ct-horizontal ct-end"
+                                                             style="width: 119px; height: 20px"
+                                                             xmlns="http://www.w3.org/2000/xmlns/">2008</span>
+                            </foreignObject>
+                            <foreignObject style="overflow: visible;" x="169.28571428571428" y="255"
+                                           width="119.28571428571429" height="20"><span
+                                    class="ct-label ct-horizontal ct-end" style="width: 119px; height: 20px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2009</span></foreignObject>
+                            <foreignObject style="overflow: visible;" x="288.57142857142856" y="255"
+                                           width="119.2857142857143" height="20"><span
+                                    class="ct-label ct-horizontal ct-end" style="width: 119px; height: 20px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2010</span></foreignObject>
+                            <foreignObject style="overflow: visible;" x="407.8571428571429" y="255"
+                                           width="119.28571428571428" height="20"><span
+                                    class="ct-label ct-horizontal ct-end" style="width: 119px; height: 20px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2011</span></foreignObject>
+                            <foreignObject style="overflow: visible;" x="527.1428571428571" y="255"
+                                           width="119.28571428571428" height="20"><span
+                                    class="ct-label ct-horizontal ct-end" style="width: 119px; height: 20px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2012</span></foreignObject>
+                            <foreignObject style="overflow: visible;" x="646.4285714285714" y="255"
+                                           width="119.28571428571433" height="20"><span
+                                    class="ct-label ct-horizontal ct-end" style="width: 119px; height: 20px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2013</span></foreignObject>
+                            <foreignObject style="overflow: visible;" x="765.7142857142858" y="255"
+                                           width="119.28571428571422" height="20"><span
+                                    class="ct-label ct-horizontal ct-end" style="width: 119px; height: 20px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2014</span></foreignObject>
+                            <foreignObject style="overflow: visible;" x="885" y="255" width="30" height="20"><span
+                                    class="ct-label ct-horizontal ct-end" style="width: 30px; height: 20px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2015</span></foreignObject>
+                            <foreignObject style="overflow: visible;" y="210.83333333333334" x="10"
+                                           height="39.166666666666664" width="30"><span
+                                    class="ct-label ct-vertical ct-start" style="height: 39px; width: 30px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">1k</span></foreignObject>
+                            <foreignObject style="overflow: visible;" y="171.66666666666669" x="10"
+                                           height="39.166666666666664" width="30"><span
+                                    class="ct-label ct-vertical ct-start" style="height: 39px; width: 30px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">2k</span></foreignObject>
+                            <foreignObject style="overflow: visible;" y="132.5" x="10" height="39.16666666666667"
+                                           width="30"><span class="ct-label ct-vertical ct-start"
+                                                            style="height: 39px; width: 30px"
+                                                            xmlns="http://www.w3.org/2000/xmlns/">3k</span>
+                            </foreignObject>
+                            <foreignObject style="overflow: visible;" y="93.33333333333334" x="10"
+                                           height="39.16666666666666" width="30"><span
+                                    class="ct-label ct-vertical ct-start" style="height: 39px; width: 30px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">4k</span></foreignObject>
+                            <foreignObject style="overflow: visible;" y="54.16666666666666" x="10"
+                                           height="39.166666666666686" width="30"><span
+                                    class="ct-label ct-vertical ct-start" style="height: 39px; width: 30px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">5k</span></foreignObject>
+                            <foreignObject style="overflow: visible;" y="15" x="10" height="39.16666666666666"
+                                           width="30"><span class="ct-label ct-vertical ct-start"
+                                                            style="height: 39px; width: 30px"
+                                                            xmlns="http://www.w3.org/2000/xmlns/">6k</span>
+                            </foreignObject>
+                            <foreignObject style="overflow: visible;" y="-15" x="10" height="30" width="30"><span
+                                    class="ct-label ct-vertical ct-start" style="height: 30px; width: 30px"
+                                    xmlns="http://www.w3.org/2000/xmlns/">7k</span></foreignObject>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
