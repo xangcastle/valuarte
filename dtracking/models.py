@@ -312,6 +312,7 @@ class Gestion(models.Model):
                                          blank=True, help_text="Numero registro catastro, para el caso de vehiculos el número de chasis")
 
     factura           = models.BooleanField(default=False,verbose_name="Factura")
+    fiscal           = models.BooleanField(default=False)
     fecha_facturacion = models.DateField(null=True, blank=True)
 
     cancelada         = models.BooleanField(default=False,verbose_name="Cancelada")

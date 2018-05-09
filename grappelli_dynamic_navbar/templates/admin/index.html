@@ -681,15 +681,19 @@
     <script src="{% static 'chartist/dist/chartist.js' %}"></script>
     <script src="{% static 'chartist-plugin-tooltip/dist/chartist-plugin-tooltip.js' %}"></script>
     <style>
-        .ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut {
-             stroke: goldenrod;
+        #ct-visits .ct-series-b .ct-line, #ct-visits .ct-series-b .ct-point {
+            stroke: #2cabe3;
+        }
+
+        .ct-series-b .ct-slice-pie, .ct-series-b .ct-area {
+            fill: #2cabe3;
         }
     </style>
     <script>
         $(document).ready(function () {
             new Chartist.Line('#ct-visits', {
                 labels: ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO'
-                ,'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'],
+                    , 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'],
                 series: [
                     [5, 2, 7, 4, 5, 3, 5, 4, 7, 4, 5, 3],
                     [2, 5, 2, 6, 2, 5, 2, 4, 2, 6, 2, 5]
