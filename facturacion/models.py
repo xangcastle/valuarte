@@ -189,7 +189,6 @@ class Cliente(Base):
         return sorted(data, key=lambda x: x['fecha'])
 
 
-
 class Factura(Base):
     primer_estatus = "Factura"
     fecha = models.DateField(null=True, blank=True)

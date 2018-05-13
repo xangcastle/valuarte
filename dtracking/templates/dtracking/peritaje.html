@@ -542,7 +542,7 @@
                 processData: false,
                 data: formData,
                 success: function (e) {
-                    btn_form.prop("disabled", false);
+                    //btn_form.prop("disabled", false);
                     if (typeof(e.error) != "undefined" && e.error != "")
                         new PNotify({
                             title: 'Error!',
@@ -565,7 +565,6 @@
                             param = e.param;
                         window[name](e, element, param);
                     }
-                    redrawEvent(e.object);
 
                 }, error: function (data) {
                     btn_form.prop("disabled", false);
