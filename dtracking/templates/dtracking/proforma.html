@@ -18,12 +18,7 @@
             left: 83mm;
         }
 
-        .descripcion {
-            top: 99mm;
-            left: 42mm;
-            max-width: 84mm;
-            text-align: justify;
-        }
+
 
         .total {
             top: 141mm;
@@ -65,7 +60,6 @@
 {% load humanize %}
 <div class="campo cliente">{{ o.destinatario }}</div>
 <div class="campo contacto">{{ o.contacto_envio }}</div>
-<div class="campo descripcion">{{ o.descripcion }}</div>
 <div class="campo subtotal">${{ o.subtotal|intcomma }}</div>
 <div class="campo precio-unitario">${{ o.subtotal|intcomma }}</div>
 <div class="campo total-detalle">${{ o.subtotal|intcomma }}</div>
