@@ -84,7 +84,7 @@ Geraldo==0.4.17
 gunicorn==18.0
 hiredis==0.1.1
 html5lib==1.0b2
-httplib2==0.10.3
+httplib2==0.18.0
 hyperlink==17.3.0
 idna==2.6
 importlib==1.0.4
