@@ -2,58 +2,55 @@
 <head>
     <title>{{ o.nombre }}</title>
     <style>
-       table {font-family: "Lato","sans-serif";	}
-       table.one {
-           margin-bottom: 1em;
-           display: inline-block;
-         }
+        table {
+            font-family: "Lato", "sans-serif";
+        }
 
-       table.one td {
-         text-align: center;
-         width: 10em;
-         padding: 1em; 		}
+        table.one {
+            margin-bottom: 1em;
+            display: inline-block;
+        }
 
-       table.one th {
-       text-align: center;
-       padding: 0.2em;
-       background-color: #7E97AD;
-       color: white;		}
+        table.one td {
+            text-align: center;
+            width: 10em;
+            padding: 1em;
+        }
 
-       table.one tr
-       {
-        height: 1em;
-       }
+        table.one th {
+            text-align: center;
+            padding: 0.2em;
+            background-color: #7E97AD;
+            color: white;
+        }
 
-       table.one tr:nth-child(even)
-       {
-         background-color: #eee;
-       }
+        table.one tr {
+            height: 1em;
+        }
 
-       table.one tr:nth-child(odd)
-       {
-         background-color:#fff;
-       }
-       .blue
-       {
-         text-align: center;
-         padding: 1em;
-         background-color: #7E97AD;
-         color: white;
-         font-family: "Lato","sans-serif";
-       }
+        table.one tr:nth-child(even) {
+            background-color: #eee;
+        }
+
+        table.one tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .blue {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #7E97AD;
+            color: white;
+            font-family: "Lato", "sans-serif";
+        }
     </style>
 </head>
 <body style="max-height: 220mm; max-width: 150mm">
-{% load static %}
-{% load humanize %}
-<script src="/static/dtracking/js/jquery.js"></script>
-<script src="/static/dtracking/js/html2canvas.js"></script>
+{% load static humanize %}
 
-<div id="previewImage">
-</div>
 <div id="html-content-holder" style=" width: 816px;
         padding-left: 25px; padding-top: 5px;">
-  <svg
+    <svg
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:cc="http://creativecommons.org/ns#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -329,97 +326,78 @@
                    id="image4656" /></g></g></g></g></g><g
          id="g4658"></svg>
 
-        	<!-- HTML TABLES  -->
+    <div class="blue" style="width:816px;">ASIGNACIÓN DE AVALÚO <b>{{ o.barra }}</b></div>
+    </br></br>
+    <table class="one">
+        <tr>
+            <th>CLIENTE</th>
+            <td>{{ o.destinatario }}</td>
+            <th>IDENTIFICACIÓN</th>
+            <td>{{ o.identificacion }}</td>
+        </tr>
+        <tr>
+            <th>TEL.CLIENTE</th>
+            <td> {{ o.telefono }}</td>
+            <th>CONTACTO</th>
+            <td>{{ o.contacto }}</td>
+        </tr>
+        <tr>
+            <th>TIPO DE AVALUÓ</th>
+            <td> {{ o.tipo_gestion.name }}</td>
+            <th>TEL. CONTACTO</th>
+            <td>{{ o.contacto_telefono }}</td>
+        </tr>
 
+        <tr>
+            <th>USO GESTIÓN</th>
+            <td> {{ o.uso_gestion }}</td>
+            <th>FIN GESTIÓN</th>
+            <td> {{ o.fin_gestion }}</td>
+        </tr>
+        <tr>
+            <th>FECHA SOLICITUD</th>
+            <td> {{ o.fecha|date:"d/m/y" }}</td>
+            <th>FECHA ELABORACIÓN</th>
+            <td>{{ o.fecha_asignacion|date:"d/m/y" }}</td>
+        </tr>
+        <tr>
+            <th>CIUDAD</th>
+            <td> {{ o.municipio.name }}</td>
+            <th>DEPARTAMENTO</th>
+            <td> {{ o.departamento.name }}</td>
+        </tr>
+        <tr>
+            <th>UBICACIÓN DEL BIEN A EVALUAR</th>
+            <td colspan="3"> {{ o.direccion }} Barrio: {{ o.barrio.name }}</td>
+        </tr>
+        <tr>
+            <th>DIRECCIÓN DE ENVIO</th>
+            <td colspan="3">{{ o.direccion_envio }} </td>
+        </tr>
 
-        	<!-- HTML TABLE ONE -->
-          <center>
-            <div class="blue" style="width:816px;" >ASIGNACIÓN DE AVALÚO <b>{{ o.barra }}</b> </div>
-            </br></br>
-            <table class="one">
-                <tr>
-                  <th>CLIENTE</th>
-                  <td >{{ o.destinatario }}</td>
-                  <th>IDENTIFICACIÓN</th>
-                  <td >{{ o.identificacion }}</td>
-                </tr>
-                <tr>
-                  <th>TEL.CLIENTE</th>
-                  <td> {{ o.telefono }}</td>
-                  <th>CONTACTO</th>
-                  <td>{{ o.contacto }}</td>
-                </tr>
-                <tr>
-                  <th>TIPO DE AVALUÓ</th>
-                  <td> {{ o.tipo_gestion.name }}</td>
-                  <th>TEL. CONTACTO</th>
-                  <td>{{ o.contacto_telefono }}</td>
-                </tr>
+        <tr>
+            <th>BANCO</th>
+            <td>{{ o.banco }}</td>
+            <th>EJECUTIVO</th>
+            <td>{{ o.banco_ejecutivo }}</td>
+        </tr>
 
-                <tr>
-                  <th>USO GESTIÓN</th>
-                  <td> {{ o.uso_gestion }}</td>
-                  <th>FIN GESTIÓN</th>
-                  <td> {{ o.fin_gestion }}</td>
-                </tr>
-                <tr>
-                  <th>FECHA SOLICITUD</th>
-                  <td> {{ o.fecha|date:"d/m/y" }}</td>
-                  <th>FECHA ELABORACIÓN</th>
-                  <td>{{ o.fecha_asignacion|date:"d/m/y" }}</td>
-                </tr>
-                <tr>
-                  <th>CIUDAD</th>
-                  <td> {{ o.municipio.name }}</td>
-                  <th>DEPARTAMENTO</th>
-                  <td> {{ o.departamento.name }}</td>
-                </tr>
-                <tr>
-                  <th>UBICACIÓN DEL BIEN A EVALUAR</th>
-                  <td colspan="3"> {{ o.direccion }} Barrio: {{ o.barrio.name }}</td>
-                </tr>
-                <tr>
-                  <th>DIRECCIÓN DE ENVIO</th>
-                  <td colspan="3">{{ o.direccion_envio }} </td>
-                </tr>
+        <tr>
+            <th>VALOR AVALUÓ</th>
+            <td colspan="3">{{ o.valor }}</td>
+        </tr>
+    </table>
 
-                <tr>
-                  <th>BANCO</th>
-                  <td>{{ o.banco }}</td>
-                  <th  >EJECUTIVO</th>
-                  <td >{{ o.banco_ejecutivo }}</td>
-                </tr>
-
-                <tr>
-                  <th>VALOR AVALUÓ</th>
-                  <td  colspan="3">{{ o.valor }}</td>
-                </tr>
-            </table>
-
-        </br></br>
-        <div class="blue" style="width:816px;" ><center> OBSERVACIONES </center></div>
-        <div style="width:808px;background-color:write;height:100px;border-style: solid;border-color:#7E97AD" >
-               {{ o.observaciones }}
-        </div>
-        </center>
-
+    </br></br>
+    <div class="blue" style="width:816px;">
+        <center> OBSERVACIONES</center>
     </div>
+    <div style="width:809px;background-color:white;height:100px;border-style: solid;border-color:#7E97AD">
+        {{ o.observaciones }}
+    </div>
+    </center>
 
-<script>
-$(document).ready(function(){
-    var element = $("#html-content-holder"); // global variable
-    var getCanvas; // global variable
-
-    html2canvas(element, {
-    onrendered: function (canvas) {
-           $("#previewImage").append(canvas);
-           getCanvas = canvas;
-        }
-    });
-    $("#html-content-holder").html("");
-});
-
-</script>
+</div>
 
 </body>
 </html>
