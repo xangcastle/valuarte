@@ -152,7 +152,7 @@ SQLAlchemy==1.2.0
 sqlparse==0.2.4
 suds==0.4
 tablib==0.12.1
-Twisted==17.5.0
+Twisted==20.3.0
 txaio==2.8.0
 unicodecsv==0.14.1
 Unidecode==0.4.20
