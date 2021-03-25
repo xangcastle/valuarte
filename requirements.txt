@@ -135,7 +135,7 @@ python-openid==2.2.5
 python-slugify==1.1.4
 python-social-auth==0.2.19
 pytz==2018.4
-PyYAML==3.12
+PyYAML==5.4
 raven==3.4.1
 redis==2.10.6
 reportlab==2.7
