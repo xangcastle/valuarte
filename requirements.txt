@@ -5,7 +5,7 @@ asgi-redis==1.4.2
 asgiref==1.1.2
 asn1crypto==0.23.0
 attrs==17.2.0
-autobahn==17.6.2
+autobahn==20.12.3
 Automat==0.6.0
 bcrypt==3.1.4
 BeautifulSoup==3.2.1
