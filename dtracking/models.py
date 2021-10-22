@@ -69,10 +69,8 @@ ESTADOS_LOG_GESTION = (('RECEPCIONADO', 'RECEPCIONADO'),  # 0 0
                        ('LEVANTAMIENTO REALIZADO', 'LEVANTAMIENTO REALIZADO'),  # 2 0
                        ('CONTROL DE CALIDAD', 'CONTROL DE CALIDAD'),  # 3 0
                        ('EN REVISION FINAL DE INFORME', 'EN REVISION FINAL DE INFORME'),  # 4 0
-                       ('TERMINADO', 'TERMINADO'), # 5 0
+                       ('TERMINADO', 'TERMINADO'),  # 5 0
                        ('CANCELADO', 'CANCELADO'))  # 6 0
-
-
 
 
 class Gestor(models.Model):
@@ -308,14 +306,15 @@ class Gestion_Uso(Entidad):
 
 
 class Gestion(models.Model):
-    numero            = models.CharField(max_length=65, null=True, verbose_name="Número Registro",
-                                         blank=True, help_text="Numero registro catastro, para el caso de vehiculos el número de chasis")
+    numero = models.CharField(max_length=65, null=True, verbose_name="Número Registro",
+                              blank=True,
+                              help_text="Numero registro catastro, para el caso de vehiculos el número de chasis")
 
-    factura           = models.BooleanField(default=False,verbose_name="Factura")
-    fiscal           = models.BooleanField(default=False)
+    factura = models.BooleanField(default=False, verbose_name="Factura")
+    fiscal = models.BooleanField(default=False)
     fecha_facturacion = models.DateField(null=True, blank=True)
 
-    cancelada         = models.BooleanField(default=False,verbose_name="Cancelada")
+    cancelada = models.BooleanField(default=False, verbose_name="Cancelada")
     fecha_cancelacion = models.DateField(null=True, blank=True)
     fecha = models.DateField(null=True, blank=True,
                              verbose_name="fecha de solicitud")  # fecha en que se recepciona la solicitud del avaluo
@@ -327,7 +326,7 @@ class Gestion(models.Model):
     observaciones = models.TextField(max_length=600, null=True, blank=True)
     observaciones_cotizacion = models.TextField(max_length=255, null=True, blank=True,
                                                 verbose_name="observaciones en la cotización")
-    retenida         = models.BooleanField(default=False,verbose_name="Retenida")
+    retenida = models.BooleanField(default=False, verbose_name="Retenida")
     referencia = models.CharField(max_length=35, null=True, blank=True, verbose_name="Referencia bancaria")
     valor = models.FloatField(null=True, blank=True, verbose_name="precio del avaluo ya con iva")
     descuento = models.IntegerField(default=0, verbose_name="% descuento")
@@ -354,7 +353,7 @@ class Gestion(models.Model):
     banco_ejecutivo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ejecutivo bancario",
                                        help_text="temporal")
     banco_sucursal = models.CharField(max_length=100, null=True, blank=True, verbose_name="Sucursal bancaria",
-                                       help_text="temporal")
+                                      help_text="temporal")
 
     # peritaje
     notify = models.BooleanField(default=False,
@@ -369,7 +368,7 @@ class Gestion(models.Model):
 
     # operaciones
     fecha_recepcion = models.DateTimeField(null=True, blank=True)  ###
-    prearmado = models.BooleanField(default=False, verbose_name="prearmado")###
+    prearmado = models.BooleanField(default=False, verbose_name="prearmado")  ###
     fecha_prearmado = models.DateTimeField(null=True, blank=True)  # fecha de prearmado incluye hora
     fecha_vence = models.DateField(null=True, blank=True)
     armador = models.ForeignKey('Operaciones', null=True, blank=True,
@@ -390,21 +389,21 @@ class Gestion(models.Model):
 
     priority = models.BooleanField(default=False, verbose_name="prioridad")
 
-    def asignarFechaFacturacion(self,request):
-        f = request.POST.get('text_fecha',None)
-        if f and not self.fecha_facturacion :
-            try :
+    def asignarFechaFacturacion(self, request):
+        f = request.POST.get('text_fecha', None)
+        if f and not self.fecha_facturacion:
+            try:
                 date = datetime.strptime(f, "%Y-%m-%d").date()
-                self.factura           = True
+                self.factura = True
                 self.fecha_facturacion = date
                 self.save()
-            except Exception as e :
-                return {"result": e.message,"code":500}
-            return {"result": "Fecha de facturación asignada con exito","code":200}
+            except Exception as e:
+                return {"result": e.message, "code": 500}
+            return {"result": "Fecha de facturación asignada con exito", "code": 200}
         elif not f:
-            return {"result": "Debe asignar una fecha", "code":500}
+            return {"result": "Debe asignar una fecha", "code": 500}
         elif self.fecha_facturacion:
-            return {"result": "La fecha ya fue asignada", "code":500}
+            return {"result": "La fecha ya fue asignada", "code": 500}
 
     def telefonos(self):
         l = []
@@ -413,8 +412,6 @@ class Gestion(models.Model):
         if self.contacto_telefono:
             l.append(self.contacto_telefono)
         return ", ".join(l)
-
-
 
     def terminarControl(self):
         print "terminando"
@@ -441,7 +438,6 @@ class Gestion(models.Model):
         self.save()
         return {"result": "Avaluo rechazado!"}
 
-
     def dias_proceso(self):
         if self.fecha and self.fecha_entrega_efectiva:
             dias = (self.fecha_entrega_efectiva - self.fecha).days
@@ -454,12 +450,13 @@ class Gestion(models.Model):
 
     def notificar(self, *args, **kwargs):
         email = None
-        if self.status_gestion == ESTADOS_LOG_GESTION[1][0] :
-           email = self.user.email
-        elif self.status_gestion == ESTADOS_LOG_GESTION[2][0] :
-           email = self.armador.email
+        if self.status_gestion == ESTADOS_LOG_GESTION[1][0]:
+            email = self.user.email
+        elif self.status_gestion == ESTADOS_LOG_GESTION[2][0]:
+            email = self.armador.email
         if email:
-           Gestion.send_email("Asignacion de Avaluo "+ self.barra,render_to_string('emails/asignacion_gestion.html',{'gestion':self}),email)
+            Gestion.send_email("Asignacion de Avaluo " + self.barra,
+                               render_to_string('emails/asignacion_gestion.html', {'gestion': self}), email)
         """if kwargs.has_key('request'):
             request = kwargs.pop('request')
             self.log(request.user, datetime.now(), ESTADOS_LOG_GESTION[1][0])"""
@@ -486,9 +483,9 @@ class Gestion(models.Model):
             return None
 
     def get_user_log(self, status):
-        if status == ESTADOS_LOG_GESTION[1][0]:# 1 , 0
+        if status == ESTADOS_LOG_GESTION[1][0]:  # 1 , 0
             return self.user
-        elif status == ESTADOS_LOG_GESTION[2][0]:# 2,0
+        elif status == ESTADOS_LOG_GESTION[2][0]:  # 2,0
             return self.armador
         else:
             return None
@@ -501,21 +498,26 @@ class Gestion(models.Model):
 
     def get_status_gestion(self):
         actual = ESTADOS_LOG_GESTION[0][0]
-        if self.cancelada :
+        if self.cancelada:
             actual = ESTADOS_LOG_GESTION[6][0]
-        else :
-            if not self.user and not self.fecha_asignacion: #Recepcion
+        else:
+            if not self.user and not self.fecha_asignacion:  # Recepcion
                 actual = ESTADOS_LOG_GESTION[0][0]
-            if self.user and self.fecha_asignacion: #Logistica
+            if self.user and self.fecha_asignacion:  # Logistica
                 actual = ESTADOS_LOG_GESTION[1][0]
-            if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion: # operaciones
+            if self.user and self.fecha_asignacion and (
+                    self.realizada or self.ficha_inspeccion) and self.fecha_recepcion:  # operaciones
                 actual = ESTADOS_LOG_GESTION[2][0]
-            if self.user and self.fecha_asignacion and (self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada: #control de calidad
+            if self.user and self.fecha_asignacion and (
+                    self.realizada or self.ficha_inspeccion) and self.fecha_recepcion and self.armador and self.revizada:  # control de calidad
                 actual = ESTADOS_LOG_GESTION[3][0]
-            if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
-                        self.control):#firma
+            if self.user and self.fecha_asignacion and self.fecha_recepcion and (
+                    self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
+                    self.control):  # firma
                 actual = ESTADOS_LOG_GESTION[4][0]
-            if self.user and self.fecha_asignacion and self.fecha_recepcion and (self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (self.control and self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
+            if self.user and self.fecha_asignacion and self.fecha_recepcion and (
+                    self.realizada or self.ficha_inspeccion) and self.armador and self.revizada and (
+                    self.control and self.informe_final or self.terminada) and self.fecha_entrega_efectiva:
                 actual = ESTADOS_LOG_GESTION[5][0]
         return actual
 
@@ -524,6 +526,7 @@ class Gestion(models.Model):
 
     def delete(self, *args, **kwargs):
         pass
+
     def save(self, *args, **kwargs):
         if self.revizada and not self.fecha_revision:
             self.fecha_revision = datetime.now()
@@ -533,8 +536,8 @@ class Gestion(models.Model):
             self.fecha = datetime.now()
         if not self.barra:
             self.barra = self.get_code()
-        if self.prearmado :
-           self.fecha_prearmado =  datetime.now()
+        if self.prearmado:
+            self.fecha_prearmado = datetime.now()
         self.categoria = self.get_categoria()
         self.status_gestion = self.get_status_gestion()
         self.fecha_vence = self.get_fecha_vence()
@@ -572,7 +575,7 @@ class Gestion(models.Model):
             return 0.0
 
     def monto_descuento(self):
-        return round((self.subtotal() * self.descuento)/100, 2)
+        return round((self.subtotal() * self.descuento) / 100, 2)
 
     def total_pagar(self):
         return round((self.subtotal() - self.monto_descuento()) + self.iva(), 2)
@@ -590,7 +593,9 @@ class Gestion(models.Model):
         if self.fecha and self.tipo_gestion:
             numero = ""
             try:
-                numero = int(type(self).objects.filter(fecha__year=datetime.now().year, barra__isnull=False).order_by('-barra')[0].barra[0:4]) + 1
+                numero = int(
+                    type(self).objects.filter(fecha__year=datetime.now().year, barra__isnull=False).order_by('-barra')[
+                        0].barra[0:4]) + 1
             except:
                 numero = 1
             code = "%s-%s-%s" % (str(numero).zfill(4), self.tipo_gestion.prefijo, str(self.fecha.year))
@@ -648,15 +653,15 @@ class Gestion(models.Model):
     def anular(self):
         estado = self.status_gestion
         print estado
-        if estado == 'RECEPCIONADO' or estado =='ASIGNADO A EVALUADOR' or estado =='CONTROL DE CALIDAD':
-          print "cancelando..."
-          self.cancelada =True
-          self.fecha_cancelacion = datetime.now()
-          self.valor = 0.0
-          self.save()
-          return {"result": "Cancelada Con Exito","code":200}
-        else :
-          return {"result": "Nose debe cancelar", "code":500}
+        if estado == 'RECEPCIONADO' or estado == 'ASIGNADO A EVALUADOR' or estado == 'CONTROL DE CALIDAD':
+            print "cancelando..."
+            self.cancelada = True
+            self.fecha_cancelacion = datetime.now()
+            self.valor = 0.0
+            self.save()
+            return {"result": "Cancelada Con Exito", "code": 200}
+        else:
+            return {"result": "Nose debe cancelar", "code": 500}
 
     def restablecer(self, request):
         self.cancelada = False
@@ -713,18 +718,19 @@ class Gestion(models.Model):
                     entiempo.append(g)
 
         enfirma = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0])
-        ventas  = Gestion.objects.filter(fecha__month=today.month,fecha__year=today.year,
-            valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
-                                                     ESTADOS_LOG_GESTION[1][0],
-                                                     ESTADOS_LOG_GESTION[2][0],
-                                                     ESTADOS_LOG_GESTION[3][0],
-                                                     ESTADOS_LOG_GESTION[4][0],
-                                                     ]).aggregate(Sum('valor'))['valor__sum']
+        ventas = Gestion.objects.filter(fecha__month=today.month, fecha__year=today.year,
+                                        valor__isnull=False, status_gestion__in=[ESTADOS_LOG_GESTION[0][0],
+                                                                                 ESTADOS_LOG_GESTION[1][0],
+                                                                                 ESTADOS_LOG_GESTION[2][0],
+                                                                                 ESTADOS_LOG_GESTION[3][0],
+                                                                                 ESTADOS_LOG_GESTION[4][0],
+                                                                                 ]).aggregate(Sum('valor'))[
+            'valor__sum']
 
-        gestiones_control = Gestion.objects.filter( status_gestion=ESTADOS_LOG_GESTION[3][0])
+        gestiones_control = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0])
 
         control_para_hoy = gestiones_control.filter(fecha_vence__year=today.year, fecha_vence__month=today.month,
-                              fecha_vence__day=today.day)
+                                                    fecha_vence__day=today.day)
         control_vencidas = []
         control_entiempo = []
         for g in gestiones_control:
@@ -735,10 +741,10 @@ class Gestion(models.Model):
                     control_entiempo.append(g)
 
         data = dict()
-        data['list_48']      =recepcionadas_48h
-        data['list_hoy']     =for_today
-        data['list_enfirma'] =enfirma
-        data['list_incumplidas']=incumplidas
+        data['list_48'] = recepcionadas_48h
+        data['list_hoy'] = for_today
+        data['list_enfirma'] = enfirma
+        data['list_incumplidas'] = incumplidas
         data['recepcion'] = {'de_hoy': recepcionadas_de_hoy, 'total': recepcionadas.count(), 'a48h': recepcionadas_48h}
         data['logistica'] = {'total': agendadas.count(), 'para_hoy': agendadas_de_hoy.count(),
                              'incumplidas': len(incumplidas), 'programadas': len(programadas)}
@@ -747,10 +753,10 @@ class Gestion(models.Model):
                                'en_tiempo': len(entiempo),
                                'total': for_today.count() + len(vencidas) + len(entiempo)}
         data['control'] = {
-                            'para_hoy': control_para_hoy.count(),
-                            'vencidas': len(control_vencidas),
-                            'en_tiempo': len(control_entiempo),
-                            'total': control_para_hoy.count() + len(control_vencidas) + len(control_entiempo)
+            'para_hoy': control_para_hoy.count(),
+            'vencidas': len(control_vencidas),
+            'en_tiempo': len(control_entiempo),
+            'total': control_para_hoy.count() + len(control_vencidas) + len(control_entiempo)
         }
 
         if ventas:
@@ -759,19 +765,19 @@ class Gestion(models.Model):
             cont_ventas = 0
 
         data['gerencia'] = {'en_firma': enfirma.count(),
-                            'ventas':cont_ventas,
+                            'ventas': cont_ventas,
                             'total': enfirma.count() + gs.count() + recepcionadas.count() + agendadas.count(),
                             }
         return data
 
     @staticmethod
     def notificar_reporte_diario():
-        asunto= "Reporte diario - Avalúos "+datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        Gestion.send_email(asunto,render_to_string('emails/email7.html'),settings.EMAILS_REPORTE_DIARIO)
+        asunto = "Reporte diario - Avalúos " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        Gestion.send_email(asunto, render_to_string('emails/email7.html'), settings.EMAILS_REPORTE_DIARIO)
 
     @staticmethod
     def notificar_facturacion():
-        asunto = "Reporte diario - Avalúos para Facturación "+datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        asunto = "Reporte diario - Avalúos para Facturación " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         Gestion.send_email(asunto, render_to_string('emails/email8.html'), settings.EMAILS_FACTURACION)
 
     @staticmethod
@@ -971,9 +977,9 @@ class Archivo(models.Model):
         o = {}
         o['variable'] = self.variable
         if self.archivo:
-          o['archivo']  = self.archivo.url
-        else :
-          o['archivo']  = "#"
+            o['archivo'] = self.archivo.url
+        else:
+            o['archivo'] = "#"
         return o
 
     class Meta:
@@ -987,19 +993,19 @@ class Position(models.Model):
 
     def to_json(self):
         o = {}
-        if self.user :
-          o['label'] =  self.user.username[0].upper()
-          o['usuario'] = self.user.username
-        else :
-          o['label'] = ""
-          o['usuario'] =""
-        if self.position :
-          o['latitude']= self.position.latitude
-          o['longitude']= self.position.longitude
-        else :
-           o['latitude']= ""
-           o['longitude']= ""
-        o['fecha']=str(self.fecha)
+        if self.user:
+            o['label'] = self.user.username[0].upper()
+            o['usuario'] = self.user.username
+        else:
+            o['label'] = ""
+            o['usuario'] = ""
+        if self.position:
+            o['latitude'] = self.position.latitude
+            o['longitude'] = self.position.longitude
+        else:
+            o['latitude'] = ""
+            o['longitude'] = ""
+        o['fecha'] = str(self.fecha)
         return o
 
     class Meta:
@@ -1139,7 +1145,7 @@ class Log_Gestion(models.Model):
     estado = models.CharField(max_length=50, choices=ESTADOS_LOG_GESTION, null=True)
 
     def anexo(self):
-        txt =""
+        txt = ""
         if self.estado == ESTADOS_LOG_GESTION[0][0]:
             return "Inicio del Proceso."
         if self.estado == ESTADOS_LOG_GESTION[1][0]:
@@ -1151,7 +1157,7 @@ class Log_Gestion(models.Model):
                 "{:d}:{:02d}".format(
                     self.gestion.fecha_asignacion.hour,
                     self.gestion.fecha_asignacion.minute))
-                    ##
+            ##
         if self.estado == ESTADOS_LOG_GESTION[2][0]:
             txt = "Inspeccion fisica realizada."
             if self.gestion.json:
@@ -1231,11 +1237,14 @@ class Ejecutivo(models.Model):
 
 
 def reporteRecepcion():
-    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Tipo de Avaluo', 'Observaciones']
+    head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Tipo de Avaluo',
+            'Observaciones']
     data = []
     qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[0][0]).order_by('fecha')
     for q in qs:
-        data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo, q.tipo_gestion.name, q.observaciones])
+        data.append(
+            [q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo, q.tipo_gestion.name,
+             q.observaciones])
     return {'head': head, 'data': data}
 
 
@@ -1246,7 +1255,7 @@ def reporteLogistica():
     qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[1][0]).order_by('fecha')
     for q in qs:
         data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
-                    q.fecha_asignacion, q.user.get_full_name()])
+                     q.fecha_asignacion, q.user.get_full_name()])
     return {'head': head, 'data': data}
 
 
@@ -1254,11 +1263,12 @@ def reporteOperaciones():
     head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
             'Perito', 'Fecha Inspección', 'Armador', 'Fecha Vencimiento', 'Dias de Retraso']
     data = []
-    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0]).order_by('fecha')
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[2][0], armador__isnull=False).order_by('fecha')
     for q in qs:
         data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
-                    q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
-                    q.armador.get_full_name(), q.fecha_vence.strftime("%d-%m-%Y"), q.dias_retrazo()])
+                     q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(),
+                     q.fecha_recepcion.strftime("%d-%m-%Y"),
+                     q.armador.get_full_name(), q.fecha_vence.strftime("%d-%m-%Y"), q.dias_retrazo()])
     return {'head': head, 'data': data}
 
 
@@ -1266,11 +1276,12 @@ def reporteControlCalidad():
     head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
             'Perito', 'Fecha Inspección', 'Armador', 'Fecha Vencimiento', 'Dias de Retraso']
     data = []
-    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0]).order_by('fecha')
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[3][0], armador__isnull=False).order_by('fecha')
     for q in qs:
         data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
-                    q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
-                    q.armador.get_full_name(), q.fecha_vence.strftime("%d-%m-%Y"), q.dias_retrazo()])
+                     q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(),
+                     q.fecha_recepcion.strftime("%d-%m-%Y"),
+                     q.armador.get_full_name(), q.fecha_vence.strftime("%d-%m-%Y"), q.dias_retrazo()])
     return {'head': head, 'data': data}
 
 
@@ -1278,20 +1289,22 @@ def reporteTerminados():
     head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
             'Perito', 'Fecha Inspección', 'Armador', 'Fecha Entrega', 'Dias en Proceso']
     data = []
-    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0]).order_by('fecha')
+    qs = Gestion.objects.filter(status_gestion=ESTADOS_LOG_GESTION[4][0], armador__isnull=False,
+                                fecha_entrega_efectiva__isnull=False).order_by('fecha')
     for q in qs:
         data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
-                    q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(), q.fecha_recepcion.strftime("%d-%m-%Y"),
-                    q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
+                     q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(),
+                     q.fecha_recepcion.strftime("%d-%m-%Y"),
+                     q.armador.get_full_name(), q.fecha_entrega_efectiva.strftime("%d-%m-%Y"), q.dias_proceso()])
     return {'head': head, 'data': data}
-
 
 
 def reporteFacturacion():
     head = ['Fecha de Solicitud', 'Código de Avaluo', 'Nombre del Cliente', 'Banco', 'Ejecutivo', 'Fecha Asignación',
             'Perito', 'Fecha Inspección', 'Armador', 'Fecha Entrega', 'Dias en Proceso', 'Facturar']
     data = []
-    qs = Gestion.objects.filter(realizad=ESTADOS_LOG_GESTION[4][0]).order_by('fecha')
+    qs = Gestion.objects.filter(realizad=ESTADOS_LOG_GESTION[4][0], armador__isnull=False,
+                                fecha_entrega_efectiva__isnull=False).order_by('fecha')
     for q in qs:
         data.append([q.fecha.strftime("%d-%m-%Y"), q.barra, q.destinatario, q.banco, q.banco_ejecutivo,
                      q.fecha_asignacion.strftime("%d-%m-%Y"), q.user.get_full_name(),
