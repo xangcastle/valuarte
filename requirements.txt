@@ -124,7 +124,7 @@ pymongo==3.4.0
 PyNaCl==1.2.1
 pyparsing==2.2.0
 pyPdf==1.13
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 pysftp==0.2.9
 pytest==2.3.5
 pytest-cov==1.6
