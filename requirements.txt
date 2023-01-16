@@ -156,7 +156,7 @@ tablib==0.12.1
 txaio==2.8.0
 unicodecsv==0.14.1
 Unidecode==0.4.20
-urllib3==1.22
+urllib3==1.26.5
 Werkzeug==0.14.1
 xhtml2pdf==0.0.6
 xlrd==1.1.0
