@@ -115,7 +115,7 @@ Pillow==4.3.0
 # pkg-resources==0.0.0
 postmonkey==1.0a4
 psycopg2==2.7.3.2
-py==1.4.15
+py==1.10.0
 pyasn1==0.4.2
 pycparser==2.18
 pycrypto==2.6.1
