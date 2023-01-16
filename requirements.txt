@@ -150,7 +150,7 @@ social-auth-core==1.2.0
 sorl-thumbnail==12.3
 SQLAlchemy==1.2.0
 sqlparse==0.2.4
-suds==0.4
+suds==1.0.0
 tablib==0.12.1
 # Twisted==17.5.0
 txaio==2.8.0
